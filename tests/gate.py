@@ -562,7 +562,9 @@ def _():
             SELECT strftime(month, '%Y-%m') BETWEEN '{k['first_file_month']}' AND '{k['last_file_month'] or '9999'}' AND department_code IN ({', '.join(repr(e) for e in k['entities'].split(';'))}) AS in_s,
                    list_contains(kdi_ids, '{k['id']}') AS has FROM monthly_org_kdi)""")[0]
         if exp[0] or exp[1]: bad.append(f"{k['id']}: {exp[0]} scoped entity-months unflagged, {exp[1]} flagged outside scope")
-        notes.append(f"{k['id']} {exp[2]} entity-months")
+        # unit: organization-months (department x agency x subelement rows of monthly_org_kdi, i.e. subelement-months with
+        # rows), not the cube metas' kdi_in_scope entity-months, which count every level and months without rows (L-036)
+        notes.append(f"{k['id']} {exp[2]} subelement-months with rows (organization rows; the cube metas count entity-months at every level)")
     # KDI-007 (REDACTED grade): only inside the scope (actions in full; employment all months from coverage, sampled raw)
     k7 = [k for k in act if k['treatment'] == 'unknown_with_coverage']
     out7 = []
@@ -2532,6 +2534,7 @@ def _():
 
 # ---- invariant 1: promoted files are the staged files (D-036) ----
 WEB_DATA = os.environ.get('OPM_WEB_DATA') or 'web/data'   # override only to test the check on a copy
+PROMOTED_PROBLEMS = os.environ.get('OPM_PROMOTED_PROBLEMS') or 'warehouse/gate_promoted_matches_staged.txt'   # full problem list when promoted_matches_staged fails
 
 
 def staged_source(rel):
@@ -2583,10 +2586,102 @@ def _():
         if miss: bad.append(f'{rel} lists {len(miss)} file(s) not promoted, e.g. {miss[:2]}')
     orphan = sorted(set(present) - set(metas) - listed)
     if orphan: bad.append(f'{len(orphan)} promoted file(s) no promoted meta lists, e.g. {orphan[:2]}')
-    if bad: return False, '; '.join(bad[:6]) + (f' (+{len(bad) - 6} more)' if len(bad) > 6 else '') + tag
+    if bad:   # every problem, never "+N more": inline when short, else the full list in a file the message names
+        if len(bad) <= 25: return False, '; '.join(bad) + tag
+        with open(PROMOTED_PROBLEMS, 'w', encoding='utf-8') as f: f.write('\n'.join(bad) + '\n')
+        return False, (f'{len(bad)} problems ({sum(" differs from " in b for b in bad)} differing files), full list in {PROMOTED_PROBLEMS} '
+                       f'(rewritten on every failing run); first: ' + '; '.join(bad[:6]) + tag)
     return True, (f'{len(present):,} files in {WEB_DATA} ({len(metas)} metas) = their staged sources byte for byte (sha256); '
                   f'all {len(required)} staged metas promoted ({", ".join(m[:-10] for m in required)}; covers the {len(fetched)} the pages name literally); '
                   f'every meta on manifest {want[:12]} as staged; no meta missing its files, no file outside a meta' + tag)
+
+
+# ---- invariant 1: what each meta records about its inputs and its files is true now (L-039) ----
+META_CUBES = os.environ.get('OPM_META_CUBES') or CUBES   # override only to test the check on a copy
+SIZE_KEYS = {'files', 'total_bytes', 'mean_bytes', 'largest', 'gov_first_load_bytes', 'gov_first_load_files'}
+
+
+def meta_sets():
+    """(label, meta path, the directory its file paths are relative to): every staged meta, and every promoted meta in
+    web/data/ when present."""
+    out = [(f'staged {n}', f'{META_CUBES}/{n}.meta.json', META_CUBES) for n in ALL_CUBES]
+    out.append(('staged lookup', f'{LOOKUP}/lookup.meta.json', os.path.dirname(LOOKUP)))
+    if os.path.isdir(WEB_DATA):
+        out += [(f'promoted {f[:-10]}', f'{WEB_DATA}/{f}', WEB_DATA) for f in sorted(os.listdir(WEB_DATA)) if f.endswith('.meta.json')]
+    return out
+
+
+@check('meta_inputs_and_sizes', 'inv 1')
+def _():
+    """Every input a meta names with a hash (a top-level {file | path, sha256}: known_data_issues, administrations,
+    groups, fields_file) hashes to it now, and every cube meta names pipeline/known_data_issues.csv; every size a meta
+    records equals the files on disk it describes: per-file bytes, size.files, total_bytes, mean_bytes, largest and
+    gov_first_load_bytes (the sum of size.gov_first_load_files, or of core's list for a meta that records the figure
+    without one), and the Look-Up's totals by dataset; a size key this check does not know fails, so a new recorded total
+    gets a check. Staged metas and promoted ones alike: promoted_matches_staged compares promoted files with staged ones,
+    which passes when both carry the same stale record."""
+    import hashlib
+    hashes = {}
+    def sha(p):
+        if p not in hashes: hashes[p] = hashlib.sha256(open(p, 'rb').read()).hexdigest()
+        return hashes[p]
+    bad, n_meta, n_hash, n_size, first = [], 0, 0, 0, {}
+    for label, mp, base in meta_sets():
+        if not os.path.isfile(mp): bad.append(f'{label}: {mp} missing'); continue
+        m = json.load(open(mp)); n_meta += 1
+        cube = 'cube' in m
+        kdi = m.get('known_data_issues')
+        if cube and not (isinstance(kdi, dict) and kdi.get('file') == 'pipeline/known_data_issues.csv' and 'sha256' in kdi):
+            bad.append(f'{label}: no known_data_issues record naming pipeline/known_data_issues.csv with a sha256')
+        for k, v in m.items():
+            if k == 'files' or not isinstance(v, dict) or 'sha256' not in v: continue
+            src = v.get('file') or v.get('path')
+            n_hash += 1
+            if not src or not os.path.isfile(src): bad.append(f'{label}: {k} names no input file ({src!r})'); continue
+            if v['sha256'] != sha(src): bad.append(f"{label}: {k}.sha256 {str(v['sha256'])[:12]} != {src} now {sha(src)[:12]} (stale)")
+        files = m.get('files') or {}
+        actual = {key: os.path.getsize(f"{base}/{fi['path']}") if os.path.isfile(f"{base}/{fi['path']}") else None for key, fi in files.items()}
+        missing = sorted(files[key]['path'] for key, s in actual.items() if s is None)
+        if missing: bad.append(f'{label}: {len(missing)} listed file(s) missing, e.g. {missing[:2]}'); continue
+        wrong = sorted(fi['path'] for key, fi in files.items() if fi.get('bytes') != actual[key]); n_size += len(files)
+        if wrong: bad.append(f'{label}: {len(wrong)} file(s) whose bytes differ from the meta: {wrong[:4]}')
+        tot = sum(actual.values())
+        if cube:
+            sz = m.get('size')
+            if not isinstance(sz, dict) or not files: bad.append(f'{label}: no size record or no files'); continue
+            unknown = sorted(set(sz) - SIZE_KEYS)
+            if unknown: bad.append(f'{label}: size keys {unknown} have no check here (add one)')
+            for f, w in (('files', len(files)), ('total_bytes', tot), ('mean_bytes', round(tot / len(files)))):
+                n_size += 1
+                if sz.get(f) != w: bad.append(f'{label}: size.{f} {sz.get(f)} != {w} on disk')
+            lg, big = sz.get('largest') or {}, max(actual.values()); n_size += 1
+            if lg.get('bytes') != big or actual.get(lg.get('key')) != big:
+                bad.append(f"{label}: size.largest {lg.get('key')} {lg.get('bytes')} B != largest on disk {big} B")
+            if 'gov_first_load_bytes' in sz or 'gov_first_load_files' in sz:
+                fl = sz.get('gov_first_load_files')
+                if fl is None and os.path.isfile(f'{base}/core.meta.json'):
+                    fl = json.load(open(f'{base}/core.meta.json')).get('size', {}).get('gov_first_load_files')
+                if not fl: bad.append(f'{label}: gov_first_load_bytes with no list of the files it sums'); continue
+                gone = [p for p in fl if not os.path.isfile(f'{base}/{p}')]
+                if gone: bad.append(f'{label}: gov first-load files missing {gone}'); continue
+                w = sum(os.path.getsize(f'{base}/{p}') for p in fl); n_size += 1
+                first[label] = (w, len(fl))
+                if sz.get('gov_first_load_bytes') != w: bad.append(f"{label}: size.gov_first_load_bytes {sz.get('gov_first_load_bytes')} != {w} on disk ({' + '.join(fl)})")
+        else:   # the Look-Up: totals by dataset and in all
+            want = {}
+            for key, fi in files.items():
+                b = want.setdefault(fi['dataset'], {'files': 0, 'rows': 0, 'bytes': 0})
+                b['files'] += 1; b['rows'] += fi['rows']; b['bytes'] += actual[key]
+            want['all'] = {'files': len(files), 'rows': sum(fi['rows'] for fi in files.values()), 'bytes': tot}
+            n_size += 1
+            if m.get('totals') != want: bad.append(f"{label}: totals {m.get('totals')} != on disk {want}")
+    if bad:
+        return False, '; '.join(bad[:25]) + (f' (and {len(bad) - 25} more problems of the same kinds)' if len(bad) > 25 else '')
+    k = sha('pipeline/known_data_issues.csv')[:12]
+    promoted = sum(1 for lab, _, _ in meta_sets() if lab.startswith('promoted'))
+    fl = ', '.join(f'{lab} {w:,} B ({n} files)' for lab, (w, n) in first.items())
+    return True, (f'{n_meta} metas ({n_meta - promoted} staged, {promoted} promoted): {n_hash} recorded input hashes = the files now '
+                  f'(known_data_issues.csv {k} in every cube meta); {n_size:,} recorded sizes = disk; gov first load: {fl}')
 
 
 n_pass = sum(ok for _, ok in RESULTS)
