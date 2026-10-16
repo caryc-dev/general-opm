@@ -1,0 +1,630 @@
+{
+ "_note": "Written by web/tools/build-known-breaks.js from pipeline/known_breaks.csv (signed) and warehouse/cubes/known_breaks_candidates.csv. Do not edit by hand.",
+ "gap": "headcount change minus net flow over the fiscal year (people); gap_pct: as a percent of average month-end employees",
+ "rows": [
+  {
+   "entity": "TR",
+   "fiscal_year": 2012,
+   "name": "DEPARTMENT OF THE TREASURY",
+   "gap": 6807,
+   "gap_pct": 6.24,
+   "decision": "D-017"
+  },
+  {
+   "entity": "GM",
+   "fiscal_year": 2015,
+   "name": "VALLES CALDERA TRUST",
+   "gap": 56,
+   "gap_pct": 104.02,
+   "decision": "D-017"
+  },
+  {
+   "entity": "GM",
+   "fiscal_year": 2016,
+   "name": "VALLES CALDERA TRUST",
+   "gap": -56,
+   "gap_pct": -5600,
+   "decision": "D-017"
+  },
+  {
+   "entity": "AB",
+   "fiscal_year": 2018,
+   "name": "AMERICAN BATTLE MONUMENTS COMMISSION",
+   "gap": 44,
+   "gap_pct": 55.11,
+   "decision": "D-017"
+  },
+  {
+   "entity": "KS",
+   "fiscal_year": 2020,
+   "name": "CORPORATION FOR NATIONAL AND COMMUNITY SERVICE",
+   "gap": 36,
+   "gap_pct": 6.97,
+   "decision": "D-017"
+  },
+  {
+   "entity": "SB",
+   "fiscal_year": 2020,
+   "name": "SMALL BUSINESS ADMINISTRATION",
+   "gap": 330,
+   "gap_pct": 5.85,
+   "decision": "D-017"
+  },
+  {
+   "entity": "BH",
+   "fiscal_year": 2021,
+   "name": "COMMISSION FOR THE PRESERVATION OF AMERICA'S HERITAGE ABROAD",
+   "gap": 22,
+   "gap_pct": 95.65,
+   "decision": "D-017"
+  },
+  {
+   "entity": "IG",
+   "fiscal_year": 2021,
+   "name": "COUNCIL OF THE INSPECTORS GENERAL ON INTEGRITY AND EFFICIENCY",
+   "gap": -22,
+   "gap_pct": -48.89,
+   "decision": "D-017"
+  },
+  {
+   "entity": "CU",
+   "fiscal_year": 2022,
+   "name": "NATIONAL CREDIT UNION ADMINISTRATION",
+   "gap": 91,
+   "gap_pct": 7.89,
+   "decision": "D-017"
+  },
+  {
+   "entity": "ZL",
+   "fiscal_year": 2022,
+   "name": "MEDICARE PAYMENT ADVISORY COMMISSION",
+   "gap": -47,
+   "gap_pct": 0,
+   "decision": "D-017"
+  },
+  {
+   "entity": "CU",
+   "fiscal_year": 2023,
+   "name": "NATIONAL CREDIT UNION ADMINISTRATION",
+   "gap": 95,
+   "gap_pct": 8,
+   "decision": "D-017"
+  },
+  {
+   "entity": "IG",
+   "fiscal_year": 2023,
+   "name": "COUNCIL OF THE INSPECTORS GENERAL ON INTEGRITY AND EFFICIENCY",
+   "gap": -67,
+   "gap_pct": -744.44,
+   "decision": "D-017"
+  },
+  {
+   "entity": "IG",
+   "fiscal_year": 2024,
+   "name": "COUNCIL OF THE INSPECTORS GENERAL ON INTEGRITY AND EFFICIENCY",
+   "gap": 38,
+   "gap_pct": 107.8,
+   "decision": "D-017"
+  },
+  {
+   "entity": "KS",
+   "fiscal_year": 2024,
+   "name": "CORPORATION FOR NATIONAL AND COMMUNITY SERVICE",
+   "gap": 41,
+   "gap_pct": 5.24,
+   "decision": "D-017"
+  },
+  {
+   "entity": "AG",
+   "fiscal_year": 2025,
+   "name": "DEPARTMENT OF AGRICULTURE",
+   "gap": 13021,
+   "gap_pct": 14.15,
+   "decision": "D-017"
+  },
+  {
+   "entity": "AH",
+   "fiscal_year": 2025,
+   "name": "NATIONAL FOUNDATION ON THE ARTS AND THE HUMANITIES",
+   "gap": 74,
+   "gap_pct": 17.99,
+   "decision": "D-017"
+  },
+  {
+   "entity": "AM",
+   "fiscal_year": 2025,
+   "name": "U.S. AGENCY FOR INTERNATIONAL DEVELOPMENT",
+   "gap": 690,
+   "gap_pct": 17.04,
+   "decision": "D-017"
+  },
+  {
+   "entity": "BO",
+   "fiscal_year": 2025,
+   "name": "OFFICE OF MANAGEMENT AND BUDGET",
+   "gap": -74,
+   "gap_pct": -13.1,
+   "decision": "D-017"
+  },
+  {
+   "entity": "CT",
+   "fiscal_year": 2025,
+   "name": "COMMODITY FUTURES TRADING COMMISSION",
+   "gap": 67,
+   "gap_pct": 9.88,
+   "decision": "D-017"
+  },
+  {
+   "entity": "DL",
+   "fiscal_year": 2025,
+   "name": "DEPARTMENT OF LABOR",
+   "gap": 1146,
+   "gap_pct": 8.12,
+   "decision": "D-017"
+  },
+  {
+   "entity": "DN",
+   "fiscal_year": 2025,
+   "name": "DEPARTMENT OF ENERGY",
+   "gap": 1637,
+   "gap_pct": 9.47,
+   "decision": "D-017"
+  },
+  {
+   "entity": "ED",
+   "fiscal_year": 2025,
+   "name": "DEPARTMENT OF EDUCATION",
+   "gap": 243,
+   "gap_pct": 6.43,
+   "decision": "D-017"
+  },
+  {
+   "entity": "EE",
+   "fiscal_year": 2025,
+   "name": "EQUAL EMPLOYMENT OPPORTUNITY COMMISSION",
+   "gap": 110,
+   "gap_pct": 5.43,
+   "decision": "D-017"
+  },
+  {
+   "entity": "FC",
+   "fiscal_year": 2025,
+   "name": "FEDERAL COMMUNICATIONS COMMISSION",
+   "gap": 75,
+   "gap_pct": 5.21,
+   "decision": "D-017"
+  },
+  {
+   "entity": "FD",
+   "fiscal_year": 2025,
+   "name": "FEDERAL DEPOSIT INSURANCE CORPORATION",
+   "gap": 383,
+   "gap_pct": 6.07,
+   "decision": "D-017"
+  },
+  {
+   "entity": "FL",
+   "fiscal_year": 2025,
+   "name": "FARM CREDIT ADMINISTRATION",
+   "gap": 32,
+   "gap_pct": 9.61,
+   "decision": "D-017"
+  },
+  {
+   "entity": "FM",
+   "fiscal_year": 2025,
+   "name": "FEDERAL MEDIATION AND CONCILIATION SERVICE",
+   "gap": 78,
+   "gap_pct": 39.9,
+   "decision": "D-017"
+  },
+  {
+   "entity": "FR",
+   "fiscal_year": 2025,
+   "name": "FEDERAL RESERVE SYSTEM",
+   "gap": 83,
+   "gap_pct": 5.13,
+   "decision": "D-017"
+  },
+  {
+   "entity": "FT",
+   "fiscal_year": 2025,
+   "name": "FEDERAL TRADE COMMISSION",
+   "gap": 74,
+   "gap_pct": 6.03,
+   "decision": "D-017"
+  },
+  {
+   "entity": "GB",
+   "fiscal_year": 2025,
+   "name": "DEVELOPMENT FINANCE CORPORATION",
+   "gap": 116,
+   "gap_pct": 16.91,
+   "decision": "D-017"
+  },
+  {
+   "entity": "GS",
+   "fiscal_year": 2025,
+   "name": "GENERAL SERVICES ADMINISTRATION",
+   "gap": 2052,
+   "gap_pct": 15.7,
+   "decision": "D-017"
+  },
+  {
+   "entity": "HF",
+   "fiscal_year": 2025,
+   "name": "FEDERAL HOUSING FINANCE AGENCY",
+   "gap": 87,
+   "gap_pct": 10.4,
+   "decision": "D-017"
+  },
+  {
+   "entity": "HU",
+   "fiscal_year": 2025,
+   "name": "DEPARTMENT OF HOUSING AND URBAN DEVELOPMENT",
+   "gap": 1869,
+   "gap_pct": 21.83,
+   "decision": "D-017"
+  },
+  {
+   "entity": "IB",
+   "fiscal_year": 2025,
+   "name": "U.S. AGENCY FOR GLOBAL MEDIA",
+   "gap": 222,
+   "gap_pct": 19.46,
+   "decision": "D-017"
+  },
+  {
+   "entity": "KS",
+   "fiscal_year": 2025,
+   "name": "CORPORATION FOR NATIONAL AND COMMUNITY SERVICE",
+   "gap": 222,
+   "gap_pct": 31.45,
+   "decision": "D-017"
+  },
+  {
+   "entity": "MI",
+   "fiscal_year": 2025,
+   "name": "MILLENNIUM CHALLENGE CORPORATION",
+   "gap": 103,
+   "gap_pct": 29.78,
+   "decision": "D-017"
+  },
+  {
+   "entity": "NF",
+   "fiscal_year": 2025,
+   "name": "NATIONAL SCIENCE FOUNDATION",
+   "gap": 289,
+   "gap_pct": 17.99,
+   "decision": "D-017"
+  },
+  {
+   "entity": "NQ",
+   "fiscal_year": 2025,
+   "name": "NATIONAL ARCHIVES AND RECORDS ADMINISTRATION",
+   "gap": 149,
+   "gap_pct": 5.33,
+   "decision": "D-017"
+  },
+  {
+   "entity": "OM",
+   "fiscal_year": 2025,
+   "name": "OFFICE OF PERSONNEL MANAGEMENT",
+   "gap": 431,
+   "gap_pct": 14.82,
+   "decision": "D-017"
+  },
+  {
+   "entity": "PU",
+   "fiscal_year": 2025,
+   "name": "PEACE CORPS",
+   "gap": 208,
+   "gap_pct": 21.53,
+   "decision": "D-017"
+  },
+  {
+   "entity": "SB",
+   "fiscal_year": 2025,
+   "name": "SMALL BUSINESS ADMINISTRATION",
+   "gap": 1243,
+   "gap_pct": 15.47,
+   "decision": "D-017"
+  },
+  {
+   "entity": "ST",
+   "fiscal_year": 2025,
+   "name": "DEPARTMENT OF STATE",
+   "gap": 1031,
+   "gap_pct": 7.32,
+   "decision": "D-017"
+  },
+  {
+   "entity": "TD",
+   "fiscal_year": 2025,
+   "name": "DEPARTMENT OF TRANSPORTATION",
+   "gap": 3577,
+   "gap_pct": 6.28,
+   "decision": "D-017"
+  },
+  {
+   "entity": "TR",
+   "fiscal_year": 2025,
+   "name": "DEPARTMENT OF THE TREASURY",
+   "gap": 23027,
+   "gap_pct": 20.32,
+   "decision": "D-017"
+  },
+  {
+   "entity": "GOV",
+   "fiscal_year": 2026,
+   "name": "All departments and agencies",
+   "gap": -116920,
+   "gap_pct": -5.72,
+   "decision": "D-017"
+  },
+  {
+   "entity": "AG",
+   "fiscal_year": 2026,
+   "name": "DEPARTMENT OF AGRICULTURE",
+   "gap": -13958,
+   "gap_pct": -18.65,
+   "decision": "D-017"
+  },
+  {
+   "entity": "AH",
+   "fiscal_year": 2026,
+   "name": "NATIONAL FOUNDATION ON THE ARTS AND THE HUMANITIES",
+   "gap": -72,
+   "gap_pct": -33.6,
+   "decision": "D-017"
+  },
+  {
+   "entity": "AM",
+   "fiscal_year": 2026,
+   "name": "U.S. AGENCY FOR INTERNATIONAL DEVELOPMENT",
+   "gap": -713,
+   "gap_pct": -250.34,
+   "decision": "D-017"
+  },
+  {
+   "entity": "CT",
+   "fiscal_year": 2026,
+   "name": "COMMODITY FUTURES TRADING COMMISSION",
+   "gap": -65,
+   "gap_pct": -11.64,
+   "decision": "D-017"
+  },
+  {
+   "entity": "DL",
+   "fiscal_year": 2026,
+   "name": "DEPARTMENT OF LABOR",
+   "gap": -1189,
+   "gap_pct": -10.35,
+   "decision": "D-017"
+  },
+  {
+   "entity": "DN",
+   "fiscal_year": 2026,
+   "name": "DEPARTMENT OF ENERGY",
+   "gap": -2840,
+   "gap_pct": -20.51,
+   "decision": "D-017"
+  },
+  {
+   "entity": "ED",
+   "fiscal_year": 2026,
+   "name": "DEPARTMENT OF EDUCATION",
+   "gap": -178,
+   "gap_pct": -7.59,
+   "decision": "D-017"
+  },
+  {
+   "entity": "EE",
+   "fiscal_year": 2026,
+   "name": "EQUAL EMPLOYMENT OPPORTUNITY COMMISSION",
+   "gap": -107,
+   "gap_pct": -6.21,
+   "decision": "D-017"
+  },
+  {
+   "entity": "EP",
+   "fiscal_year": 2026,
+   "name": "ENVIRONMENTAL PROTECTION AGENCY",
+   "gap": -727,
+   "gap_pct": -5.5,
+   "decision": "D-017"
+  },
+  {
+   "entity": "FC",
+   "fiscal_year": 2026,
+   "name": "FEDERAL COMMUNICATIONS COMMISSION",
+   "gap": -85,
+   "gap_pct": -7.01,
+   "decision": "D-017"
+  },
+  {
+   "entity": "FL",
+   "fiscal_year": 2026,
+   "name": "FARM CREDIT ADMINISTRATION",
+   "gap": -28,
+   "gap_pct": -9.14,
+   "decision": "D-017"
+  },
+  {
+   "entity": "FM",
+   "fiscal_year": 2026,
+   "name": "FEDERAL MEDIATION AND CONCILIATION SERVICE",
+   "gap": -78,
+   "gap_pct": -84.53,
+   "decision": "D-017"
+  },
+  {
+   "entity": "FR",
+   "fiscal_year": 2026,
+   "name": "FEDERAL RESERVE SYSTEM",
+   "gap": -70,
+   "gap_pct": -6.02,
+   "decision": "D-017"
+  },
+  {
+   "entity": "FT",
+   "fiscal_year": 2026,
+   "name": "FEDERAL TRADE COMMISSION",
+   "gap": -95,
+   "gap_pct": -9.31,
+   "decision": "D-017"
+  },
+  {
+   "entity": "GB",
+   "fiscal_year": 2026,
+   "name": "DEVELOPMENT FINANCE CORPORATION",
+   "gap": -108,
+   "gap_pct": -20.25,
+   "decision": "D-017"
+  },
+  {
+   "entity": "GS",
+   "fiscal_year": 2026,
+   "name": "GENERAL SERVICES ADMINISTRATION",
+   "gap": -1681,
+   "gap_pct": -18.93,
+   "decision": "D-017"
+  },
+  {
+   "entity": "HF",
+   "fiscal_year": 2026,
+   "name": "FEDERAL HOUSING FINANCE AGENCY",
+   "gap": -93,
+   "gap_pct": -15.25,
+   "decision": "D-017"
+  },
+  {
+   "entity": "HU",
+   "fiscal_year": 2026,
+   "name": "DEPARTMENT OF HOUSING AND URBAN DEVELOPMENT",
+   "gap": -1867,
+   "gap_pct": -30.87,
+   "decision": "D-017"
+  },
+  {
+   "entity": "IB",
+   "fiscal_year": 2026,
+   "name": "U.S. AGENCY FOR GLOBAL MEDIA",
+   "gap": -228,
+   "gap_pct": -28.04,
+   "decision": "D-017"
+  },
+  {
+   "entity": "IN",
+   "fiscal_year": 2026,
+   "name": "DEPARTMENT OF THE INTERIOR",
+   "gap": -3866,
+   "gap_pct": -6.77,
+   "decision": "D-017"
+  },
+  {
+   "entity": "KS",
+   "fiscal_year": 2026,
+   "name": "CORPORATION FOR NATIONAL AND COMMUNITY SERVICE",
+   "gap": -254,
+   "gap_pct": -63.73,
+   "decision": "D-017"
+  },
+  {
+   "entity": "MI",
+   "fiscal_year": 2026,
+   "name": "MILLENNIUM CHALLENGE CORPORATION",
+   "gap": -103,
+   "gap_pct": -44.59,
+   "decision": "D-017"
+  },
+  {
+   "entity": "NF",
+   "fiscal_year": 2026,
+   "name": "NATIONAL SCIENCE FOUNDATION",
+   "gap": -282,
+   "gap_pct": -24.5,
+   "decision": "D-017"
+  },
+  {
+   "entity": "NL",
+   "fiscal_year": 2026,
+   "name": "NATIONAL LABOR RELATIONS BOARD",
+   "gap": -66,
+   "gap_pct": -6.17,
+   "decision": "D-017"
+  },
+  {
+   "entity": "NN",
+   "fiscal_year": 2026,
+   "name": "NATIONAL AERONAUTICS AND SPACE ADMINISTRATION",
+   "gap": -1560,
+   "gap_pct": -10.39,
+   "decision": "D-017"
+  },
+  {
+   "entity": "NQ",
+   "fiscal_year": 2026,
+   "name": "NATIONAL ARCHIVES AND RECORDS ADMINISTRATION",
+   "gap": -139,
+   "gap_pct": -5.81,
+   "decision": "D-017"
+  },
+  {
+   "entity": "OM",
+   "fiscal_year": 2026,
+   "name": "OFFICE OF PERSONNEL MANAGEMENT",
+   "gap": -466,
+   "gap_pct": -22.49,
+   "decision": "D-017"
+  },
+  {
+   "entity": "PU",
+   "fiscal_year": 2026,
+   "name": "PEACE CORPS",
+   "gap": -212,
+   "gap_pct": -32.33,
+   "decision": "D-017"
+  },
+  {
+   "entity": "SB",
+   "fiscal_year": 2026,
+   "name": "SMALL BUSINESS ADMINISTRATION",
+   "gap": -1245,
+   "gap_pct": -23.06,
+   "decision": "D-017"
+  },
+  {
+   "entity": "SK",
+   "fiscal_year": 2026,
+   "name": "CONSUMER PRODUCT SAFETY COMMISSION",
+   "gap": -22,
+   "gap_pct": -5.1,
+   "decision": "D-017"
+  },
+  {
+   "entity": "ST",
+   "fiscal_year": 2026,
+   "name": "DEPARTMENT OF STATE",
+   "gap": -1042,
+   "gap_pct": -9.05,
+   "decision": "D-017"
+  },
+  {
+   "entity": "TD",
+   "fiscal_year": 2026,
+   "name": "DEPARTMENT OF TRANSPORTATION",
+   "gap": -3400,
+   "gap_pct": -6.41,
+   "decision": "D-017"
+  },
+  {
+   "entity": "TR",
+   "fiscal_year": 2026,
+   "name": "DEPARTMENT OF THE TREASURY",
+   "gap": -21967,
+   "gap_pct": -25.38,
+   "decision": "D-017"
+  }
+ ]
+}

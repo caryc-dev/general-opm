@@ -704,7 +704,8 @@ def _():
 # known-data-issue reading, then compared with the cube files.
 CUBES = 'warehouse/cubes'
 BREAKDOWN_CUBES = ('leaving', 'joining', 'admin', 'appointments')   # Phase 2b (pipeline/build_breakdowns.py)
-ALL_CUBES = ('core', 'compare') + BREAKDOWN_CUBES
+MATRIX_CUBES = ('matrix',)   # docs/cube-plan.md amendment 1 (pipeline/build_matrix.py, copied from admin)
+ALL_CUBES = ('core', 'compare') + BREAKDOWN_CUBES + MATRIX_CUBES
 CUBE_FILE_MAX = 3_000_000      # bytes per file (docs/cube-plan.md section 3)
 FIRST_LOAD_MAX = 3_000_000     # GOV core + GOV compare (docs/cube-plan.md section 3)
 SMALL_BASE = 30                # invariant 9
@@ -936,7 +937,8 @@ def _():
             if hashlib.sha256(open(p, 'rb').read()).hexdigest() != fi['sha256']: bad.append(f'{name} {fi["path"]} sha256 differs from its meta')
             if os.path.getsize(p) != fi['bytes']: bad.append(f'{name} {fi["path"]} size differs from its meta')
             head = open(p, encoding='utf-8').read(300)   # the header only: the files are written {"cube", "entity"|"parent", ...}
-            if not head.startswith(json.dumps({'cube': name, 'parent' if name == 'compare' else 'entity': k}, separators=(',', ':'))[:-1] + ','):
+            hdr = {'cube': name} if name in MATRIX_CUBES else {'cube': name, 'parent' if name == 'compare' else 'entity': k}
+            if not head.startswith(json.dumps(hdr, separators=(',', ':'))[:-1] + ','):
                 bad.append(f'{name} {fi["path"]} header names another cube or key')
         digest = hashlib.sha256(''.join(f"{fi['path']} {fi['sha256']}\n" for fi in sorted(meta['files'].values(), key=lambda f: f['path'])).encode()).hexdigest()
         if meta.get('files_sha256') != digest: bad.append(f'{name} files_sha256 does not match its listed files')
@@ -1617,6 +1619,78 @@ def _():
         f'{n:,} admin rows ({len(spans)} entities x 4 administrations x months in office) = recomputation from the independent '
         f'core months; seven reasons sum to departures on {reasons_ok:,} rows; {skipped} entity-administrations without a '
         f'month 0 have no rows{note}')
+
+
+# docs/cube-plan.md amendment 1 (signed 2026-10-15): the matrix holds, for every department and DOD agency, the admin
+# rows of these columns, in this order, copied unchanged
+MATRIX_COLUMNS_SIGNED = ['entity', 'administration', 'months_in_office', 'headcount_0', 'headcount_change', 'departures',
+                         'sep_drp', 'hire_num', 'attrition_num', 'rate_den', 'rate_small_base', 'provisional',
+                         'opm_incomplete', 'kdi_ids']
+
+
+@check('matrix_matches_admin', 'cube plan A1')
+def _():
+    """matrix = the admin cube rows of every department and DOD agency (not GOV, not subelements), every column equal
+    for the same entity, administration and month in office; nothing missing, nothing extra; under the per-file cap;
+    the file's bytes equal the gate's own serialization of the admin rows (a rebuild is byte-identical)."""
+    bad, mism = [], 0
+    meta, am = cube_meta('matrix'), cube_meta('admin')
+    spans = b_entities()
+    ents = [k for k in am['files'] if k != 'GOV']
+    lev = {k: am['entities'][k]['level'] for k in am['files']}
+    if sorted(ents) != sorted(k for k in spans if k != 'GOV'): bad.append('admin entities other than GOV differ from the departments and DOD agencies')
+    if any(lev[k] not in ('department', 'agency') for k in ents): bad.append('a matrix entity is not a department or DOD agency')
+    if list(meta['files']) != ['matrix']: bad.append(f"matrix meta lists files {list(meta['files'])}")
+    fi = meta['files'].get('matrix', {}); p = f"{CUBES}/{fi.get('path')}"
+    raw_bytes = open(p, 'rb').read()
+    d = json.loads(raw_bytes)
+    if d.get('columns') != MATRIX_COLUMNS_SIGNED: bad.append(f"matrix columns {d.get('columns')} != signed")
+    if [c['name'] for c in meta['columns']] != MATRIX_COLUMNS_SIGNED: bad.append('matrix meta columns != signed')
+    acol = {c['name']: c for c in am['columns']}
+    for c in meta['columns']:
+        if c['kind'] not in KINDS: bad.append(f"matrix column {c['name']} kind {c['kind']}")
+        if c['name'] != 'entity' and c != acol.get(c['name']): bad.append(f"matrix column {c['name']} declared differently from admin")
+    for k in ('manifest_sha256', 'provisional_months', 'reissued_months', 'known_data_issues', 'administrations', 'small_base_threshold'):
+        if meta.get(k) != am.get(k): bad.append(f'matrix meta {k} differs from admin meta')
+    if meta.get('source', {}).get('files_sha256') != am['files_sha256']: bad.append('matrix meta source is not the current admin cube')
+    ewc = {k: v for k, v in am.get('entities_without_comparison', {}).items() if k in ents}
+    if meta.get('entities_without_comparison') != ewc: bad.append('matrix entities_without_comparison differs from admin')
+    got = {}
+    for r in d['rows']:
+        key = (r[0], r[1], r[2])
+        if key in got: bad.append(f'matrix duplicate row {key}')
+        got[key] = r
+    want_rows, n, skipped = [], 0, 0
+    for k in ents:
+        a = json.load(open(f"{CUBES}/{am['files'][k]['path']}"))
+        ix = [a['columns'].index(c) for c in MATRIX_COLUMNS_SIGNED[1:]]
+        have = {r[0] for r in a['rows']}
+        for adm in ewc.get(k, []):
+            skipped += 1
+            if adm in have: bad.append(f'admin {k} has rows for {adm}, listed without comparison')
+        for r in a['rows']:
+            e = [k] + [r[i] for i in ix]
+            want_rows.append(e)
+            m = got.pop((k, r[0], r[1]), None)
+            if m is None:
+                mism += 1
+                if mism <= 5: bad.append(f'matrix lacks {k} {r[0]} N={r[1]}')
+                continue
+            n += 1
+            for c, x, y in zip(MATRIX_COLUMNS_SIGNED, m, e):
+                if x != y or type(x) is not type(y):
+                    mism += 1
+                    if mism <= 5: bad.append(f'matrix {k} {r[0]} N={r[1]} {c} {x!r} != admin {y!r}')
+    if got: bad.append(f'matrix holds {len(got)} rows not in admin, e.g. {sorted(got)[:2]}')
+    if (json.dumps({'cube': 'matrix', 'columns': MATRIX_COLUMNS_SIGNED, 'rows': want_rows}, separators=(',', ':'), ensure_ascii=False) + '\n').encode() != raw_bytes:
+        bad.append('matrix bytes differ from the serialization of the admin rows (not a deterministic copy)')
+    if len(raw_bytes) > CUBE_FILE_MAX: bad.append(f'matrix {len(raw_bytes):,} B > {CUBE_FILE_MAX:,}')
+    dj = next((r for r in d['rows'] if r[0] == 'DJ' and r[1] == 'trump2' and r[2] == 20), None)
+    note = (f"; DJ trump2 N=20: headcount_0 {dj[3]:,}, change {dj[4]:+,}, departures {dj[5]:,}, DRP {dj[6]:,}") if dj else ''
+    return not bad, '; '.join(bad[:6]) + (f' ({mism} mismatches)' if mism > 5 else '') or (
+        f"{n:,} matrix rows ({len(ents)} entities: departments and DOD agencies) = the admin rows on all {len(MATRIX_COLUMNS_SIGNED)} "
+        f"columns (values and types); none missing, none extra; {skipped} entity-administrations without comparison have no rows; "
+        f"bytes = the gate's own serialization of the admin rows; {len(raw_bytes):,} B (cap {CUBE_FILE_MAX:,}){note}")
 
 
 @check('appointments_partition', 'inv 5')

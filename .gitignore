@@ -11,3 +11,5 @@
 __pycache__/
 .venv/
 .vscode/
+# page screenshots from the smoke tests (regenerated every run)
+/web/_screens/

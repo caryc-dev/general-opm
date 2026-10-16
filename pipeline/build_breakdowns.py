@@ -34,6 +34,8 @@ Cubes (one file per entity key, plus <cube>.meta.json)
                            departure and hire rate numerators over the mean month-end headcount of months 1..N.
                            An entity whose span begins after month 0 has no rows for that administration (it did
                            not exist when the administration took office); rows stop at the entity's last month.
+  matrix/matrix.json       built at the end by pipeline/build_matrix.py: departments and DOD agencies x administration x
+                           months in office, every value copied from admin (docs/cube-plan.md amendment 1)
   appointments/<key>.json  hires and departures by appointment group (pipeline/crosswalks/appointment_groups.csv):
                            'all', the groups (partitioning all, unknown included) and the political subgroups
                            (partitioning political), at fy, t12 and admin grain; counts only, no rates.
@@ -698,6 +700,8 @@ def main():
     print('; '.join(f"{c} {m['size']['files']} files {m['size']['total_bytes']:,} B (largest {m['size']['largest']['key']} "
                     f"{m['size']['largest']['bytes']:,})" for c, m in metas.items())
           + f'; total {tot:,} B; GOV first load {gov_first:,} B; {time.time() - T0:.1f}s')
+    import build_matrix   # the matrix cube (cube plan amendment 1) is copied from the admin cube just written
+    build_matrix.main()
 
 
 if __name__ == '__main__':

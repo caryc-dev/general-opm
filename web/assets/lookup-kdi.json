@@ -1,0 +1,288 @@
+{
+ "_note": "Written by web/tools/build-lookup-kdi.js from pipeline/known_data_issues.csv (active rows on Look-Up fields). Do not edit by hand.",
+ "rows": [
+  {
+   "id": "KDI-001",
+   "dataset": "accessions",
+   "field": "length_of_service_years",
+   "first": "202406",
+   "last": "202503",
+   "level": "all",
+   "entities": [],
+   "min": 124,
+   "max": 126,
+   "treatment": "unknown"
+  },
+  {
+   "id": "KDI-001",
+   "dataset": "separations",
+   "field": "length_of_service_years",
+   "first": "202406",
+   "last": "202507",
+   "level": "all",
+   "entities": [],
+   "min": 124,
+   "max": 126,
+   "treatment": "unknown"
+  },
+  {
+   "id": "KDI-003",
+   "dataset": "employment",
+   "field": "*",
+   "first": "202605",
+   "last": "202605",
+   "level": "subelement",
+   "entities": [
+    "DD15"
+   ],
+   "min": null,
+   "max": null,
+   "treatment": "counted_flagged"
+  },
+  {
+   "id": "KDI-003",
+   "dataset": "employment",
+   "field": "*",
+   "first": "202606",
+   "last": "202606",
+   "level": "subelement",
+   "entities": [
+    "DD34",
+    "DD01",
+    "DD06",
+    "ARXF"
+   ],
+   "min": null,
+   "max": null,
+   "treatment": "counted_flagged"
+  },
+  {
+   "id": "KDI-004",
+   "dataset": "employment",
+   "field": "department_code",
+   "first": "202410",
+   "last": "202503",
+   "level": "agency",
+   "entities": [
+    "HU"
+   ],
+   "min": null,
+   "max": null,
+   "treatment": "department_from_agency"
+  },
+  {
+   "id": "KDI-004",
+   "dataset": "accessions",
+   "field": "department_code",
+   "first": "202410",
+   "last": "202503",
+   "level": "agency",
+   "entities": [
+    "HU"
+   ],
+   "min": null,
+   "max": null,
+   "treatment": "department_from_agency"
+  },
+  {
+   "id": "KDI-004",
+   "dataset": "separations",
+   "field": "department_code",
+   "first": "202410",
+   "last": "202503",
+   "level": "agency",
+   "entities": [
+    "HU"
+   ],
+   "min": null,
+   "max": null,
+   "treatment": "department_from_agency"
+  },
+  {
+   "id": "KDI-005",
+   "dataset": "employment",
+   "field": "department_code",
+   "first": "201502",
+   "last": "201504",
+   "level": "subelement",
+   "entities": [
+    "AF2D"
+   ],
+   "min": null,
+   "max": null,
+   "treatment": "department_from_agency"
+  },
+  {
+   "id": "KDI-006",
+   "dataset": "employment",
+   "field": "*",
+   "first": "202606",
+   "last": "202607",
+   "level": "department",
+   "entities": [
+    "DOD"
+   ],
+   "min": null,
+   "max": null,
+   "treatment": "flagged_incomplete"
+  },
+  {
+   "id": "KDI-007",
+   "dataset": "employment",
+   "field": "grade",
+   "first": "201110",
+   "last": "201409",
+   "level": "department",
+   "entities": [
+    "FR"
+   ],
+   "min": null,
+   "max": null,
+   "treatment": "unknown_with_coverage"
+  },
+  {
+   "id": "KDI-007",
+   "dataset": "employment",
+   "field": "grade",
+   "first": "201710",
+   "last": "999912",
+   "level": "department",
+   "entities": [
+    "DN"
+   ],
+   "min": null,
+   "max": null,
+   "treatment": "unknown_with_coverage"
+  },
+  {
+   "id": "KDI-007",
+   "dataset": "accessions",
+   "field": "grade",
+   "first": "201110",
+   "last": "201409",
+   "level": "department",
+   "entities": [
+    "FR"
+   ],
+   "min": null,
+   "max": null,
+   "treatment": "unknown_with_coverage"
+  },
+  {
+   "id": "KDI-007",
+   "dataset": "accessions",
+   "field": "grade",
+   "first": "201710",
+   "last": "999912",
+   "level": "department",
+   "entities": [
+    "DN"
+   ],
+   "min": null,
+   "max": null,
+   "treatment": "unknown_with_coverage"
+  },
+  {
+   "id": "KDI-007",
+   "dataset": "separations",
+   "field": "grade",
+   "first": "201110",
+   "last": "201409",
+   "level": "department",
+   "entities": [
+    "FR"
+   ],
+   "min": null,
+   "max": null,
+   "treatment": "unknown_with_coverage"
+  },
+  {
+   "id": "KDI-007",
+   "dataset": "separations",
+   "field": "grade",
+   "first": "201710",
+   "last": "999912",
+   "level": "department",
+   "entities": [
+    "DN"
+   ],
+   "min": null,
+   "max": null,
+   "treatment": "unknown_with_coverage"
+  },
+  {
+   "id": "KDI-008",
+   "dataset": "accessions",
+   "field": "department_code",
+   "first": "201608",
+   "last": "201608",
+   "level": "subelement",
+   "entities": [
+    "HB00"
+   ],
+   "min": null,
+   "max": null,
+   "treatment": "department_from_agency"
+  },
+  {
+   "id": "KDI-009",
+   "dataset": "accessions",
+   "field": "length_of_service_years",
+   "first": "201110",
+   "last": "999912",
+   "level": "all",
+   "entities": [],
+   "min": 100.1,
+   "max": null,
+   "treatment": "unknown"
+  },
+  {
+   "id": "KDI-009",
+   "dataset": "separations",
+   "field": "length_of_service_years",
+   "first": "201110",
+   "last": "999912",
+   "level": "all",
+   "entities": [],
+   "min": 100.1,
+   "max": null,
+   "treatment": "unknown"
+  },
+  {
+   "id": "KDI-010",
+   "dataset": "accessions",
+   "field": "length_of_service_years",
+   "first": "202603",
+   "last": "202603",
+   "level": "all",
+   "entities": [],
+   "min": null,
+   "max": -0.1,
+   "treatment": "unknown"
+  },
+  {
+   "id": "KDI-010",
+   "dataset": "accessions",
+   "field": "length_of_service_years",
+   "first": "202606",
+   "last": "202606",
+   "level": "all",
+   "entities": [],
+   "min": null,
+   "max": -0.1,
+   "treatment": "unknown"
+  },
+  {
+   "id": "KDI-010",
+   "dataset": "accessions",
+   "field": "length_of_service_years",
+   "first": "202608",
+   "last": "202608",
+   "level": "all",
+   "entities": [],
+   "min": null,
+   "max": -0.1,
+   "treatment": "unknown"
+  }
+ ]
+}

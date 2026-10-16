@@ -37,3 +37,11 @@ department level (spec section 9), so small units are never split into small cel
    government and department level).
 3. leaving and joining, then admin and appointments.
 Cubes are staged under `warehouse/cubes/`; promotion into `web/data/` waits for the verifier and a signed promotion.
+
+## Amendment 1 (signed 2026-10-15): matrix cube
+| Cube | Entities | Grains | Contents | One file per | Size |
+|---|---|---|---|---|---|
+| matrix | departments and the 4 Defense agencies (145) | months in office, each administration | per entity, administration and month: headcount at month 0, headcount change, departures, DRP departures, hire and attrition rate numerators, rate denominator, small-base, provisional and OPM-incomplete flags, known data issues | one file for all entities | 1.54 MB measured on a prototype (0.34 MB compressed) |
+Every value is copied from the admin cube of the same entity, administration and month, so the gate can check the
+two match exactly. Entities without a comparison for an administration (D-020) have no rows for it. The home page
+loads it with GOV admin (40 KB), inside the 3 MB first-load budget.
