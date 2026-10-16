@@ -224,7 +224,7 @@ only), "Annual pace" (C).
 | Item | Contents |
 |---|---|
 | Controls | records: Departures, Hires, Employees; for Departures and Hires a fiscal year (one file each, FY2012 to the latest, plus actions effective before October 2011), default the latest; for Employees a department (one file each, the latest month), chosen before anything loads |
-| Filters | department, agency, subelement, effective month, reason or hire type, occupation, grade, age, supervisory status, appointment type (grouped as on page 7); free-text search; "count by" any filter field; "clear filters" |
+| Filters | department, agency, subelement, effective month, reason or hire type, occupation, occupational family (OPM's published group, D-037), grade, age, supervisory status, appointment type (grouped as on page 7); free-text search; "count by" any filter field; "clear filters" |
 | Summary and table | matching record count and counts by the chosen field; one row per record in the order of the signed fields (metric spec section 10), values as published, REDACTED as written, known data issue values marked and linked to Reading the data; 50 rows per page, every column sorts |
 | Download | the filtered rows as CSV, OPM column names, values exactly as published |
 The browser reads one file at a time and never joins files (invariant: Look-Up allowlist).
@@ -497,6 +497,7 @@ fixed text measured on the Aug 2026 data (warehouse/profile/REPORT.md, opm-conte
 | p8.col.hireType | Hire type |
 | p8.col.drp | Deferred resignation |
 | p8.col.occupation | Occupation |
+| p8.col.family | Occupational family |
 | p8.col.payPlan | Pay plan |
 | p8.col.grade | Grade |
 | p8.col.age | Age |

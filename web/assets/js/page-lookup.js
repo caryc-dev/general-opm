@@ -4,7 +4,9 @@
   'use strict';
   var C = root.OPM.core, S = root.OPM.shell, LM = root.OPM.lookupModel, h = S.h;
   var PAGE_SIZE = 50;
-  var t, lmeta, ents, names, rules = [], state, ctl = {}, box = {}, data = null;
+  /* the seven appointment groups page 7 shows, labelled with its signed group labels (D-035) */
+  var APPT_GROUPS = ['career', 'career_conditional', 'excepted', 'temporary', 'ses', 'political', 'schedule_policy'];
+  var t, lmeta, ents, names, rules = [], appt = null, state, ctl = {}, box = {}, data = null;
 
   function datasetOf(rec) { return rec === 'separations' ? 'separations' : rec === 'accessions' ? 'accessions' : 'employment'; }
   function fyFiles(ds) {
@@ -65,7 +67,7 @@
       .then(function (rows) {
         if (fileName() !== name) return; // another file was chosen meanwhile
         var fields = lmeta.fields[ds];
-        data = { name: name, ds: ds, rows: rows, fields: fields, cols: LM.columns(fields) };
+        data = { name: name, ds: ds, rows: rows, fields: fields, cols: LM.columns(fields, { appointment: appt }) };
         data.filterCols = data.cols.filter(function (c) { return LM.FILTERS.indexOf(c.key) >= 0; });
         data.options = {};
         data.filterCols.forEach(function (c) { data.options[c.key] = LM.distinct(rows, c); });
@@ -158,8 +160,9 @@
 
   S.init('look-up').then(function (cp) {
     t = cp.t;
-    return Promise.all([S.getJson('data/lookup.meta.json'), S.getJson('data/admin.meta.json'), S.getJson('assets/lookup-kdi.json')]).then(function (ms) {
+    return Promise.all([S.getJson('data/lookup.meta.json'), S.getJson('data/admin.meta.json'), S.getJson('assets/lookup-kdi.json'), S.getJson('data/appointments.meta.json')]).then(function (ms) {
       lmeta = ms[0]; ents = ms[1].entities; rules = ms[2].rows;
+      appt = LM.appointmentGroups(ms[3].groups.list, function (id) { return APPT_GROUPS.indexOf(id) >= 0 ? t('p7.group.' + id) : null; });
       S.setDataMonth(ms[1].range.last_month);
       names = C.displayNames(ents, t('p1.control.entity.all'));
       var e = S.entityParam();

@@ -1,0 +1,2746 @@
+{
+ "cube": "compare",
+ "format": "one JSON file per parent, files[<key>].path: {\"cube\", \"parent\", \"columns\", \"rows\": [[values in column order]]}",
+ "manifest_sha256": "86d0cd47076a2a689d314094010e0fdab5794b4e2a5852ad3225eecd5cdd09d1",
+ "manifest_hash_method": "sha256 of data/opm_manifest.json canonical content: records sorted by (dataset, filename), json.dumps(sort_keys=True, separators=(\",\", \":\"))",
+ "spec": "docs/metric-spec.md (signed, D-014, D-015, D-018, D-034); docs/cube-plan.md (signed, D-016)",
+ "time_basis": "effective",
+ "range": {
+  "first_month": "2011-10",
+  "last_month": "2026-08"
+ },
+ "provisional_months": [
+  "2026-06",
+  "2026-07",
+  "2026-08"
+ ],
+ "reissued_months": [],
+ "revision_baseline": {
+  "file": "revision_baseline.json",
+  "manifest_sha256": "86d0cd47076a2a689d314094010e0fdab5794b4e2a5852ad3225eecd5cdd09d1",
+  "prior_manifest_sha256": null
+ },
+ "small_base_threshold": 30,
+ "known_breaks": {
+  "signed_file": "pipeline/known_breaks.csv",
+  "signed": [
+   {
+    "entity": "TR",
+    "fiscal_year": "2012",
+    "decision": "D-017",
+    "cause": "Earlier years: mostly small entities and Sep/Oct timing; for Treasury FY2012 and NCUA the cause is not in the data"
+   },
+   {
+    "entity": "GM",
+    "fiscal_year": "2015",
+    "decision": "D-017",
+    "cause": "Earlier years: mostly small entities and Sep/Oct timing; for Treasury FY2012 and NCUA the cause is not in the data"
+   },
+   {
+    "entity": "GM",
+    "fiscal_year": "2016",
+    "decision": "D-017",
+    "cause": "Earlier years: mostly small entities and Sep/Oct timing; for Treasury FY2012 and NCUA the cause is not in the data"
+   },
+   {
+    "entity": "AB",
+    "fiscal_year": "2018",
+    "decision": "D-017",
+    "cause": "Earlier years: mostly small entities and Sep/Oct timing; for Treasury FY2012 and NCUA the cause is not in the data"
+   },
+   {
+    "entity": "KS",
+    "fiscal_year": "2020",
+    "decision": "D-017",
+    "cause": "Earlier years: mostly small entities and Sep/Oct timing; for Treasury FY2012 and NCUA the cause is not in the data"
+   },
+   {
+    "entity": "SB",
+    "fiscal_year": "2020",
+    "decision": "D-017",
+    "cause": "Earlier years: mostly small entities and Sep/Oct timing; for Treasury FY2012 and NCUA the cause is not in the data"
+   },
+   {
+    "entity": "BH",
+    "fiscal_year": "2021",
+    "decision": "D-017",
+    "cause": "Earlier years: mostly small entities and Sep/Oct timing; for Treasury FY2012 and NCUA the cause is not in the data"
+   },
+   {
+    "entity": "IG",
+    "fiscal_year": "2021",
+    "decision": "D-017",
+    "cause": "Earlier years: mostly small entities and Sep/Oct timing; for Treasury FY2012 and NCUA the cause is not in the data"
+   },
+   {
+    "entity": "CU",
+    "fiscal_year": "2022",
+    "decision": "D-017",
+    "cause": "Earlier years: mostly small entities and Sep/Oct timing; for Treasury FY2012 and NCUA the cause is not in the data"
+   },
+   {
+    "entity": "ZL",
+    "fiscal_year": "2022",
+    "decision": "D-017",
+    "cause": "Earlier years: mostly small entities and Sep/Oct timing; for Treasury FY2012 and NCUA the cause is not in the data"
+   },
+   {
+    "entity": "CU",
+    "fiscal_year": "2023",
+    "decision": "D-017",
+    "cause": "Earlier years: mostly small entities and Sep/Oct timing; for Treasury FY2012 and NCUA the cause is not in the data"
+   },
+   {
+    "entity": "IG",
+    "fiscal_year": "2023",
+    "decision": "D-017",
+    "cause": "Earlier years: mostly small entities and Sep/Oct timing; for Treasury FY2012 and NCUA the cause is not in the data"
+   },
+   {
+    "entity": "IG",
+    "fiscal_year": "2024",
+    "decision": "D-017",
+    "cause": "Earlier years: mostly small entities and Sep/Oct timing; for Treasury FY2012 and NCUA the cause is not in the data"
+   },
+   {
+    "entity": "KS",
+    "fiscal_year": "2024",
+    "decision": "D-017",
+    "cause": "Earlier years: mostly small entities and Sep/Oct timing; for Treasury FY2012 and NCUA the cause is not in the data"
+   },
+   {
+    "entity": "AG",
+    "fiscal_year": "2025",
+    "decision": "D-017",
+    "cause": "Fiscal-year-end timing: departures effective Sep 2025, mostly DRP, stay on the September file and leave in October"
+   },
+   {
+    "entity": "AH",
+    "fiscal_year": "2025",
+    "decision": "D-017",
+    "cause": "Fiscal-year-end timing: departures effective Sep 2025, mostly DRP, stay on the September file and leave in October"
+   },
+   {
+    "entity": "AM",
+    "fiscal_year": "2025",
+    "decision": "D-017",
+    "cause": "Fiscal-year-end timing: departures effective Sep 2025, mostly DRP, stay on the September file and leave in October"
+   },
+   {
+    "entity": "BO",
+    "fiscal_year": "2025",
+    "decision": "D-017",
+    "cause": "Headcount fell without matching departures; cause not in the data"
+   },
+   {
+    "entity": "CT",
+    "fiscal_year": "2025",
+    "decision": "D-017",
+    "cause": "Fiscal-year-end timing: departures effective Sep 2025, mostly DRP, stay on the September file and leave in October"
+   },
+   {
+    "entity": "DL",
+    "fiscal_year": "2025",
+    "decision": "D-017",
+    "cause": "Fiscal-year-end timing: departures effective Sep 2025, mostly DRP, stay on the September file and leave in October"
+   },
+   {
+    "entity": "DN",
+    "fiscal_year": "2025",
+    "decision": "D-017",
+    "cause": "Fiscal-year-end timing: departures effective Sep 2025, mostly DRP, stay on the September file and leave in October"
+   },
+   {
+    "entity": "ED",
+    "fiscal_year": "2025",
+    "decision": "D-017",
+    "cause": "Fiscal-year-end timing: departures effective Sep 2025, mostly DRP, stay on the September file and leave in October"
+   },
+   {
+    "entity": "EE",
+    "fiscal_year": "2025",
+    "decision": "D-017",
+    "cause": "Fiscal-year-end timing: departures effective Sep 2025, mostly DRP, stay on the September file and leave in October"
+   },
+   {
+    "entity": "FC",
+    "fiscal_year": "2025",
+    "decision": "D-017",
+    "cause": "Fiscal-year-end timing: departures effective Sep 2025, mostly DRP, stay on the September file and leave in October"
+   },
+   {
+    "entity": "FD",
+    "fiscal_year": "2025",
+    "decision": "D-017",
+    "cause": "Fiscal-year-end timing: departures effective Sep 2025, mostly DRP, stay on the September file and leave in October"
+   },
+   {
+    "entity": "FL",
+    "fiscal_year": "2025",
+    "decision": "D-017",
+    "cause": "Fiscal-year-end timing: departures effective Sep 2025, mostly DRP, stay on the September file and leave in October"
+   },
+   {
+    "entity": "FM",
+    "fiscal_year": "2025",
+    "decision": "D-017",
+    "cause": "Fiscal-year-end timing: departures effective Sep 2025, mostly DRP, stay on the September file and leave in October"
+   },
+   {
+    "entity": "FR",
+    "fiscal_year": "2025",
+    "decision": "D-017",
+    "cause": "Fiscal-year-end timing: departures effective Sep 2025, mostly DRP, stay on the September file and leave in October"
+   },
+   {
+    "entity": "FT",
+    "fiscal_year": "2025",
+    "decision": "D-017",
+    "cause": "Fiscal-year-end timing: departures effective Sep 2025, mostly DRP, stay on the September file and leave in October"
+   },
+   {
+    "entity": "GB",
+    "fiscal_year": "2025",
+    "decision": "D-017",
+    "cause": "Fiscal-year-end timing: departures effective Sep 2025, mostly DRP, stay on the September file and leave in October"
+   },
+   {
+    "entity": "GS",
+    "fiscal_year": "2025",
+    "decision": "D-017",
+    "cause": "Fiscal-year-end timing: departures effective Sep 2025, mostly DRP, stay on the September file and leave in October"
+   },
+   {
+    "entity": "HF",
+    "fiscal_year": "2025",
+    "decision": "D-017",
+    "cause": "Fiscal-year-end timing: departures effective Sep 2025, mostly DRP, stay on the September file and leave in October"
+   },
+   {
+    "entity": "HU",
+    "fiscal_year": "2025",
+    "decision": "D-017",
+    "cause": "Fiscal-year-end timing: departures effective Sep 2025, mostly DRP, stay on the September file and leave in October"
+   },
+   {
+    "entity": "IB",
+    "fiscal_year": "2025",
+    "decision": "D-017",
+    "cause": "Fiscal-year-end timing: departures effective Sep 2025, mostly DRP, stay on the September file and leave in October"
+   },
+   {
+    "entity": "KS",
+    "fiscal_year": "2025",
+    "decision": "D-017",
+    "cause": "Fiscal-year-end timing: departures effective Sep 2025, mostly DRP, stay on the September file and leave in October"
+   },
+   {
+    "entity": "MI",
+    "fiscal_year": "2025",
+    "decision": "D-017",
+    "cause": "Fiscal-year-end timing: departures effective Sep 2025, mostly DRP, stay on the September file and leave in October"
+   },
+   {
+    "entity": "NF",
+    "fiscal_year": "2025",
+    "decision": "D-017",
+    "cause": "Fiscal-year-end timing: departures effective Sep 2025, mostly DRP, stay on the September file and leave in October"
+   },
+   {
+    "entity": "NQ",
+    "fiscal_year": "2025",
+    "decision": "D-017",
+    "cause": "Fiscal-year-end timing: departures effective Sep 2025, mostly DRP, stay on the September file and leave in October"
+   },
+   {
+    "entity": "OM",
+    "fiscal_year": "2025",
+    "decision": "D-017",
+    "cause": "Fiscal-year-end timing: departures effective Sep 2025, mostly DRP, stay on the September file and leave in October"
+   },
+   {
+    "entity": "PU",
+    "fiscal_year": "2025",
+    "decision": "D-017",
+    "cause": "Fiscal-year-end timing: departures effective Sep 2025, mostly DRP, stay on the September file and leave in October"
+   },
+   {
+    "entity": "SB",
+    "fiscal_year": "2025",
+    "decision": "D-017",
+    "cause": "Fiscal-year-end timing: departures effective Sep 2025, mostly DRP, stay on the September file and leave in October"
+   },
+   {
+    "entity": "ST",
+    "fiscal_year": "2025",
+    "decision": "D-017",
+    "cause": "Fiscal-year-end timing: departures effective Sep 2025, mostly DRP, stay on the September file and leave in October"
+   },
+   {
+    "entity": "TD",
+    "fiscal_year": "2025",
+    "decision": "D-017",
+    "cause": "Fiscal-year-end timing: departures effective Sep 2025, mostly DRP, stay on the September file and leave in October"
+   },
+   {
+    "entity": "TR",
+    "fiscal_year": "2025",
+    "decision": "D-017",
+    "cause": "Fiscal-year-end timing: departures effective Sep 2025, mostly DRP, stay on the September file and leave in October"
+   },
+   {
+    "entity": "GOV",
+    "fiscal_year": "2026",
+    "decision": "D-017",
+    "cause": "Fiscal-year-end timing: departures effective Sep 2025, mostly DRP, stay on the September file and leave in October"
+   },
+   {
+    "entity": "AG",
+    "fiscal_year": "2026",
+    "decision": "D-017",
+    "cause": "Fiscal-year-end timing: departures effective Sep 2025, mostly DRP, stay on the September file and leave in October"
+   },
+   {
+    "entity": "AH",
+    "fiscal_year": "2026",
+    "decision": "D-017",
+    "cause": "Fiscal-year-end timing: departures effective Sep 2025, mostly DRP, stay on the September file and leave in October"
+   },
+   {
+    "entity": "AM",
+    "fiscal_year": "2026",
+    "decision": "D-017",
+    "cause": "Fiscal-year-end timing: departures effective Sep 2025, mostly DRP, stay on the September file and leave in October"
+   },
+   {
+    "entity": "CT",
+    "fiscal_year": "2026",
+    "decision": "D-017",
+    "cause": "Fiscal-year-end timing: departures effective Sep 2025, mostly DRP, stay on the September file and leave in October"
+   },
+   {
+    "entity": "DL",
+    "fiscal_year": "2026",
+    "decision": "D-017",
+    "cause": "Fiscal-year-end timing: departures effective Sep 2025, mostly DRP, stay on the September file and leave in October"
+   },
+   {
+    "entity": "DN",
+    "fiscal_year": "2026",
+    "decision": "D-017",
+    "cause": "Headcount fell without matching departures; cause not in the data"
+   },
+   {
+    "entity": "ED",
+    "fiscal_year": "2026",
+    "decision": "D-017",
+    "cause": "Fiscal-year-end timing: departures effective Sep 2025, mostly DRP, stay on the September file and leave in October"
+   },
+   {
+    "entity": "EE",
+    "fiscal_year": "2026",
+    "decision": "D-017",
+    "cause": "Fiscal-year-end timing: departures effective Sep 2025, mostly DRP, stay on the September file and leave in October"
+   },
+   {
+    "entity": "EP",
+    "fiscal_year": "2026",
+    "decision": "D-017",
+    "cause": "Fiscal-year-end timing: departures effective Sep 2025, mostly DRP, stay on the September file and leave in October"
+   },
+   {
+    "entity": "FC",
+    "fiscal_year": "2026",
+    "decision": "D-017",
+    "cause": "Fiscal-year-end timing: departures effective Sep 2025, mostly DRP, stay on the September file and leave in October"
+   },
+   {
+    "entity": "FL",
+    "fiscal_year": "2026",
+    "decision": "D-017",
+    "cause": "Fiscal-year-end timing: departures effective Sep 2025, mostly DRP, stay on the September file and leave in October"
+   },
+   {
+    "entity": "FM",
+    "fiscal_year": "2026",
+    "decision": "D-017",
+    "cause": "Fiscal-year-end timing: departures effective Sep 2025, mostly DRP, stay on the September file and leave in October"
+   },
+   {
+    "entity": "FR",
+    "fiscal_year": "2026",
+    "decision": "D-017",
+    "cause": "Fiscal-year-end timing: departures effective Sep 2025, mostly DRP, stay on the September file and leave in October"
+   },
+   {
+    "entity": "FT",
+    "fiscal_year": "2026",
+    "decision": "D-017",
+    "cause": "Fiscal-year-end timing: departures effective Sep 2025, mostly DRP, stay on the September file and leave in October"
+   },
+   {
+    "entity": "GB",
+    "fiscal_year": "2026",
+    "decision": "D-017",
+    "cause": "Fiscal-year-end timing: departures effective Sep 2025, mostly DRP, stay on the September file and leave in October"
+   },
+   {
+    "entity": "GS",
+    "fiscal_year": "2026",
+    "decision": "D-017",
+    "cause": "Fiscal-year-end timing: departures effective Sep 2025, mostly DRP, stay on the September file and leave in October"
+   },
+   {
+    "entity": "HF",
+    "fiscal_year": "2026",
+    "decision": "D-017",
+    "cause": "Fiscal-year-end timing: departures effective Sep 2025, mostly DRP, stay on the September file and leave in October"
+   },
+   {
+    "entity": "HU",
+    "fiscal_year": "2026",
+    "decision": "D-017",
+    "cause": "Fiscal-year-end timing: departures effective Sep 2025, mostly DRP, stay on the September file and leave in October"
+   },
+   {
+    "entity": "IB",
+    "fiscal_year": "2026",
+    "decision": "D-017",
+    "cause": "Fiscal-year-end timing: departures effective Sep 2025, mostly DRP, stay on the September file and leave in October"
+   },
+   {
+    "entity": "IN",
+    "fiscal_year": "2026",
+    "decision": "D-017",
+    "cause": "Fiscal-year-end timing: departures effective Sep 2025, mostly DRP, stay on the September file and leave in October"
+   },
+   {
+    "entity": "KS",
+    "fiscal_year": "2026",
+    "decision": "D-017",
+    "cause": "Fiscal-year-end timing: departures effective Sep 2025, mostly DRP, stay on the September file and leave in October"
+   },
+   {
+    "entity": "MI",
+    "fiscal_year": "2026",
+    "decision": "D-017",
+    "cause": "Fiscal-year-end timing: departures effective Sep 2025, mostly DRP, stay on the September file and leave in October"
+   },
+   {
+    "entity": "NF",
+    "fiscal_year": "2026",
+    "decision": "D-017",
+    "cause": "Fiscal-year-end timing: departures effective Sep 2025, mostly DRP, stay on the September file and leave in October"
+   },
+   {
+    "entity": "NL",
+    "fiscal_year": "2026",
+    "decision": "D-017",
+    "cause": "Fiscal-year-end timing: departures effective Sep 2025, mostly DRP, stay on the September file and leave in October"
+   },
+   {
+    "entity": "NN",
+    "fiscal_year": "2026",
+    "decision": "D-017",
+    "cause": "Headcount fell without matching departures; cause not in the data"
+   },
+   {
+    "entity": "NQ",
+    "fiscal_year": "2026",
+    "decision": "D-017",
+    "cause": "Fiscal-year-end timing: departures effective Sep 2025, mostly DRP, stay on the September file and leave in October"
+   },
+   {
+    "entity": "OM",
+    "fiscal_year": "2026",
+    "decision": "D-017",
+    "cause": "Fiscal-year-end timing: departures effective Sep 2025, mostly DRP, stay on the September file and leave in October"
+   },
+   {
+    "entity": "PU",
+    "fiscal_year": "2026",
+    "decision": "D-017",
+    "cause": "Fiscal-year-end timing: departures effective Sep 2025, mostly DRP, stay on the September file and leave in October"
+   },
+   {
+    "entity": "SB",
+    "fiscal_year": "2026",
+    "decision": "D-017",
+    "cause": "Fiscal-year-end timing: departures effective Sep 2025, mostly DRP, stay on the September file and leave in October"
+   },
+   {
+    "entity": "SK",
+    "fiscal_year": "2026",
+    "decision": "D-017",
+    "cause": "Fiscal-year-end timing: departures effective Sep 2025, mostly DRP, stay on the September file and leave in October"
+   },
+   {
+    "entity": "ST",
+    "fiscal_year": "2026",
+    "decision": "D-017",
+    "cause": "Fiscal-year-end timing: departures effective Sep 2025, mostly DRP, stay on the September file and leave in October"
+   },
+   {
+    "entity": "TD",
+    "fiscal_year": "2026",
+    "decision": "D-017",
+    "cause": "Fiscal-year-end timing: departures effective Sep 2025, mostly DRP, stay on the September file and leave in October"
+   },
+   {
+    "entity": "TR",
+    "fiscal_year": "2026",
+    "decision": "D-017",
+    "cause": "Fiscal-year-end timing: departures effective Sep 2025, mostly DRP, stay on the September file and leave in October"
+   }
+  ],
+  "rule": "|gap| > 5% of average month-end headcount and > 20 people (D-009), government and department fiscal years",
+  "candidates_file": "known_breaks_candidates.csv",
+  "candidates": 78
+ },
+ "known_data_issues": {
+  "file": "pipeline/known_data_issues.csv",
+  "sha256": "aa0056a088bd7a6914969b3e9bd3be8af77ee9cb3ee87efb043c11de15d157e0",
+  "applied": [
+   {
+    "id": "KDI-001",
+    "treatment": "unknown",
+    "decision": "D-014"
+   },
+   {
+    "id": "KDI-002",
+    "treatment": "unusable",
+    "decision": "D-014"
+   },
+   {
+    "id": "KDI-003",
+    "treatment": "counted_flagged",
+    "decision": "D-011"
+   },
+   {
+    "id": "KDI-004",
+    "treatment": "department_from_agency",
+    "decision": "D-014"
+   },
+   {
+    "id": "KDI-005",
+    "treatment": "department_from_agency",
+    "decision": "D-014"
+   },
+   {
+    "id": "KDI-006",
+    "treatment": "flagged_incomplete",
+    "decision": "D-014"
+   },
+   {
+    "id": "KDI-007",
+    "treatment": "unknown_with_coverage",
+    "decision": "D-014"
+   },
+   {
+    "id": "KDI-008",
+    "treatment": "department_from_agency",
+    "decision": "D-015"
+   },
+   {
+    "id": "KDI-009",
+    "treatment": "unknown",
+    "decision": "D-018"
+   },
+   {
+    "id": "KDI-010",
+    "treatment": "unknown",
+    "decision": "D-021"
+   }
+  ]
+ },
+ "grains": [
+  "fy",
+  "t12"
+ ],
+ "t12_window": {
+  "last_month": "2026-08",
+  "first_month": "2025-09",
+  "note": "the trailing 12 months ending at the latest month, for each child with at least one month inside the window (D-034), so children sum exactly to their parent; partial, over its own months, for a child whose rows begin inside the window; a child that ended inside the window keeps its in-window flows and counts headcount 0 for the months after its last month (rates on a zero mean stay empty)"
+ },
+ "parents": {
+  "GOV": {
+   "children": 141
+  },
+  "AA": {
+   "children": 1
+  },
+  "AB": {
+   "children": 2
+  },
+  "AG": {
+   "children": 33
+  },
+  "AH": {
+   "children": 3
+  },
+  "AM": {
+   "children": 2
+  },
+  "AN": {
+   "children": 1
+  },
+  "AP": {
+   "children": 1
+  },
+  "AU": {
+   "children": 1
+  },
+  "AW": {
+   "children": 1
+  },
+  "BD": {
+   "children": 1
+  },
+  "BF": {
+   "children": 1
+  },
+  "BG": {
+   "children": 1
+  },
+  "BH": {
+   "children": 1
+  },
+  "BK": {
+   "children": 1
+  },
+  "BO": {
+   "children": 1
+  },
+  "BT": {
+   "children": 1
+  },
+  "BW": {
+   "children": 1
+  },
+  "BZ": {
+   "children": 1
+  },
+  "CC": {
+   "children": 1
+  },
+  "CE": {
+   "children": 1
+  },
+  "CF": {
+   "children": 1
+  },
+  "CM": {
+   "children": 14
+  },
+  "CT": {
+   "children": 1
+  },
+  "CU": {
+   "children": 1
+  },
+  "CX": {
+   "children": 1
+  },
+  "DA": {
+   "children": 1
+  },
+  "DB": {
+   "children": 1
+  },
+  "DF": {
+   "children": 1
+  },
+  "DG": {
+   "children": 1
+  },
+  "DJ": {
+   "children": 12
+  },
+  "DL": {
+   "children": 22
+  },
+  "DN": {
+   "children": 2
+  },
+  "DO": {
+   "children": 1
+  },
+  "DOD": {
+   "children": 223
+  },
+  "DQ": {
+   "children": 1
+  },
+  "EB": {
+   "children": 1
+  },
+  "EC": {
+   "children": 1
+  },
+  "ED": {
+   "children": 25
+  },
+  "EE": {
+   "children": 1
+  },
+  "EO": {
+   "children": 1
+  },
+  "EP": {
+   "children": 1
+  },
+  "EQ": {
+   "children": 1
+  },
+  "EW": {
+   "children": 1
+  },
+  "FC": {
+   "children": 1
+  },
+  "FD": {
+   "children": 1
+  },
+  "FI": {
+   "children": 1
+  },
+  "FJ": {
+   "children": 1
+  },
+  "FK": {
+   "children": 1
+  },
+  "FL": {
+   "children": 1
+  },
+  "FM": {
+   "children": 1
+  },
+  "FQ": {
+   "children": 2
+  },
+  "FR": {
+   "children": 1
+  },
+  "FT": {
+   "children": 1
+  },
+  "FW": {
+   "children": 1
+  },
+  "GB": {
+   "children": 2
+  },
+  "GC": {
+   "children": 1
+  },
+  "GE": {
+   "children": 1
+  },
+  "GG": {
+   "children": 1
+  },
+  "GJ": {
+   "children": 1
+  },
+  "GM": {
+   "children": 1
+  },
+  "GO": {
+   "children": 1
+  },
+  "GQ": {
+   "children": 1
+  },
+  "GS": {
+   "children": 22
+  },
+  "GU": {
+   "children": 1
+  },
+  "GW": {
+   "children": 1
+  },
+  "GX": {
+   "children": 1
+  },
+  "GY": {
+   "children": 1
+  },
+  "GZ": {
+   "children": 1
+  },
+  "HB": {
+   "children": 4
+  },
+  "HD": {
+   "children": 1
+  },
+  "HE": {
+   "children": 18
+  },
+  "HF": {
+   "children": 4
+  },
+  "HP": {
+   "children": 1
+  },
+  "HS": {
+   "children": 13
+  },
+  "HT": {
+   "children": 1
+  },
+  "HU": {
+   "children": 35
+  },
+  "HW": {
+   "children": 1
+  },
+  "IB": {
+   "children": 1
+  },
+  "IF": {
+   "children": 1
+  },
+  "IG": {
+   "children": 1
+  },
+  "IN": {
+   "children": 16
+  },
+  "IP": {
+   "children": 1
+  },
+  "JL": {
+   "children": 1
+  },
+  "KS": {
+   "children": 1
+  },
+  "KY": {
+   "children": 1
+  },
+  "LF": {
+   "children": 1
+  },
+  "LP": {
+   "children": 1
+  },
+  "LT": {
+   "children": 1
+  },
+  "MA": {
+   "children": 1
+  },
+  "MC": {
+   "children": 1
+  },
+  "MI": {
+   "children": 1
+  },
+  "NF": {
+   "children": 1
+  },
+  "NK": {
+   "children": 1
+  },
+  "NL": {
+   "children": 1
+  },
+  "NM": {
+   "children": 1
+  },
+  "NN": {
+   "children": 10
+  },
+  "NP": {
+   "children": 1
+  },
+  "NQ": {
+   "children": 1
+  },
+  "NS": {
+   "children": 1
+  },
+  "NU": {
+   "children": 1
+  },
+  "OM": {
+   "children": 1
+  },
+  "OP": {
+   "children": 1
+  },
+  "OS": {
+   "children": 1
+  },
+  "OY": {
+   "children": 1
+  },
+  "PU": {
+   "children": 1
+  },
+  "QQ": {
+   "children": 1
+  },
+  "RE": {
+   "children": 1
+  },
+  "RF": {
+   "children": 1
+  },
+  "RH": {
+   "children": 1
+  },
+  "RJ": {
+   "children": 1
+  },
+  "RO": {
+   "children": 1
+  },
+  "RR": {
+   "children": 1
+  },
+  "RS": {
+   "children": 1
+  },
+  "RZ": {
+   "children": 1
+  },
+  "SB": {
+   "children": 1
+  },
+  "SE": {
+   "children": 1
+  },
+  "SK": {
+   "children": 1
+  },
+  "SM": {
+   "children": 5
+  },
+  "SS": {
+   "children": 1
+  },
+  "ST": {
+   "children": 1
+  },
+  "SZ": {
+   "children": 1
+  },
+  "TB": {
+   "children": 1
+  },
+  "TC": {
+   "children": 1
+  },
+  "TD": {
+   "children": 13
+  },
+  "TN": {
+   "children": 1
+  },
+  "TR": {
+   "children": 14
+  },
+  "TS": {
+   "children": 1
+  },
+  "TW": {
+   "children": 1
+  },
+  "UJ": {
+   "children": 1
+  },
+  "UT": {
+   "children": 1
+  },
+  "VA": {
+   "children": 43
+  },
+  "VB": {
+   "children": 1
+  },
+  "VD": {
+   "children": 1
+  },
+  "WK": {
+   "children": 1
+  },
+  "WU": {
+   "children": 1
+  },
+  "WX": {
+   "children": 1
+  },
+  "YG": {
+   "children": 1
+  },
+  "ZL": {
+   "children": 2
+  },
+  "ZP": {
+   "children": 1
+  },
+  "ZS": {
+   "children": 1
+  },
+  "ZU": {
+   "children": 1
+  }
+ },
+ "kdi_in_scope": {
+  "KDI-001": {
+   "rows": 444,
+   "entities": [
+    "AF03",
+    "AF06",
+    "AF07",
+    "AF09",
+    "AF0B",
+    "AF0D",
+    "AF0J",
+    "AF0M",
+    "AF0R",
+    "AF0V",
+    "AF12",
+    "AF13",
+    "AF16",
+    "AF1B",
+    "AF1C",
+    "AF1L",
+    "AF1M",
+    "AF1Q",
+    "AF1Y",
+    "AF2E",
+    "AF2I",
+    "AF2L",
+    "AF2S",
+    "AF2Z",
+    "AF38",
+    "AF3C",
+    "AF3D",
+    "AF3Q",
+    "AF3T",
+    "AF3V",
+    "AF40",
+    "AF4D",
+    "AF4F",
+    "AF4G",
+    "AF4S",
+    "AF4V",
+    "AF4W",
+    "AF5D",
+    "AF6D",
+    "AF6F",
+    "AF6S",
+    "AF6T",
+    "AFGS",
+    "AFNG",
+    "AFSN",
+    "AG",
+    "AG02",
+    "AG03",
+    "AG07",
+    "AG10",
+    "AG11",
+    "AG16",
+    "AG22",
+    "AG30",
+    "AG34",
+    "AG90",
+    "AG99",
+    "AGHL",
+    "AGIT",
+    "AH",
+    "AH01",
+    "AR2A",
+    "AR3A",
+    "AR5A",
+    "ARAE",
+    "ARAF",
+    "ARAN",
+    "ARAP",
+    "ARAS",
+    "ARAT",
+    "ARCB",
+    "ARCE",
+    "ARCH",
+    "ARCP",
+    "ARCS",
+    "ARE1",
+    "ARE2",
+    "ARE5",
+    "AREN",
+    "ARFC",
+    "ARGB",
+    "ARHC",
+    "ARHR",
+    "ARJ1",
+    "ARJA",
+    "ARMA",
+    "ARMC",
+    "ARMW",
+    "ARNG",
+    "ARP1",
+    "ARSA",
+    "ARSB",
+    "ARSC",
+    "ARSE",
+    "ARSO",
+    "ARSP",
+    "ARTA",
+    "ARTC",
+    "ARTW",
+    "ARX2",
+    "ARX6",
+    "ARX7",
+    "ARX8",
+    "ARX9",
+    "ARXA",
+    "ARXB",
+    "ARXC",
+    "ARXD",
+    "ARXF",
+    "ARXP",
+    "ARXQ",
+    "ARXT",
+    "CM",
+    "CM51",
+    "CM54",
+    "CM56",
+    "CM61",
+    "CM63",
+    "CM67",
+    "CU",
+    "CU00",
+    "DD01",
+    "DD02",
+    "DD04",
+    "DD06",
+    "DD07",
+    "DD10",
+    "DD12",
+    "DD13",
+    "DD15",
+    "DD16",
+    "DD21",
+    "DD25",
+    "DD26",
+    "DD27",
+    "DD29",
+    "DD34",
+    "DD35",
+    "DD48",
+    "DD53",
+    "DD60",
+    "DD61",
+    "DD63",
+    "DD65",
+    "DD69",
+    "DD71",
+    "DD74",
+    "DD80",
+    "DD81",
+    "DD82",
+    "DD83",
+    "DJ",
+    "DJ01",
+    "DJ02",
+    "DJ03",
+    "DJ06",
+    "DJ08",
+    "DJ09",
+    "DJ12",
+    "DJ15",
+    "DL",
+    "DLAM",
+    "DLET",
+    "DLIG",
+    "DLOW",
+    "DLPW",
+    "DLSH",
+    "DLVE",
+    "DLWH",
+    "DN",
+    "DN00",
+    "DOD",
+    "DOD-AF",
+    "DOD-AR",
+    "DOD-DD",
+    "DOD-NV",
+    "ED",
+    "EDEC",
+    "FC",
+    "FC00",
+    "FD",
+    "FD00",
+    "FQ",
+    "FQ01",
+    "FR",
+    "FRFT",
+    "GS",
+    "GS03",
+    "GS11",
+    "GS30",
+    "HE",
+    "HE10",
+    "HE11",
+    "HE34",
+    "HE36",
+    "HE37",
+    "HE38",
+    "HE39",
+    "HE50",
+    "HE60",
+    "HE70",
+    "HE90",
+    "HS",
+    "HSAA",
+    "HSAB",
+    "HSAC",
+    "HSAD",
+    "HSBB",
+    "HSBC",
+    "HSBD",
+    "HSBE",
+    "HSCA",
+    "HSCB",
+    "HSDA",
+    "HU",
+    "HUBB",
+    "HUCC",
+    "HUGG",
+    "HUKK",
+    "HU_NR",
+    "IN",
+    "IN10",
+    "NS",
+    "NS00",
+    "NU",
+    "NU00",
+    "NV11",
+    "NV12",
+    "NV14",
+    "NV15",
+    "NV18",
+    "NV19",
+    "NV22",
+    "NV23",
+    "NV24",
+    "NV25",
+    "NV27",
+    "NV30",
+    "NV39",
+    "NV41",
+    "NV52",
+    "NV60",
+    "NV70",
+    "NV72",
+    "NV74",
+    "NV76",
+    "OM",
+    "OM00",
+    "RH",
+    "RH00",
+    "SB",
+    "SB00",
+    "SE",
+    "SE00",
+    "SM",
+    "SM01",
+    "SM03",
+    "ST",
+    "ST00",
+    "TD",
+    "TD03",
+    "TD13",
+    "TR",
+    "TR91",
+    "TR93",
+    "TRAD",
+    "TRAI",
+    "TRFD",
+    "TRTG",
+    "VA",
+    "VAAA",
+    "VAAE",
+    "VAAF",
+    "VAAJ",
+    "VABE",
+    "VADD",
+    "VADG",
+    "VAEB",
+    "VAGB",
+    "VAGC",
+    "VAHA",
+    "VAHG",
+    "VAJA",
+    "VAJB",
+    "VAJC",
+    "VALA",
+    "VAPA",
+    "VATA"
+   ]
+  },
+  "KDI-003": {
+   "rows": 16,
+   "entities": [
+    "ARXF",
+    "DD01",
+    "DD06",
+    "DD15",
+    "DD34",
+    "DOD",
+    "DOD-AR",
+    "DOD-DD"
+   ]
+  },
+  "KDI-004": {
+   "rows": 2,
+   "entities": [
+    "HU",
+    "HU_NR"
+   ]
+  },
+  "KDI-005": {
+   "rows": 3,
+   "entities": [
+    "AF2D",
+    "DOD",
+    "DOD-AF"
+   ]
+  },
+  "KDI-006": {
+   "rows": 356,
+   "entities": [
+    "AF02",
+    "AF03",
+    "AF06",
+    "AF07",
+    "AF09",
+    "AF0B",
+    "AF0D",
+    "AF0J",
+    "AF0M",
+    "AF0R",
+    "AF0U",
+    "AF0V",
+    "AF12",
+    "AF13",
+    "AF16",
+    "AF1B",
+    "AF1C",
+    "AF1L",
+    "AF1M",
+    "AF1Q",
+    "AF1S",
+    "AF1Y",
+    "AF20",
+    "AF2A",
+    "AF2E",
+    "AF2F",
+    "AF2H",
+    "AF2I",
+    "AF2K",
+    "AF2L",
+    "AF2M",
+    "AF2R",
+    "AF2S",
+    "AF2T",
+    "AF2Z",
+    "AF38",
+    "AF3C",
+    "AF3D",
+    "AF3Q",
+    "AF3T",
+    "AF3V",
+    "AF40",
+    "AF4D",
+    "AF4F",
+    "AF4G",
+    "AF4S",
+    "AF4V",
+    "AF4W",
+    "AF5D",
+    "AF6D",
+    "AF6E",
+    "AF6F",
+    "AF6K",
+    "AF6N",
+    "AF6S",
+    "AF6T",
+    "AFGS",
+    "AFNG",
+    "AFSN",
+    "AFZG",
+    "AR2A",
+    "AR3A",
+    "AR5A",
+    "ARAE",
+    "ARAF",
+    "ARAN",
+    "ARAP",
+    "ARAS",
+    "ARAT",
+    "ARBA",
+    "ARCB",
+    "ARCC",
+    "ARCE",
+    "ARCH",
+    "ARCS",
+    "ARE1",
+    "ARE2",
+    "ARE3",
+    "ARE5",
+    "AREN",
+    "ARFC",
+    "ARGB",
+    "ARHC",
+    "ARHR",
+    "ARJ1",
+    "ARJA",
+    "ARJC",
+    "ARMA",
+    "ARMC",
+    "ARMW",
+    "ARNG",
+    "ARP1",
+    "ARPS",
+    "ARSA",
+    "ARSB",
+    "ARSC",
+    "ARSE",
+    "ARSJ",
+    "ARSO",
+    "ARSP",
+    "ART2",
+    "ARTA",
+    "ARTC",
+    "ARTW",
+    "ARW1",
+    "ARX2",
+    "ARX6",
+    "ARX7",
+    "ARX8",
+    "ARX9",
+    "ARXA",
+    "ARXB",
+    "ARXC",
+    "ARXD",
+    "ARXF",
+    "ARXG",
+    "ARXK",
+    "ARXP",
+    "ARXQ",
+    "ARXT",
+    "ARXX",
+    "DD01",
+    "DD02",
+    "DD04",
+    "DD06",
+    "DD07",
+    "DD08",
+    "DD10",
+    "DD12",
+    "DD13",
+    "DD15",
+    "DD16",
+    "DD21",
+    "DD25",
+    "DD26",
+    "DD27",
+    "DD29",
+    "DD34",
+    "DD35",
+    "DD48",
+    "DD53",
+    "DD60",
+    "DD61",
+    "DD63",
+    "DD65",
+    "DD68",
+    "DD69",
+    "DD71",
+    "DD74",
+    "DD80",
+    "DD81",
+    "DD82",
+    "DD83",
+    "DOD",
+    "DOD-AF",
+    "DOD-AR",
+    "DOD-DD",
+    "DOD-NV",
+    "NV11",
+    "NV12",
+    "NV14",
+    "NV15",
+    "NV18",
+    "NV19",
+    "NV22",
+    "NV23",
+    "NV24",
+    "NV25",
+    "NV27",
+    "NV30",
+    "NV39",
+    "NV41",
+    "NV52",
+    "NV60",
+    "NV70",
+    "NV72",
+    "NV74",
+    "NV76"
+   ]
+  },
+  "KDI-008": {
+   "rows": 2,
+   "entities": [
+    "HB",
+    "HB00"
+   ]
+  },
+  "KDI-009": {
+   "rows": 5,
+   "entities": [
+    "AF1C",
+    "DOD",
+    "DOD-AF",
+    "TD",
+    "TD04"
+   ]
+  }
+ },
+ "columns": [
+  {
+   "name": "parent",
+   "kind": "dimension",
+   "description": "parent entity key of every row in the file"
+  },
+  {
+   "name": "child_level",
+   "kind": "dimension",
+   "description": "'department', 'agency' (DOD only) or 'subelement'"
+  },
+  {
+   "name": "child",
+   "kind": "dimension",
+   "description": "child entity key (same keys as the core cube)"
+  },
+  {
+   "name": "grain",
+   "kind": "dimension",
+   "description": "'fy' (fiscal year) or 't12' (the trailing 12 months ending at period_last_month)"
+  },
+  {
+   "name": "period",
+   "kind": "dimension",
+   "description": "'FYyyyy', or for t12 the last month 'YYYY-MM'"
+  },
+  {
+   "name": "fiscal_year",
+   "kind": "dimension",
+   "description": "fiscal year of the period; null for t12"
+  },
+  {
+   "name": "period_first_month",
+   "kind": "dimension",
+   "description": "first calendar month of the period (YYYY-MM), published or not"
+  },
+  {
+   "name": "period_last_month",
+   "kind": "dimension",
+   "description": "last published month of the period up to the entity's last month: the month stocks are taken from"
+  },
+  {
+   "name": "months_in_period",
+   "kind": "dimension",
+   "description": "calendar months in the period: 1, 3 or 12"
+  },
+  {
+   "name": "months_published",
+   "kind": "dimension",
+   "description": "months of the period with a published employment file, from the entity's first month to its last"
+  },
+  {
+   "name": "time_basis",
+   "kind": "dimension",
+   "description": "'effective': flows counted by personnel_action_effective_date_yyyymm (invariant 6)"
+  },
+  {
+   "name": "provisional",
+   "kind": "flag",
+   "description": "the period contains any of the newest 3 months (invariant 8)"
+  },
+  {
+   "name": "partial",
+   "kind": "flag",
+   "description": "the period has months not yet published, or months before the entity's first month or after its last"
+  },
+  {
+   "name": "reissued",
+   "kind": "flag",
+   "description": "a month of the period changed file version since the previous manifest (revision_baseline.json); false on the first build, which is the baseline"
+  },
+  {
+   "name": "opm_incomplete",
+   "kind": "flag",
+   "description": "a month of the period is one OPM marks incomplete for this entity (KDI-006: DOD entities and the government, Jun and Jul 2026)"
+  },
+  {
+   "name": "kdi_ids",
+   "kind": "flag",
+   "description": "known data issue ids (pipeline/known_data_issues.csv) touching a month of the period: entity-month flags of the entity and the entities inside it, and KDI-001 when a departure of the period has a length of service treated as unknown (KDI-001, KDI-009)"
+  },
+  {
+   "name": "headcount",
+   "kind": "stock",
+   "description": "rows in the employment file of period_last_month, as published; 0 when the entity has none that month"
+  },
+  {
+   "name": "hires",
+   "kind": "flow",
+   "description": "accession rows effective in the period (new hires and transfers in)"
+  },
+  {
+   "name": "departures",
+   "kind": "flow",
+   "description": "separation rows effective in the period (every code; transfers out and DRP included)"
+  },
+  {
+   "name": "acc_transfer_in",
+   "kind": "flow",
+   "description": "hires with accession code AA + AB; the two categories partition hires"
+  },
+  {
+   "name": "acc_new_hire",
+   "kind": "flow",
+   "description": "hires with accession code AC + AD + AE; the two categories partition hires"
+  },
+  {
+   "name": "sep_transfer_out",
+   "kind": "flow",
+   "description": "departures with separation code SA + SB; the six categories partition departures"
+  },
+  {
+   "name": "sep_drp",
+   "kind": "flow",
+   "description": "departures with drp_indicator = 'Y', any code: an overlay on the six categories, and with the six _nondrp columns the seventh reason"
+  },
+  {
+   "name": "sep_transfer_out_nondrp",
+   "kind": "flow",
+   "description": "departures with separation code SA + SB and drp_indicator not 'Y'; sep_drp plus the six _nondrp columns partition departures (the seven reasons)"
+  },
+  {
+   "name": "sep_quit_nondrp",
+   "kind": "flow",
+   "description": "departures with separation code SC and drp_indicator not 'Y'; sep_drp plus the six _nondrp columns partition departures (the seven reasons)"
+  },
+  {
+   "name": "sep_retirement_nondrp",
+   "kind": "flow",
+   "description": "departures with separation code SD + SE + SG and drp_indicator not 'Y'; sep_drp plus the six _nondrp columns partition departures (the seven reasons)"
+  },
+  {
+   "name": "sep_rif_nondrp",
+   "kind": "flow",
+   "description": "departures with separation code SH and drp_indicator not 'Y'; sep_drp plus the six _nondrp columns partition departures (the seven reasons)"
+  },
+  {
+   "name": "sep_termination_nondrp",
+   "kind": "flow",
+   "description": "departures with separation code SJ and drp_indicator not 'Y'; sep_drp plus the six _nondrp columns partition departures (the seven reasons)"
+  },
+  {
+   "name": "sep_other_nondrp",
+   "kind": "flow",
+   "description": "departures with separation code SL and drp_indicator not 'Y'; sep_drp plus the six _nondrp columns partition departures (the seven reasons)"
+  },
+  {
+   "name": "attrition_a_num",
+   "kind": "rate_numerator",
+   "description": "attrition rate numerator, method A, trailing 12 months ending in period_last_month (null before the 12th month, Sep 2012, and before the entity's 12th month): departures; rate = attrition_a_num / rate_a_den"
+  },
+  {
+   "name": "hire_a_num",
+   "kind": "rate_numerator",
+   "description": "hire rate numerator, method A, trailing 12 months ending in period_last_month (null before the 12th month, Sep 2012, and before the entity's 12th month): hires; rate = hire_a_num / rate_a_den"
+  },
+  {
+   "name": "rate_a_den",
+   "kind": "rate_denominator",
+   "description": "shared denominator of the attrition and hire rates, method A, trailing 12 months ending in period_last_month (null before the 12th month, Sep 2012, and before the entity's 12th month): mean of the month-end headcounts of rate_a_months months; null, with null numerators and flag, when that mean is 0 (never 0/0)"
+  },
+  {
+   "name": "rate_a_months",
+   "kind": "rate_denominator",
+   "description": "number of month-end headcounts averaged into rate_a_den"
+  },
+  {
+   "name": "rate_a_small_base",
+   "kind": "flag",
+   "description": "rate_a_den < 30 (invariant 9): shown with a flag, never hidden; null when the rate is empty"
+  },
+  {
+   "name": "attrition_b_num",
+   "kind": "rate_numerator",
+   "description": "attrition rate numerator, method B, fiscal year only (null at month and quarter grain); a partial fiscal year is year to date over its published months, not annualized: departures; rate = attrition_b_num / rate_b_den"
+  },
+  {
+   "name": "hire_b_num",
+   "kind": "rate_numerator",
+   "description": "hire rate numerator, method B, fiscal year only (null at month and quarter grain); a partial fiscal year is year to date over its published months, not annualized: hires; rate = hire_b_num / rate_b_den"
+  },
+  {
+   "name": "rate_b_den",
+   "kind": "rate_denominator",
+   "description": "shared denominator of the attrition and hire rates, method B, fiscal year only (null at month and quarter grain); a partial fiscal year is year to date over its published months, not annualized: mean of the month-end headcounts of rate_b_months months; null, with null numerators and flag, when that mean is 0 (never 0/0); fy rows only (null on t12 rows, where method A is the window itself)"
+  },
+  {
+   "name": "rate_b_months",
+   "kind": "rate_denominator",
+   "description": "number of month-end headcounts averaged into rate_b_den"
+  },
+  {
+   "name": "rate_b_small_base",
+   "kind": "flag",
+   "description": "rate_b_den < 30 (invariant 9): shown with a flag, never hidden; null when the rate is empty"
+  },
+  {
+   "name": "attrition_c_num",
+   "kind": "rate_numerator",
+   "description": "attrition rate numerator, method C, annualized per period: sums times 12 / rate_c_months over its published months: departures; rate = attrition_c_num / rate_c_den"
+  },
+  {
+   "name": "hire_c_num",
+   "kind": "rate_numerator",
+   "description": "hire rate numerator, method C, annualized per period: sums times 12 / rate_c_months over its published months: hires; rate = hire_c_num / rate_c_den"
+  },
+  {
+   "name": "rate_c_den",
+   "kind": "rate_denominator",
+   "description": "shared denominator of the attrition and hire rates, method C, annualized per period: sums times 12 / rate_c_months over its published months: mean of the month-end headcounts of rate_c_months months; null, with null numerators and flag, when that mean is 0 (never 0/0); fy rows only (null on t12 rows, where method A is the window itself)"
+  },
+  {
+   "name": "rate_c_months",
+   "kind": "rate_denominator",
+   "description": "number of month-end headcounts averaged into rate_c_den"
+  },
+  {
+   "name": "rate_c_small_base",
+   "kind": "flag",
+   "description": "rate_c_den < 30 (invariant 9): shown with a flag, never hidden; null when the rate is empty"
+  }
+ ],
+ "files": {
+  "GOV": {
+   "path": "compare/GOV.json",
+   "sha256": "61093a8c977d29d6dce6ecb78b721cf57ea2411395e3d04b12905cc6871fb23f",
+   "bytes": 441746,
+   "rows": 2021,
+   "children": 141
+  },
+  "AA": {
+   "path": "compare/AA.json",
+   "sha256": "956351d46d5b62b5253e12069155f80a97c43d4903017c9180bd4653b9690e51",
+   "bytes": 3911,
+   "rows": 16,
+   "children": 1
+  },
+  "AB": {
+   "path": "compare/AB.json",
+   "sha256": "449cf0b8038f743fa1f9320e12784a8dc0ec760ea84f5dc0c8b3013d23bb1201",
+   "bytes": 5139,
+   "rows": 22,
+   "children": 2
+  },
+  "AG": {
+   "path": "compare/AG.json",
+   "sha256": "51221957cb0652f06b0b10c2ca0b14a4a13f77868cee5b98b11de5fe5431390a",
+   "bytes": 110686,
+   "rows": 495,
+   "children": 33
+  },
+  "AH": {
+   "path": "compare/AH.json",
+   "sha256": "be60a4871ab0f25f9504675e262e7be1736f674a74643f1b855b5f7068c9863c",
+   "bytes": 10983,
+   "rows": 48,
+   "children": 3
+  },
+  "AM": {
+   "path": "compare/AM.json",
+   "sha256": "7122ca19e8598e3ccf5a2e5164acbe343028bc8453d0c22189da60fbedd50c88",
+   "bytes": 5159,
+   "rows": 19,
+   "children": 2
+  },
+  "AN": {
+   "path": "compare/AN.json",
+   "sha256": "529760e53defbfb42fc85ef920d78fc0695079cbc9df6d2448c54ff3d7ec3082",
+   "bytes": 4018,
+   "rows": 16,
+   "children": 1
+  },
+  "AP": {
+   "path": "compare/AP.json",
+   "sha256": "f19f0ba189c7a554c76a1da0ceeb6726dfcacd29fcedf13bf9fd9e0d22999b7a",
+   "bytes": 3856,
+   "rows": 16,
+   "children": 1
+  },
+  "AU": {
+   "path": "compare/AU.json",
+   "sha256": "74103db02366ef1938344bf55411249b6aabb395663d845e13dc8f8d75191908",
+   "bytes": 4172,
+   "rows": 16,
+   "children": 1
+  },
+  "AW": {
+   "path": "compare/AW.json",
+   "sha256": "103ce0e2f04dd8e883609f30624440097f907e286178d22aed66f191ac25ca39",
+   "bytes": 3837,
+   "rows": 16,
+   "children": 1
+  },
+  "BD": {
+   "path": "compare/BD.json",
+   "sha256": "43218ab55ba29c83dd7f9027b8a70188723d34850faed89f33c0cb4d62af2ea0",
+   "bytes": 4167,
+   "rows": 16,
+   "children": 1
+  },
+  "BF": {
+   "path": "compare/BF.json",
+   "sha256": "0e98846cdaba06b82e7db9ff274bc09401710b0aaa0c80d232ffd6b923a75569",
+   "bytes": 4146,
+   "rows": 16,
+   "children": 1
+  },
+  "BG": {
+   "path": "compare/BG.json",
+   "sha256": "e24ca726c29e0f633d0cf3c9cf56cab0da76cd8dbfd8121bb5cd21d80172e908",
+   "bytes": 4322,
+   "rows": 16,
+   "children": 1
+  },
+  "BH": {
+   "path": "compare/BH.json",
+   "sha256": "bd50a8aefc0b206c2935bdac05616674655ebd2cb86cd00dbd32f3fba62a653e",
+   "bytes": 3500,
+   "rows": 14,
+   "children": 1
+  },
+  "BK": {
+   "path": "compare/BK.json",
+   "sha256": "07e1a58fc228c1d8903b5e22b385c8db8d3825ca5368b44e97cc8aceb7056f84",
+   "bytes": 3843,
+   "rows": 16,
+   "children": 1
+  },
+  "BO": {
+   "path": "compare/BO.json",
+   "sha256": "3b490b36882fc01f701c02f9b50e9ab8bb0606de7861885dad6872972b30d0ec",
+   "bytes": 4344,
+   "rows": 16,
+   "children": 1
+  },
+  "BT": {
+   "path": "compare/BT.json",
+   "sha256": "bf2c5cee15b0b87d36275356d3472040e464c46b093ee139415a9244cecda268",
+   "bytes": 3995,
+   "rows": 16,
+   "children": 1
+  },
+  "BW": {
+   "path": "compare/BW.json",
+   "sha256": "596088403c40834fff6ad4a40f0bb3a8001b08a0a07b4d233cd353c8092f882b",
+   "bytes": 3952,
+   "rows": 16,
+   "children": 1
+  },
+  "BZ": {
+   "path": "compare/BZ.json",
+   "sha256": "d17bfcb2a0600cb8e51cf3a6d07f070ebdaf0d7e84bf5a7c9d690c8e984c93ec",
+   "bytes": 1920,
+   "rows": 6,
+   "children": 1
+  },
+  "CC": {
+   "path": "compare/CC.json",
+   "sha256": "cea1f48b45cfdddc30cb4cf335b2cba834744fe499ae3411b2190364c55fe409",
+   "bytes": 4043,
+   "rows": 16,
+   "children": 1
+  },
+  "CE": {
+   "path": "compare/CE.json",
+   "sha256": "aafbc7837119da780869375e69d62b44365f2ea46aee8bea6e1afb5d42d6dccd",
+   "bytes": 4040,
+   "rows": 16,
+   "children": 1
+  },
+  "CF": {
+   "path": "compare/CF.json",
+   "sha256": "13dab7e29434217593288a64acb971d14bb0cc8be1f5b00c4901effdee6d7fd1",
+   "bytes": 3896,
+   "rows": 16,
+   "children": 1
+  },
+  "CM": {
+   "path": "compare/CM.json",
+   "sha256": "bdcaaed534bff7738f5e5a762fe92a7010f86ac45ede85b71dff03234847a0e7",
+   "bytes": 49231,
+   "rows": 214,
+   "children": 14
+  },
+  "CT": {
+   "path": "compare/CT.json",
+   "sha256": "4b573ad24f6ec169fbd6429f017ce6cee639890ab83b630ea5084feac312b6fd",
+   "bytes": 4260,
+   "rows": 16,
+   "children": 1
+  },
+  "CU": {
+   "path": "compare/CU.json",
+   "sha256": "8e2fbc9c818358b43e4c0f88008a7b7ac0b6bb652f4018eb3021a972069fe284",
+   "bytes": 4357,
+   "rows": 16,
+   "children": 1
+  },
+  "CX": {
+   "path": "compare/CX.json",
+   "sha256": "6519ca81408b457ffee5f2980427a5af20fcebf9a0290b56f5ed915892eee36f",
+   "bytes": 3833,
+   "rows": 16,
+   "children": 1
+  },
+  "DA": {
+   "path": "compare/DA.json",
+   "sha256": "ffe8102f6a6c375136b8cb6a293b51d5b2fe720535130a4e58e892372884f59f",
+   "bytes": 1931,
+   "rows": 6,
+   "children": 1
+  },
+  "DB": {
+   "path": "compare/DB.json",
+   "sha256": "dcecd8cd4bf9be2b951cd8306a47879283be343da947080bafca12152c673acc",
+   "bytes": 3874,
+   "rows": 16,
+   "children": 1
+  },
+  "DF": {
+   "path": "compare/DF.json",
+   "sha256": "621e815be0ab6ec203b5f5375d0a4410b88870e585541081d94588260698b4cf",
+   "bytes": 1520,
+   "rows": 4,
+   "children": 1
+  },
+  "DG": {
+   "path": "compare/DG.json",
+   "sha256": "50565fa7cc09428d8a25948e5b9cdced90487a8eb689cde05e0b2e6fc4c116fb",
+   "bytes": 3834,
+   "rows": 16,
+   "children": 1
+  },
+  "DJ": {
+   "path": "compare/DJ.json",
+   "sha256": "4e3befe5cd1d6c37a5d8bd21250860dc13d1b55681ebe5b768d6e778c5a27a01",
+   "bytes": 45591,
+   "rows": 192,
+   "children": 12
+  },
+  "DL": {
+   "path": "compare/DL.json",
+   "sha256": "cb57a6976dfa96e24fc22f4012059547059c851cbe468f138cc182d1e6b5bc7a",
+   "bytes": 74195,
+   "rows": 337,
+   "children": 22
+  },
+  "DN": {
+   "path": "compare/DN.json",
+   "sha256": "06ed1256488df91365ad469ae64f0c6ada660f88f74d35bca89ec033f8a6c125",
+   "bytes": 8498,
+   "rows": 32,
+   "children": 2
+  },
+  "DO": {
+   "path": "compare/DO.json",
+   "sha256": "d36dfd4bd744ca49cef248385d3ab1e72aa5f6f95eb3f1276cec3167ce0b1763",
+   "bytes": 2198,
+   "rows": 7,
+   "children": 1
+  },
+  "DOD": {
+   "path": "compare/DOD.json",
+   "sha256": "d56a6507f4fa0084e8efb9078e81fa41e67f6ae0ccc598c7791f8f9752defdd2",
+   "bytes": 639207,
+   "rows": 2768,
+   "children": 223
+  },
+  "DQ": {
+   "path": "compare/DQ.json",
+   "sha256": "6adb2ab69da3693d40d508128aa78b1be0b5c8605588a6d9154b7223e47d95ef",
+   "bytes": 3938,
+   "rows": 16,
+   "children": 1
+  },
+  "EB": {
+   "path": "compare/EB.json",
+   "sha256": "76c39abf2af1acaa98b806b6efa0762280bd847d7dcf63774929a5d81d26faab",
+   "bytes": 4262,
+   "rows": 16,
+   "children": 1
+  },
+  "EC": {
+   "path": "compare/EC.json",
+   "sha256": "82864c579afd6ff3ec88dfe9b7d904597ac77e5fca734ed95cf42cfb58a4186b",
+   "bytes": 4247,
+   "rows": 16,
+   "children": 1
+  },
+  "ED": {
+   "path": "compare/ED.json",
+   "sha256": "496bba2e53ad4728cebef643b8afe9d0e623e974e02d18d4a86402aca446cc7f",
+   "bytes": 71628,
+   "rows": 337,
+   "children": 25
+  },
+  "EE": {
+   "path": "compare/EE.json",
+   "sha256": "f0851b7065922fac6c1d97402165175a162f91b414af7e58306adb36fb539ecd",
+   "bytes": 4425,
+   "rows": 16,
+   "children": 1
+  },
+  "EO": {
+   "path": "compare/EO.json",
+   "sha256": "c29adce6dd154f4999a8a6c5634a2cd76a544980b9aa01508180cbc22c88cb00",
+   "bytes": 4040,
+   "rows": 16,
+   "children": 1
+  },
+  "EP": {
+   "path": "compare/EP.json",
+   "sha256": "3dd81ba49739c0322a01ec799b7991cca6c8fa56427b8bd1d9e819762877fa23",
+   "bytes": 4752,
+   "rows": 16,
+   "children": 1
+  },
+  "EQ": {
+   "path": "compare/EQ.json",
+   "sha256": "c766539859144d6fa264c80e0eecb5cf6551f45b65e341dc2b080a2f4735e736",
+   "bytes": 4008,
+   "rows": 16,
+   "children": 1
+  },
+  "EW": {
+   "path": "compare/EW.json",
+   "sha256": "1f6d18355bd7dac70cac7d171ea3a25ccce4777ac64144614723ad2cb8958eca",
+   "bytes": 4062,
+   "rows": 16,
+   "children": 1
+  },
+  "FC": {
+   "path": "compare/FC.json",
+   "sha256": "ec7eb6ceaa26f3540ee0b5c8d5d37a060163a5b55ef50e248adc2693adc0ef97",
+   "bytes": 4447,
+   "rows": 16,
+   "children": 1
+  },
+  "FD": {
+   "path": "compare/FD.json",
+   "sha256": "4a94cece5be19fc9e0b4850c49975ebf7431cf2fa747d677a7befb81dcd86d5e",
+   "bytes": 4568,
+   "rows": 16,
+   "children": 1
+  },
+  "FI": {
+   "path": "compare/FI.json",
+   "sha256": "7d34a757983552a7f807f3dc94441930814dcaba5feb131eaf82b4f2c7830c45",
+   "bytes": 3941,
+   "rows": 16,
+   "children": 1
+  },
+  "FJ": {
+   "path": "compare/FJ.json",
+   "sha256": "c2418ade3155aefae256f0c395e2b994b4da117153983b01166224061aa37abc",
+   "bytes": 4001,
+   "rows": 16,
+   "children": 1
+  },
+  "FK": {
+   "path": "compare/FK.json",
+   "sha256": "2b1a92467b3b3d80388bc3b1309a96a2d5c52fdaec8e8dbf02aa966114af997a",
+   "bytes": 3902,
+   "rows": 16,
+   "children": 1
+  },
+  "FL": {
+   "path": "compare/FL.json",
+   "sha256": "31a6ac9e0ab076cf2e93e9806a89f4c6878ba8593f36a033c23abbb54ba58a6f",
+   "bytes": 4223,
+   "rows": 16,
+   "children": 1
+  },
+  "FM": {
+   "path": "compare/FM.json",
+   "sha256": "76d4edc199d3e7b5ec1229e1311483efc14ce7142e28d688e481d1dda1bb66ff",
+   "bytes": 4193,
+   "rows": 16,
+   "children": 1
+  },
+  "FQ": {
+   "path": "compare/FQ.json",
+   "sha256": "b5b7ae67c66a2dfe46ee978fa0e39d1d5db371388732a2b71f3401a62637bd94",
+   "bytes": 7699,
+   "rows": 32,
+   "children": 2
+  },
+  "FR": {
+   "path": "compare/FR.json",
+   "sha256": "0ddd70d88f648244bf3908c04e958f9591336f37a7a527e366d0cbea4bfa760b",
+   "bytes": 4460,
+   "rows": 16,
+   "children": 1
+  },
+  "FT": {
+   "path": "compare/FT.json",
+   "sha256": "fc0ce69b5d8bb4703fd971a3ef0331479911f3be66f9273e17cad787eb3cbbd3",
+   "bytes": 4444,
+   "rows": 16,
+   "children": 1
+  },
+  "FW": {
+   "path": "compare/FW.json",
+   "sha256": "a76a9ba832343e4b833279145f3b5996617e09d58f9d1cb3f539721039267b82",
+   "bytes": 4203,
+   "rows": 16,
+   "children": 1
+  },
+  "GB": {
+   "path": "compare/GB.json",
+   "sha256": "c59ec2e3e2bbba27d9b70d9edff7e4c5a4df03242d9ab3c4f59f786b8bdc61b7",
+   "bytes": 4709,
+   "rows": 18,
+   "children": 2
+  },
+  "GC": {
+   "path": "compare/GC.json",
+   "sha256": "c50d5a8ac5e445e605f03b75c4a02a0f033ae27ae0c7c8ffe4e9a7175bd72489",
+   "bytes": 3126,
+   "rows": 12,
+   "children": 1
+  },
+  "GE": {
+   "path": "compare/GE.json",
+   "sha256": "e59839231af0a4de88e8078eaf52965445d195cb25c1f2115f2fc7e99cb7f2bb",
+   "bytes": 3828,
+   "rows": 16,
+   "children": 1
+  },
+  "GG": {
+   "path": "compare/GG.json",
+   "sha256": "30e77d8ea0cdc44a96899cfd6c9100e74776b27cb7e5ef71be41fcc43abcb921",
+   "bytes": 4017,
+   "rows": 16,
+   "children": 1
+  },
+  "GJ": {
+   "path": "compare/GJ.json",
+   "sha256": "fc99af85f7c9053cbd4b818bb8e47ccce5fde36bb7142e1259f05f8631307cab",
+   "bytes": 4208,
+   "rows": 16,
+   "children": 1
+  },
+  "GM": {
+   "path": "compare/GM.json",
+   "sha256": "e02d3559209726d44a07acca138ce9484a1c933686be3040fe1967873dd93419",
+   "bytes": 1965,
+   "rows": 6,
+   "children": 1
+  },
+  "GO": {
+   "path": "compare/GO.json",
+   "sha256": "45a30cd27a71b89f1e34bfb13ce663e74cc5a9d0b8e3c867e242d9e566eea5ff",
+   "bytes": 2301,
+   "rows": 8,
+   "children": 1
+  },
+  "GQ": {
+   "path": "compare/GQ.json",
+   "sha256": "98d0ad769103fa0125d2183e7f268586938c26fb4d07098a0bb9d9d1106d4412",
+   "bytes": 4055,
+   "rows": 16,
+   "children": 1
+  },
+  "GS": {
+   "path": "compare/GS.json",
+   "sha256": "e6627911285360b4fe2c69085ab63366344b8c1ee6d4eda04a19750d9e3558b0",
+   "bytes": 66161,
+   "rows": 309,
+   "children": 22
+  },
+  "GU": {
+   "path": "compare/GU.json",
+   "sha256": "8d17507bcf565e78507d324c613ea12fc9980287e2165403a52a4b2b9f1edefb",
+   "bytes": 2492,
+   "rows": 9,
+   "children": 1
+  },
+  "GW": {
+   "path": "compare/GW.json",
+   "sha256": "420f745083c1da757626bf5562e4ab10cd03eccf75989caf08acd32ddd532351",
+   "bytes": 4234,
+   "rows": 16,
+   "children": 1
+  },
+  "GX": {
+   "path": "compare/GX.json",
+   "sha256": "0fba6abcca2219b0732ff26882a7b9b4ae7c402da3758966eacd5c1c52d2a7d1",
+   "bytes": 4052,
+   "rows": 16,
+   "children": 1
+  },
+  "GY": {
+   "path": "compare/GY.json",
+   "sha256": "b68feb5fbbfb0304337dc8767824199b3ce0ef4dd3d13e2042456038f1788961",
+   "bytes": 3953,
+   "rows": 16,
+   "children": 1
+  },
+  "GZ": {
+   "path": "compare/GZ.json",
+   "sha256": "92f66403862d8f43d3a7f3738a5c3766b8160021ebb3b539f105dbc8fa66564a",
+   "bytes": 1896,
+   "rows": 6,
+   "children": 1
+  },
+  "HB": {
+   "path": "compare/HB.json",
+   "sha256": "b85a119534df2a6641a618b4cb61db7efa2ce971560fd0f999450e6395ef4292",
+   "bytes": 6553,
+   "rows": 29,
+   "children": 4
+  },
+  "HD": {
+   "path": "compare/HD.json",
+   "sha256": "671190f943de73a7ccaf2a9fc2cfdac2a6e44b62bb2df53c703cf4df86a5b6b0",
+   "bytes": 4093,
+   "rows": 16,
+   "children": 1
+  },
+  "HE": {
+   "path": "compare/HE.json",
+   "sha256": "7354931649fc1e078a46cac32f4d6b7ca896edf9053f49f9e7b488e353d7e665",
+   "bytes": 59413,
+   "rows": 254,
+   "children": 18
+  },
+  "HF": {
+   "path": "compare/HF.json",
+   "sha256": "b4abe2cdde6e5e4f7d03ceaf9e03559b82afc412c0d0b39eb552502e1c4e9286",
+   "bytes": 8083,
+   "rows": 34,
+   "children": 4
+  },
+  "HP": {
+   "path": "compare/HP.json",
+   "sha256": "be1d2d831f3772b193891a97163e5961e8c35c27b6559aaa867891f64843e797",
+   "bytes": 4018,
+   "rows": 16,
+   "children": 1
+  },
+  "HS": {
+   "path": "compare/HS.json",
+   "sha256": "3b4652365e5fc549e5b37c89c4af17b1af870f89519e434ab840551d33454fd9",
+   "bytes": 50588,
+   "rows": 208,
+   "children": 13
+  },
+  "HT": {
+   "path": "compare/HT.json",
+   "sha256": "fb557f63cefcc88feff8af6fe7bb285fe5e255d7c2c289ecfbed612a139588ed",
+   "bytes": 3852,
+   "rows": 16,
+   "children": 1
+  },
+  "HU": {
+   "path": "compare/HU.json",
+   "sha256": "334f1d2ad4d2f5cb434f60352f2f45aad2a472f0e60c1b2d8a5a48fcd44a44c9",
+   "bytes": 102947,
+   "rows": 483,
+   "children": 35
+  },
+  "HW": {
+   "path": "compare/HW.json",
+   "sha256": "cad89e1ec8d78b5a3fb91d0bff5e6fc00565b901802b6df8e38763f6730260f1",
+   "bytes": 3937,
+   "rows": 16,
+   "children": 1
+  },
+  "IB": {
+   "path": "compare/IB.json",
+   "sha256": "27c17a4b2b67201effcfba0bd64f948a109c87d6d0b5bea27f5c2bab077c6344",
+   "bytes": 4353,
+   "rows": 16,
+   "children": 1
+  },
+  "IF": {
+   "path": "compare/IF.json",
+   "sha256": "f249eaa494928845443a6318c3b7114a490cf822e424c5a60520bc96a115babb",
+   "bytes": 4006,
+   "rows": 16,
+   "children": 1
+  },
+  "IG": {
+   "path": "compare/IG.json",
+   "sha256": "24e816e7a32aef755aa9ee9b168b866519c26008496367f9ad17782357443ffb",
+   "bytes": 3939,
+   "rows": 16,
+   "children": 1
+  },
+  "IN": {
+   "path": "compare/IN.json",
+   "sha256": "4da62abe2bf55df112b69c0c673dfb06608547fce64d059b0fcf26fd873ba137",
+   "bytes": 50531,
+   "rows": 214,
+   "children": 16
+  },
+  "IP": {
+   "path": "compare/IP.json",
+   "sha256": "2d87677b7ee99cb70441b8aa859fa7d5c0a11569fb8b6b6e60bce96e4a6872bc",
+   "bytes": 2290,
+   "rows": 8,
+   "children": 1
+  },
+  "JL": {
+   "path": "compare/JL.json",
+   "sha256": "d39f1ae02669ea7f60792854f7301ebbd98126f5834da8e3bdfb8a9d594a71fc",
+   "bytes": 3978,
+   "rows": 15,
+   "children": 1
+  },
+  "KS": {
+   "path": "compare/KS.json",
+   "sha256": "8d68e79be8efd9679f813c8b885e173b4e9b6009fa617b9421ef71a504f0ae5d",
+   "bytes": 4334,
+   "rows": 16,
+   "children": 1
+  },
+  "KY": {
+   "path": "compare/KY.json",
+   "sha256": "5661439e55856851e544f0a5c81f1af055f40085a73366b31332015108c5a5ba",
+   "bytes": 2484,
+   "rows": 9,
+   "children": 1
+  },
+  "LF": {
+   "path": "compare/LF.json",
+   "sha256": "9f2dcd0d36056820e10ef7da7291d5280ac5775612deccaa373a5e32a5e2b72c",
+   "bytes": 4188,
+   "rows": 16,
+   "children": 1
+  },
+  "LP": {
+   "path": "compare/LP.json",
+   "sha256": "761ffdb826d083abba88a4773e1414bf8f52bf0e82a6dac472a9359f26f688ff",
+   "bytes": 4429,
+   "rows": 16,
+   "children": 1
+  },
+  "LT": {
+   "path": "compare/LT.json",
+   "sha256": "cd0071a3c6fca82fb3de1e52bf08a986b9f664627db450504b578d54a9c7a88b",
+   "bytes": 1186,
+   "rows": 2,
+   "children": 1
+  },
+  "MA": {
+   "path": "compare/MA.json",
+   "sha256": "fc92a8db4517996b1250178fc88dd21564fb1e7b59e42ca214cb0817c59b1e2d",
+   "bytes": 3935,
+   "rows": 16,
+   "children": 1
+  },
+  "MC": {
+   "path": "compare/MC.json",
+   "sha256": "7817555cbeb70d239213ce0081983f17dafc05da23b72f585cc275680971e34d",
+   "bytes": 4172,
+   "rows": 16,
+   "children": 1
+  },
+  "MI": {
+   "path": "compare/MI.json",
+   "sha256": "61c8746473832717690287fe28fa1ce2587556d7a7afcd27e3fea1c67c0bd468",
+   "bytes": 4209,
+   "rows": 16,
+   "children": 1
+  },
+  "NF": {
+   "path": "compare/NF.json",
+   "sha256": "8438274bc9adc913fda3775e37e4e5bfb1f11f51589b038a6040ce9f5c9fb52e",
+   "bytes": 4479,
+   "rows": 16,
+   "children": 1
+  },
+  "NK": {
+   "path": "compare/NK.json",
+   "sha256": "3f8b17bdbdf3e48d83216913c9a4d3e97a145e3f9cb2c63151a727af8e11cf93",
+   "bytes": 3921,
+   "rows": 16,
+   "children": 1
+  },
+  "NL": {
+   "path": "compare/NL.json",
+   "sha256": "01c772d0f2a59d53c8138e1ea4d5934c3182e13cdcfe95074d342bcca80037ee",
+   "bytes": 4421,
+   "rows": 16,
+   "children": 1
+  },
+  "NM": {
+   "path": "compare/NM.json",
+   "sha256": "216c074ddf8f5136d7ed6fa00b21836aa68d868e409fdc666cc06f98eed677c5",
+   "bytes": 4008,
+   "rows": 16,
+   "children": 1
+  },
+  "NN": {
+   "path": "compare/NN.json",
+   "sha256": "1103c4ff9e558b10b83cd1b27972c900a60ee06e7d37c6610fcac23792d04252",
+   "bytes": 36951,
+   "rows": 160,
+   "children": 10
+  },
+  "NP": {
+   "path": "compare/NP.json",
+   "sha256": "abe340abd749f8c1c9f3ace82d3e38f4a756ce3ee37339c6d553834b1abba959",
+   "bytes": 4011,
+   "rows": 16,
+   "children": 1
+  },
+  "NQ": {
+   "path": "compare/NQ.json",
+   "sha256": "827fa5e2406841a23be24ffbdbfc6cd48a4434077559e641c47a9d74e10edc68",
+   "bytes": 4486,
+   "rows": 16,
+   "children": 1
+  },
+  "NS": {
+   "path": "compare/NS.json",
+   "sha256": "cfbceba62d5d67a7d5dc1d6b6175576266ee1130dc26bd8efec71098d8f28c59",
+   "bytes": 4141,
+   "rows": 16,
+   "children": 1
+  },
+  "NU": {
+   "path": "compare/NU.json",
+   "sha256": "db4199740ca91e19141e165c5e7168a76803d1b1bb22e8f6919809ad19bf6134",
+   "bytes": 4507,
+   "rows": 16,
+   "children": 1
+  },
+  "OM": {
+   "path": "compare/OM.json",
+   "sha256": "14a926143de44b5be81fc426225c1dfec9cef62536f2f36699a507b45431ff37",
+   "bytes": 4580,
+   "rows": 16,
+   "children": 1
+  },
+  "OP": {
+   "path": "compare/OP.json",
+   "sha256": "d48b9ce6f9766cbd3c8b6fcc786e72df4dced636453d18966e099c7d72b5018b",
+   "bytes": 1325,
+   "rows": 3,
+   "children": 1
+  },
+  "OS": {
+   "path": "compare/OS.json",
+   "sha256": "5afbb14d42b390b80cf2965e52e3c4a952db42374813ccca95683fb6a58a2c40",
+   "bytes": 4029,
+   "rows": 16,
+   "children": 1
+  },
+  "OY": {
+   "path": "compare/OY.json",
+   "sha256": "52d02e8541a4e09341b420f18c9cc6c9a320be788d7b2aa64c8a57c638d7ae27",
+   "bytes": 940,
+   "rows": 1,
+   "children": 1
+  },
+  "PU": {
+   "path": "compare/PU.json",
+   "sha256": "1687b647e78f111f086cb5bf3d42963d241b61b6ec7d817a3224d39ecb7d22f5",
+   "bytes": 4395,
+   "rows": 16,
+   "children": 1
+  },
+  "QQ": {
+   "path": "compare/QQ.json",
+   "sha256": "9deb24f215a38012a7c577b580c0eb0be73a80ea1624303473eab6bc3a3c9676",
+   "bytes": 4092,
+   "rows": 16,
+   "children": 1
+  },
+  "RE": {
+   "path": "compare/RE.json",
+   "sha256": "0c653bbb1cea0b3cf09487941b47a77c58b8a8679308838b4303ad9f0934f349",
+   "bytes": 3735,
+   "rows": 15,
+   "children": 1
+  },
+  "RF": {
+   "path": "compare/RF.json",
+   "sha256": "b37d034ea4045e05a3856752ce6b8e05b5eb1d17054e230e82c26a02187c9e13",
+   "bytes": 4203,
+   "rows": 16,
+   "children": 1
+  },
+  "RH": {
+   "path": "compare/RH.json",
+   "sha256": "d1f9ba671861d34740fcc46c177e175ba8a122c8012cb9d5accee99392d86137",
+   "bytes": 4250,
+   "rows": 16,
+   "children": 1
+  },
+  "RJ": {
+   "path": "compare/RJ.json",
+   "sha256": "dd7938eb59a3caf3cede2ffcad96238d7096e50063fa30aa339c271bccac827a",
+   "bytes": 1752,
+   "rows": 5,
+   "children": 1
+  },
+  "RO": {
+   "path": "compare/RO.json",
+   "sha256": "1dbe0784c34bbb38d5d46539ad56a6fca629fafc09280bd7616c1d2c7b66b13e",
+   "bytes": 4047,
+   "rows": 16,
+   "children": 1
+  },
+  "RR": {
+   "path": "compare/RR.json",
+   "sha256": "4b3441fd6f534c660aa482a518bf3db005a65704ada712e9e8ad5198fb81f20b",
+   "bytes": 4258,
+   "rows": 16,
+   "children": 1
+  },
+  "RS": {
+   "path": "compare/RS.json",
+   "sha256": "689fd51bb8df1de22433e41715f8a4f2becbcba7bf6d70025500851344b91d27",
+   "bytes": 4051,
+   "rows": 16,
+   "children": 1
+  },
+  "RZ": {
+   "path": "compare/RZ.json",
+   "sha256": "52cd088278a1afd576128bf23f38595be948589e0d9eb2a565f5737f8a3174cc",
+   "bytes": 1562,
+   "rows": 4,
+   "children": 1
+  },
+  "SB": {
+   "path": "compare/SB.json",
+   "sha256": "7e1eb9857a484ba759e79698e5a31971b2c5124cc7f2b53fb02be4f9fe656888",
+   "bytes": 4704,
+   "rows": 16,
+   "children": 1
+  },
+  "SE": {
+   "path": "compare/SE.json",
+   "sha256": "249cefbc1cbf6e352c7f944d37f0fd3b004e443316b5b0188df36de75e12823a",
+   "bytes": 4476,
+   "rows": 16,
+   "children": 1
+  },
+  "SK": {
+   "path": "compare/SK.json",
+   "sha256": "9c132ca3236710591ac32baa1bcc2abe73d3ac04edf877206ddea372469396fc",
+   "bytes": 4256,
+   "rows": 16,
+   "children": 1
+  },
+  "SM": {
+   "path": "compare/SM.json",
+   "sha256": "bd832deb91ddc27022af6c6df1248c1557efce7736917eb0e97b08389efce172",
+   "bytes": 15094,
+   "rows": 66,
+   "children": 5
+  },
+  "SS": {
+   "path": "compare/SS.json",
+   "sha256": "0b5642974cab4a1a5b0e0e00f418e2a09b3525c01c17fd0184eaf8632f100aa1",
+   "bytes": 4205,
+   "rows": 16,
+   "children": 1
+  },
+  "ST": {
+   "path": "compare/ST.json",
+   "sha256": "c639a11a3caf96b7b7768e5f21aa4cf55de7011902daa2abc7d3c499069b0ae3",
+   "bytes": 4788,
+   "rows": 16,
+   "children": 1
+  },
+  "SZ": {
+   "path": "compare/SZ.json",
+   "sha256": "9c9f05f8db8663084325ed1dcac0f48ea8ae670ed4d18942e5f1f7114fb5b731",
+   "bytes": 4817,
+   "rows": 16,
+   "children": 1
+  },
+  "TB": {
+   "path": "compare/TB.json",
+   "sha256": "0a70c139eb582e1fe316988e576d5839ff84b3a3579f0aa4b56f9aa9d6922c99",
+   "bytes": 4215,
+   "rows": 16,
+   "children": 1
+  },
+  "TC": {
+   "path": "compare/TC.json",
+   "sha256": "1a54c2441e10e203f9ade1416e1bd1f6f9081a0f3bbdc6616c947349280e784f",
+   "bytes": 4245,
+   "rows": 16,
+   "children": 1
+  },
+  "TD": {
+   "path": "compare/TD.json",
+   "sha256": "0ad9da400a70529b7f3f16bf5391165fe4e71889df4f7c7196796198c8e481cc",
+   "bytes": 43033,
+   "rows": 188,
+   "children": 13
+  },
+  "TN": {
+   "path": "compare/TN.json",
+   "sha256": "cfb91de62828016443e58b32b23d2574da360985e27c4e1d3910bf03778713b5",
+   "bytes": 4233,
+   "rows": 16,
+   "children": 1
+  },
+  "TR": {
+   "path": "compare/TR.json",
+   "sha256": "51b43dbba334c50abced96d4df05025c26a964bdeba133d0226f42300876c15c",
+   "bytes": 41492,
+   "rows": 178,
+   "children": 14
+  },
+  "TS": {
+   "path": "compare/TS.json",
+   "sha256": "b130367603421a6ff95a117f0690bbcca019deb0818538bba1bb40ca1bdc6e4a",
+   "bytes": 3996,
+   "rows": 16,
+   "children": 1
+  },
+  "TW": {
+   "path": "compare/TW.json",
+   "sha256": "acfb9c47ba9bac561fdecf57268b1a342f839b418c8f706da14282c02343c28d",
+   "bytes": 2624,
+   "rows": 9,
+   "children": 1
+  },
+  "UJ": {
+   "path": "compare/UJ.json",
+   "sha256": "5bd22440a5077ce871459956f93add903955ea5411a7c5dae1c9d47b66f761ec",
+   "bytes": 3894,
+   "rows": 16,
+   "children": 1
+  },
+  "UT": {
+   "path": "compare/UT.json",
+   "sha256": "a981492517fdb4210a60622a9ff78beb9c28b58eb9f1c06d8465a11d4650ad42",
+   "bytes": 3878,
+   "rows": 16,
+   "children": 1
+  },
+  "VA": {
+   "path": "compare/VA.json",
+   "sha256": "d3ba0ceef8be72cb21818b0235f6606496f28de40d2636ae2fa42be79add9bc1",
+   "bytes": 122168,
+   "rows": 571,
+   "children": 43
+  },
+  "VB": {
+   "path": "compare/VB.json",
+   "sha256": "b4a8f89c502f979d72e7d5ab91261255066048fd59fe356738be545d111f1489",
+   "bytes": 1349,
+   "rows": 3,
+   "children": 1
+  },
+  "VD": {
+   "path": "compare/VD.json",
+   "sha256": "9eb78dcd93ba1b84a60a4e8445cf08b518e57a45d43cf6d1f4584c6fe9280988",
+   "bytes": 3976,
+   "rows": 16,
+   "children": 1
+  },
+  "WK": {
+   "path": "compare/WK.json",
+   "sha256": "3be82472549e07bf1ced769f1224280edc0deda1373b1b51ef71a8f2b6e59f9c",
+   "bytes": 2353,
+   "rows": 8,
+   "children": 1
+  },
+  "WU": {
+   "path": "compare/WU.json",
+   "sha256": "0f4cac17acffcde10139d8a265d15cfce232edc62c7325d7afdcc32cb4b741e7",
+   "bytes": 1721,
+   "rows": 5,
+   "children": 1
+  },
+  "WX": {
+   "path": "compare/WX.json",
+   "sha256": "2f8badd3973415bad714acb5d70987470d9f56820ad64d5efde7e860dce19c8e",
+   "bytes": 2669,
+   "rows": 10,
+   "children": 1
+  },
+  "YG": {
+   "path": "compare/YG.json",
+   "sha256": "a306f8a5ebd6c7e07987fadecbc161e9bc935fdd2555b459953ce5de888040dd",
+   "bytes": 928,
+   "rows": 1,
+   "children": 1
+  },
+  "ZL": {
+   "path": "compare/ZL.json",
+   "sha256": "4326dfde9afdc8042d0448b3823d296d32449ece3744281934fe348b44a4bb89",
+   "bytes": 2954,
+   "rows": 11,
+   "children": 2
+  },
+  "ZP": {
+   "path": "compare/ZP.json",
+   "sha256": "5e917ab62d5834eb052088407706c1290d190c3f0c96d136637b14d601920cb7",
+   "bytes": 3979,
+   "rows": 16,
+   "children": 1
+  },
+  "ZS": {
+   "path": "compare/ZS.json",
+   "sha256": "af2d969cbe291096cf65ac276aa41c9aafc42d884a55e74911269e2829ffebac",
+   "bytes": 4062,
+   "rows": 16,
+   "children": 1
+  },
+  "ZU": {
+   "path": "compare/ZU.json",
+   "sha256": "8899eb698732fad9e69b436a04542eba746aae05e747d65e543a5267c1384b4e",
+   "bytes": 2876,
+   "rows": 11,
+   "children": 1
+  }
+ },
+ "files_sha256": "617d551900522d280c7db5bcd8f85bb6f2269baaf3979ad6826bb05972a02900",
+ "files_digest_method": "sha256 of the lines '<path> <sha256>\\n' for every file, sorted by path",
+ "size": {
+  "files": 142,
+  "total_bytes": 2511291,
+  "mean_bytes": 17685,
+  "largest": {
+   "key": "DOD",
+   "bytes": 639207
+  },
+  "gov_first_load_bytes": 535164
+ }
+}

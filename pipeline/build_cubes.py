@@ -15,7 +15,7 @@ Entities (file keys)
   <subelement key>    each agency_subelement_code; '*' becomes '_' (AB** -> AB__) and the blank code (KDI-004)
                       becomes <agency>_NR ("Not reported"), so every key is a safe file name
 Rows run from the entity's first month to its last month: the first and last month with headcount or with an
-effective hire or departure (spec section 1, D-018); no rows before it existed or after it ended, so its first and
+effective hire or departure (spec section 1, D-018; the compare cube's t12 rows are the one exception, D-034); no rows before it existed or after it ended, so its first and
 last quarter and fiscal year are partial. A month with no rows inside that span keeps headcount 0, and its rates are
 empty. Method A (trailing 12 months) needs 12 of the entity's months, as it needs 12 published months from Oct 2011.
 
@@ -23,7 +23,9 @@ Outputs (warehouse/cubes/)
   core/<key>.json      month, fiscal quarter and fiscal year rows for one entity
   compare/<key>.json   one row per child per period (fiscal year; the trailing 12 months ending at the latest
                        month) for a parent: GOV over departments, each department over its subelements, DOD also
-                       over its four agencies
+                       over its four agencies. The t12 rows include every child with at least one month inside the
+                       window (D-034), so children sum exactly to their parent: a child that ended inside the window
+                       carries its in-window flows and 0 headcount for the months after its last month.
   core.meta.json, compare.meta.json   column dictionary with kinds, manifest hash, per-file SHA-256, known data
                        issues and known breaks in scope, provisional and reissued months, size statistics
   revision_baseline.json   file versions per month for the current manifest and the previous one
@@ -360,8 +362,9 @@ def core_rows(key, vs, ks, start, end, months, ctx):
 
 def compare_rows(parent, children, vec, kdi, starts, ends, months, ctx):
     """One row per child per period: every fiscal year the child has rows in, and the trailing 12 months ending at
-    the latest month for each child whose rows reach it (partial, over its own months, when the child began inside
-    the window)."""
+    the latest month for each child with at least one month inside that window (D-034): partial, over its own months,
+    when the child began inside the window; a child that ended inside it keeps its in-window flows, and the months
+    after its last month count with headcount 0 (so its headcount is 0 and a rate on a zero mean stays empty)."""
     rows = []
     latest = len(months) - 1
     fy_periods = [p for p in ctx['periods'] if p[0] == 'fy']
@@ -380,7 +383,7 @@ def compare_rows(parent, children, vec, kdi, starts, ends, months, ctx):
                    'months_in_period': 12, 'months_published': len(pub), 'time_basis': 'effective',
                    'partial': len(pub) < 12, **v}
             rows.append([row[c] for c in COMPARE_COLUMNS])
-        if end == latest and latest >= 11:
+        if latest >= 11 and end >= latest - 11:
             pub = list(range(max(start, latest - 11), latest + 1))
             v = row_values(vs, ks, pub, months, ctx, 't12', start)
             row = {'parent': parent, 'child_level': level, 'child': key, 'grain': 't12', 'period': ym(months[latest]),
@@ -695,10 +698,13 @@ def main():
     cmp_meta = {'cube': 'compare',
                 'format': 'one JSON file per parent, files[<key>].path: {"cube", "parent", "columns", "rows": [[values in column order]]}',
                 **common,
+                'spec': 'docs/metric-spec.md (signed, D-014, D-015, D-018, D-034); docs/cube-plan.md (signed, D-016)',
                 'grains': ['fy', 't12'],
                 't12_window': {'last_month': ym(months[-1]), 'first_month': ym(months[-12]),
-                               'note': 'the trailing 12 months ending at the latest month, for each child whose rows reach it; partial, '
-                                        'over its own months, for a child whose rows begin inside the window'},
+                               'note': 'the trailing 12 months ending at the latest month, for each child with at least one month inside '
+                                        'the window (D-034), so children sum exactly to their parent; partial, over its own months, for a '
+                                        'child whose rows begin inside the window; a child that ended inside the window keeps its in-window '
+                                        'flows and counts headcount 0 for the months after its last month (rates on a zero mean stay empty)'},
                 'parents': {p: {'children': f['children']} for p, f in cmp_files.items()},
                 'kdi_in_scope': kdi_scope(cmp_files, 'kdi_ids', lambda d, r: r[2]),
                 'columns': column_dictionary(COMPARE_COLUMNS, 'compare'),

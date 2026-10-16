@@ -275,6 +275,7 @@
     "p8.col.hireType": "Hire type",
     "p8.col.drp": "Deferred resignation",
     "p8.col.occupation": "Occupation",
+    "p8.col.family": "Occupational family",
     "p8.col.payPlan": "Pay plan",
     "p8.col.grade": "Grade",
     "p8.col.age": "Age",

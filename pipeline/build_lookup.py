@@ -2,7 +2,7 @@
 
     .venv/bin/python pipeline/build_lookup.py [seconds_budget]      rerun until it prints ALL BUILT
 
-Invariant 10: OPM's release, never more. Fields and container: docs/metric-spec.md section 10 (D-021).
+Invariant 10: OPM's release, never more. Fields and container: docs/metric-spec.md section 10 (D-021, D-035, D-037).
   separations_FY<yyyy>.parquet, accessions_FY<yyyy>.parquet
         every row of every current Separations or Accessions file whose personnel_action_effective_date_yyyymm falls
         in fiscal year yyyy (Oct yyyy-1 to Sep yyyy, invariant 6); a late action lands in its effective year's file
@@ -252,7 +252,7 @@ def build(budget=140.0):
             'kdi_method': 'issue id: rows of the file in the scope of an active row of pipeline/known_data_issues.csv '
                           '(dataset, file month, entity and the issue condition; values kept as published)',
             'files': {k: files[k] for k in sorted(files)},
-            'decisions': ['D-021']}
+            'decisions': ['D-021', 'D-035', 'D-037']}
     changed = write_if_changed(meta_path, dumps_meta(meta))
     t = meta['totals']['all']
     print(f"lookup: {len(files)} files current ({wrote} written), {todo} remaining; {t['rows']:,} rows, {t['bytes']:,} B; "

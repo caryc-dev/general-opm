@@ -11,6 +11,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 os.chdir(ROOT)
 DATASETS = {'employment': 'Employment', 'accessions': 'Accessions', 'separations': 'Separations'}
 RESULTS = []
+PENDING = []   # checks that returned None: built, but what they guard does not exist yet (reported as PLAN)
 
 ONLY = [x for x in os.environ.get('GATE_ONLY', '').split(',') if x]   # run only these checks (e.g. a mutation test)
 
@@ -23,6 +24,10 @@ def check(name, guards):
             ok, detail = fn()
         except Exception as e:  # a check that cannot run is a failure, not a skip
             ok, detail = False, f'error: {e}'
+        if ok is None:   # nothing to guard yet: not a pass and not a failure
+            PENDING.append(name)
+            print(f"PLAN  {name:28s} [{guards}] {detail} ({time.time() - t:.1f}s)")
+            return fn
         RESULTS.append((name, ok))
         print(f"{'PASS' if ok else 'FAIL'}  {name:28s} [{guards}] {detail} ({time.time() - t:.1f}s)")
         if os.environ.get('GATE_MEM'):
@@ -144,7 +149,7 @@ def db():
     if _DB is None:
         import duckdb
         os.makedirs('warehouse/duckdb_tmp', exist_ok=True)
-        _DB = duckdb.connect(DB, read_only=True, config={'memory_limit': os.environ.get('GATE_DB_MEMORY', '1500MB'), 'threads': 4,
+        _DB = duckdb.connect(DB, read_only=True, config={'memory_limit': os.environ.get('GATE_DB_MEMORY', '1500MB'), 'threads': int(os.environ.get('GATE_THREADS', 4)),
                                                          'temp_directory': 'warehouse/duckdb_tmp'})
     return _DB
 
@@ -877,6 +882,34 @@ def independent_cubes():
     return _CACHE['indep']
 
 
+def independent_t12():
+    """The trailing 12 months ending at the latest month, recomputed for every entity with at least one month inside
+    the window (D-034): {entity: row}. Months from the entity's first month (or the window start) to the latest month;
+    months after the entity's last month count 0 (headcount included), so h is the latest month's headcount."""
+    if 't12x' in _CACHE: return _CACHE['t12x']
+    flows, cte = cell_cte()
+    fl = ['h'] + [c for c in flows if c != 'los_tenths']
+    sql = f"""WITH {cte},
+      ek AS ({keyed_sql('cell', ['m'] + fl)}),
+      ec AS (SELECT e, m, {', '.join(f'sum({c}) AS {c}' for c in fl)} FROM ek GROUP BY e, m),
+      span AS (SELECT e, min(m) AS fm, max(m) AS lm FROM ec WHERE h > 0 OR hires > 0 OR departures > 0 GROUP BY e),
+      win AS (SELECT DISTINCT period AS m FROM emp_org_month ORDER BY m DESC LIMIT 12),
+      g AS (SELECT e, m, {', '.join(f'coalesce(ec.{c}, 0) AS {c}' for c in fl)}
+            FROM span CROSS JOIN win LEFT JOIN ec USING (e, m)
+            WHERE span.lm >= (SELECT min(m) FROM win) AND m >= span.fm)
+      SELECT e, count(*) AS n, arg_max(h, m) AS h, avg(h) AS mean_h, max(lm) AS lm, {', '.join(f'sum({c}) AS {c}' for c in fl if c != 'h')}
+      FROM g JOIN span USING (e) GROUP BY e"""
+    cur = db().execute(sql)
+    names = [x[0] for x in cur.description]
+    out = {}
+    for x in cur.fetchall():
+        r = dict(zip(names, x))
+        r.update({'t_n': r['n'], 't_departures': r['departures'], 't_hires': r['hires'], 't_mean_h': r['mean_h'], 'los_tenths': 0})
+        out[r['e']] = r
+    _CACHE['t12x'] = out
+    return out
+
+
 def months_of(grain, period, fy, q, months, last=None, first=None):
     """Published months (YYYY-MM) of a period, from its grain and fiscal year/quarter, from the entity's first month
     to its last."""
@@ -1036,6 +1069,7 @@ def _():
         if diff: bad.append(f'{parent} month rows differ from the sum of its {len(kids)} children in {len(diff)} months, e.g. {diff[:2]}')
     # compare: one row per child per fiscal year and the latest trailing 12 months, against the same recomputation
     latest = months[-1]
+    t12x = independent_t12()   # D-034: every child with at least one month inside the window
     cmp = cube_rows('compare')
     exp_parents = set(children)
     if set(cmp) != exp_parents: bad.append(f'compare parents {len(cmp)} != {len(exp_parents)}: {sorted(set(cmp) ^ exp_parents)[:4]}')
@@ -1046,7 +1080,7 @@ def _():
         for lvl, c in kids:
             for (e, g, per), w in want.items():
                 if e == c and g == 'fy': want_keys.add((lvl, c, 'fy', per))
-            if lastm.get(c) == latest: want_keys.add((lvl, c, 't12', latest))
+            if c in t12x: want_keys.add((lvl, c, 't12', latest))
         got = {(r['child_level'], r['child'], r['grain'], r['period']) for r in rs}
         if got != want_keys: bad.append(f'compare {p}: {len(got - want_keys)} extra, {len(want_keys - got)} missing rows')
         for r in rs:
@@ -1055,9 +1089,9 @@ def _():
                 if w is None: continue
                 partial = w['n'] < 12
             else:
-                w0 = want.get((r['child'], 'month', r['period']))
-                if w0 is None: continue
-                w = t12_row(w0, flows); g = 't12'; partial = w0['t_n'] < 12
+                w = t12x.get(r['child'])
+                if w is None or r['period'] != latest: continue
+                g = 't12'; partial = w['n'] < 12
             exp = expected_figures(w, g, flows)
             exp['partial'] = partial
             for c in cols:
@@ -1069,13 +1103,59 @@ def _():
     t12 = [r for r in cmp['GOV'][1] if r['grain'] == 't12']
     gov_a = next(r['attrition_a_num'] for r in core['GOV'][1] if r['grain'] == 'month' and r['period'] == latest)
     ended = sorted(k for k in ends if ends[k] < latest)
+    t12_ended = sum(1 for r in t12 if str(t12x[r['child']]['lm'])[:7] < latest)
     return not bad, '; '.join(bad[:6]) + (f' ({mism} mismatches)' if mism > 6 else '') or (
         f"{sum(len(rs) for _, rs in core.values()):,} core rows ({len(core)} entities: GOV, {sum(1 for l, _ in children['GOV'])} departments, "
         f"4 DOD agencies, every subelement, {len(late)} beginning after {months[0]}, {len(ended)} ending before {latest}) and {n_c:,} compare rows ({len(cmp)} parents) = independent SQL "
         f"recomputation from emp_org_month and the action rows; every column declares a kind; incl. partial {gfy.get('period')} "
         f"({gfy.get('months_published')} of 12 months, headcount {gfy.get('headcount', 0):,}) and the trailing 12 months to {latest} "
-        f"({len(t12)} departments in GOV compare, departures {sum(r['departures'] for r in t12):,}; GOV method A numerator {gov_a:,}); categories and the seven reasons partition; GOV = sum of departments, DOD = sum of "
+        f"({len(t12)} departments in GOV compare, {t12_ended} of them ended inside the window (D-034), departures {sum(r['departures'] for r in t12):,}; GOV method A numerator {gov_a:,}); categories and the seven reasons partition; GOV = sum of departments, DOD = sum of "
         f"its agencies, each department = sum of its subelements, every month")
+
+
+@check('compare_t12_children_sum', 'inv 2')
+def _():
+    """D-034: in the compare cube's trailing-12-month rows, children sum exactly to their parent for every flow and
+    stock column, at every level: departments to GOV, subelements and DOD agencies to their department, DOD
+    subelements to their DOD agency. The parent figure is the gate's own SQL recomputation (independent_t12); GOV is
+    also held to its core method A numerators (the verifier's L-022 finding: 329,607 vs 329,623)."""
+    bad = []
+    t12x = independent_t12()
+    months = sorted(EMP_FILES); latest = months[-1]
+    meta = cube_meta('compare')
+    cols = [d['name'] for d in meta['columns'] if d['kind'] in ('flow', 'stock')]
+    ent = cube_meta('core')['entities']
+    groups = {}   # (parent entity, child level) -> [t12 rows]
+    for p, (_, rs) in cube_rows('compare').items():
+        for r in rs:
+            if r['grain'] != 't12': continue
+            if r['period'] != latest: bad.append(f"compare {p} {r['child']} t12 period {r['period']} != {latest}"); continue
+            groups.setdefault((p, r['child_level']), []).append(r)
+            if p == 'DOD' and r['child_level'] == 'subelement':
+                groups.setdefault((ent[r['child']]['parent'], 'subelement'), []).append(r)
+    n_cells = 0
+    for (parent, lvl), rs in sorted(groups.items()):
+        par = t12x.get(parent)
+        if par is None: bad.append(f'{parent} has t12 child rows but no month inside the window'); continue
+        want = {'headcount': par['h'], **{c: par[c] for c in cols if c != 'headcount'}}
+        for c in cols:
+            got = sum(r[c] for r in rs); n_cells += 1
+            if got != want[c]: bad.append(f'{parent} t12 {c}: {len(rs)} {lvl} children sum {got:,} != parent {want[c]:,}')
+    # every parent with a month inside the window has its children's rows (no parent left without a partition)
+    for p, (_, rs) in cube_rows('compare').items():
+        if p in t12x and not any(r['grain'] == 't12' for r in rs): bad.append(f'compare {p}: parent has a t12 window but no child rows')
+    gov = [r for r in cube_rows('compare')['GOV'][1] if r['grain'] == 't12']
+    g = next(r for r in cube_rows('core')['GOV'][1] if r['grain'] == 'month' and r['period'] == latest)
+    for c, a in (('departures', 'attrition_a_num'), ('hires', 'hire_a_num')):
+        if sum(r[c] for r in gov) != g[a]: bad.append(f'GOV t12 {c} sum of departments {sum(r[c] for r in gov):,} != core method A numerator {g[a]:,}')
+    ended = [r['child'] for r in gov if str(t12x[r['child']]['lm'])[:7] < latest]
+    nz = sum(1 for (p, _), rs in groups.items() for r in rs if str(t12x[r['child']]['lm'])[:7] < latest and r['headcount'] != 0)
+    if nz: bad.append(f'{nz} t12 rows of children that ended inside the window carry a headcount (must be 0)')
+    return not bad, '; '.join(bad[:6]) + (f' (+{len(bad) - 6} more)' if len(bad) > 6 else '') or (
+        f"{len(groups)} parent-level groups, {n_cells:,} flow and stock sums ({len(cols)} columns: headcount and {len(cols) - 1} flows): "
+        f"children = parent's independent SQL recomputation for the trailing 12 months to {latest}; GOV departures "
+        f"{sum(r['departures'] for r in gov):,} = core method A numerator {g['attrition_a_num']:,}, hires {sum(r['hires'] for r in gov):,}; "
+        f"{len(gov)} departments incl. {len(ended)} that ended inside the window ({', '.join(sorted(ended))}), headcount 0")
 
 
 @check('coverage_columns', 'inv 4')
@@ -1193,7 +1273,8 @@ def _():
         for key, (cols, rs) in cube_rows(name).items():
             for r in rs:
                 e = r['entity'] if name == 'core' else r['child']
-                ms = months_of(r['grain'], r['period'], r['fiscal_year'], r.get('fiscal_quarter'), months, lastm.get(e), firstm.get(e))
+                t12c = name == 'compare' and r['grain'] == 't12'   # D-034: the window runs to the latest month
+                ms = months_of(r['grain'], r['period'], r['fiscal_year'], r.get('fiscal_quarter'), months, None if t12c else lastm.get(e), firstm.get(e))
                 ids = set()
                 for m in ms: ids |= kd.get((e, m), set())
                 exp = {'provisional': any(m in prov for m in ms), 'reissued': any(m in reissued for m in ms),
@@ -1844,13 +1925,18 @@ def lookup_spec_fields():
     if m.group(4) != 'the same without drp_indicator, with accession_category in place of separation_category':
         raise ValueError(f'spec hires rule changed: {m.group(4)!r}')
     hires = [('accession_category' if c == 'separation_category' else c) for c in dep if c != 'drp_indicator']
-    if m.group(6) != 'snapshot_yyyymm, the six organization fields and the 14 fields from occupational_series_code to duty_station_state above':
-        raise ValueError(f'spec employees rule changed: {m.group(6)!r}')
+    e = re.fullmatch(r'snapshot_yyyymm, the six organization fields and the (\d+) fields from occupational_series_code to duty_station_state above', m.group(6))
+    if not e: raise ValueError(f'spec employees rule changed: {m.group(6)!r}')
     emp = ['snapshot_yyyymm'] + dep[:6] + dep[dep.index('occupational_series_code'):dep.index('duty_station_state') + 1]
+    if len(emp) - 7 != int(e.group(1)): raise ValueError(f'spec employees rule names {e.group(1)} fields, the departures list gives {len(emp) - 7}')
     out = {'separations': dep, 'accessions': hires, 'employment': emp}
     for ds, n in zip(out, (m.group(1), m.group(3), m.group(5))):
         if len(out[ds]) != int(n): raise ValueError(f'spec section 10 {ds}: {len(out[ds])} fields listed, the section says {n}')
     return out
+
+
+LOOKUP_FY = ("(CAST(substr(personnel_action_effective_date_yyyymm, 1, 4) AS INTEGER) "
+             "+ CAST(CAST(substr(personnel_action_effective_date_yyyymm, 5, 2) AS INTEGER) >= 10 AS INTEGER))")   # effective fiscal year
 
 
 def lookup_plan():
@@ -1858,8 +1944,7 @@ def lookup_plan():
     fiscal year of each action dataset (before Oct 2011 in before_FY2012), one per published department of the latest
     employment month (missing or 'No Data Reported' department in NOT_REPORTED)."""
     out = {}
-    fy = ("(CAST(substr(personnel_action_effective_date_yyyymm, 1, 4) AS INTEGER) "
-          "+ CAST(CAST(substr(personnel_action_effective_date_yyyymm, 5, 2) AS INTEGER) >= 10 AS INTEGER))")
+    fy = LOOKUP_FY
     for ds in ('separations', 'accessions'):
         for (y,) in rows(f"SELECT DISTINCT {fy} FROM {raw(ds)}"):
             name = f'{ds}_FY{y}' if y >= 2012 else f'{ds}_before_FY2012'
@@ -1928,23 +2013,52 @@ def _():
         if rows(f"SELECT count(*) FROM parquet_kv_metadata('{path}')")[0][0]: bad.append(f'{name} carries key-value metadata')
         if fi.get('sha256') != h(path) or fi.get('bytes') != sizes[name] or fi.get('path') != f'lookup/{name}.parquet': bad.append(f'{name} sha256, size or path differs from the meta')
     # one-to-one with the raw rows: EXCEPT ALL empty both ways for every file, and row, REDACTED and NULL counts equal
-    # per source month for each dataset (all action files; the latest employment month in full)
+    # per source month for each dataset (all action files; the latest employment month in full).
+    # Speed without weakening (L-031): each action dataset's raw rows are read once into a temp table holding the
+    # Look-Up projection plus the effective fiscal year, verified to hold every raw row (count = Parquet footers), and
+    # each file is compared against its fiscal year there; the employment files are compared in one EXCEPT ALL each way
+    # with every row tagged by its file (Look-Up side) and by the file the plan assigns it (raw side), which also
+    # catches a row in the wrong file. The cache and the DuckDB connection are released first (3 GB machine).
+    global _DB
+    _CACHE.clear()
+    if _DB is not None: _DB.close(); _DB = None  # everything cached is recomputed on demand; a new connection starts with an empty buffer pool
+    import gc; gc.collect()
     n_rows = {}
     for ds in ('separations', 'accessions', 'employment'):
         cols = spec[ds]
         sel = ', '.join(f'{LOOKUP_PERIOD} AS period' if c == 'period' else c for c in cols)
-        src = raw(ds) if ds != 'employment' else f"read_parquet('{EMP_FILES[LATEST]}', filename=true)"
         names = sorted(n for n, (d, _) in plan.items() if d == ds and n in on_disk)
-        for name in names:
-            w = plan[name][1]; lk = f"read_parquet('{LOOKUP}/{name}.parquet')"
-            a = rows(f"SELECT count(*) FROM (SELECT {', '.join(cols)} FROM {lk} EXCEPT ALL SELECT {sel} FROM {src} WHERE {w})")[0][0]
-            b = rows(f"SELECT count(*) FROM (SELECT {sel} FROM {src} WHERE {w} EXCEPT ALL SELECT {', '.join(cols)} FROM {lk})")[0][0]
-            if a or b: bad.append(f'{name}: {a} Look-Up rows not in the source, {b} source rows not in the Look-Up')
+        lfiles = ', '.join(f"'{LOOKUP}/{n}.parquet'" for n in names)
+        cl = ', '.join(cols)
+        if ds != 'employment':
+            db().execute(f"CREATE OR REPLACE TEMP TABLE gate_lookup_src AS SELECT {sel}, {LOOKUP_FY} AS fy_ FROM {raw(ds)}")
+            src, from_src = 'gate_lookup_src', f'SELECT {cl} FROM gate_lookup_src'
+            n_src = rows('SELECT count(*) FROM gate_lookup_src')[0][0]
+            n_pq = rows(f"SELECT sum(num_rows) FROM parquet_file_metadata('data/{DATASETS[ds]}/{ds}_*.parquet')")[0][0]
+            if n_src != n_pq: bad.append(f'{ds}: temp copy holds {n_src} rows, the Parquet footers {n_pq}')
+            for name in names:
+                w = plan[name][1]
+                if LOOKUP_FY not in w: bad.append(f'{name}: plan clause is not on the fiscal year'); continue
+                w = w.replace(LOOKUP_FY, 'fy_'); lk = f"read_parquet('{LOOKUP}/{name}.parquet')"
+                a = rows(f"SELECT count(*) FROM (SELECT {cl} FROM {lk} EXCEPT ALL SELECT {cl} FROM {src} WHERE {w})")[0][0]
+                b = rows(f"SELECT count(*) FROM (SELECT {cl} FROM {src} WHERE {w} EXCEPT ALL SELECT {cl} FROM {lk})")[0][0]
+                if a or b: bad.append(f'{name}: {a} Look-Up rows not in the source, {b} source rows not in the Look-Up')
+        else:
+            src = f"read_parquet('{EMP_FILES[LATEST]}', filename=true)"
+            from_src = f'SELECT {sel} FROM {src}'
+            tag = 'CASE ' + ' '.join(f"WHEN {plan[n][1]} THEN '{n}'" for n in names) + ' END'
+            lk = f"(SELECT regexp_extract(filename, '([^/]+)[.]parquet$', 1) AS file_, {cl} FROM read_parquet([{lfiles}], filename=true))"
+            rs = f"(SELECT {tag} AS file_, {sel} FROM {src})"
+            a = rows(f"SELECT file_, count(*) FROM (SELECT * FROM {lk} EXCEPT ALL SELECT * FROM {rs}) GROUP BY 1 ORDER BY 1")
+            b = rows(f"SELECT file_, count(*) FROM (SELECT * FROM {rs} EXCEPT ALL SELECT * FROM {lk}) GROUP BY 1 ORDER BY 1")
+            bad += [f'{f}: {c} Look-Up rows not in the source' for f, c in a] + [f'{f}: {c} source rows not in the Look-Up' for f, c in b]
         key = 'snapshot_yyyymm' if ds == 'employment' else 'period'
         agg = ', '.join(f"count(*) FILTER (WHERE {c} = 'REDACTED'), count(*) FILTER (WHERE {c} IS NULL)" for c in cols)
-        lfiles = ', '.join(f"'{LOOKUP}/{n}.parquet'" for n in names)
         lc = {x[0]: x[1:] for x in rows(f"SELECT {key}, count(*), {agg} FROM read_parquet([{lfiles}]) GROUP BY 1")}
-        rc = {x[0]: x[1:] for x in rows(f"SELECT {key}, count(*), {agg} FROM (SELECT {sel} FROM {src}) GROUP BY 1")}
+        rc = {x[0]: x[1:] for x in rows(f"SELECT {key}, count(*), {agg} FROM ({from_src}) GROUP BY 1")}
+        if ds != 'employment': db().execute('DROP TABLE gate_lookup_src')
+        if os.environ.get('GATE_MEM'):
+            import resource; print(f'      Look-Up {ds} compared, peak RSS {resource.getrusage(resource.RUSAGE_SELF).ru_maxrss / 1e9:.2f} GB', flush=True)
         if lc != rc: bad.append(f'{ds}: row, REDACTED or NULL counts differ from the raw rows in source month(s) {sorted(k for k in set(lc) | set(rc) if lc.get(k) != rc.get(k))[:3]}')
         n_rows[ds] = (len(names), sum(v[0] for v in lc.values()), len(lc))
         if sum(v[0] for v in lc.values()) != sum(fi['rows'] for n, fi in meta.get('files', {}).items() if n in names): bad.append(f'{ds}: meta row counts != files')
@@ -1974,20 +2088,72 @@ def _():
     big = max(sizes.items(), key=lambda x: x[1]) if sizes else ('none', 0)
     return not bad, '; '.join(bad[:5]) + (f' (+{len(bad) - 5} more)' if len(bad) > 5 else '') or (
         f"{len(sizes)} files ({', '.join(f'{ds} {v[0]} files {v[1]:,} rows from {v[2]} source months' for ds, v in n_rows.items())}): "
-        f"columns = lookup_fields.csv = spec section 10 (24/23/21), all VARCHAR, plain Parquet v1 + ZSTD, no key-value metadata; "
+        f"columns = lookup_fields.csv = spec section 10 ({'/'.join(str(len(spec[d])) for d in ('separations', 'accessions', 'employment'))}), all VARCHAR, plain Parquet v1 + ZSTD, no key-value metadata; "
         f"every file EXCEPT ALL empty both ways against the raw rows (all action files, latest employment month {LATEST} in full); "
         f"row, REDACTED and NULL counts equal per source month; length-of-service issues kept as published ({', '.join(f'{k} {v:,}' for k, v in sorted(kdi_n.items()))}); "
         f"largest {big[0]}.parquet {big[1] / 1e6:.2f} MB (limit 100 MB); total {sum(sizes.values()) / 1e6:.1f} MB; "
         f"no join, window function or SELECT * in build_lookup.py")
 
 
-# name, invariant, the phase whose output it guards
-PLANNED = [
-    ('promoted_matches_staged', 'inv 1', 'Phase 4 promotion'),
-]
-for name, guards, phase in PLANNED:
-    print(f"PLAN  {name:28s} [{guards}] not built yet; required before {phase} ships")
+# ---- invariant 1: promoted files are the staged files (D-036) ----
+WEB_DATA = os.environ.get('OPM_WEB_DATA') or 'web/data'   # override only to test the check on a copy
+
+
+def staged_source(rel):
+    """The staged file a promoted path serves, by the layout web/tools/dev-server.js maps: lookup.meta.json and
+    lookup/... from warehouse/lookup/, everything else from warehouse/cubes/."""
+    if rel == 'lookup.meta.json': return f'{LOOKUP}/lookup.meta.json'
+    if rel.startswith('lookup/'): return f'{LOOKUP}/{rel[len("lookup/"):]}'
+    return f'{CUBES}/{rel}'
+
+
+@check('promoted_matches_staged', 'inv 1')
+def _():
+    """Every file in web/data/ (any depth) is byte-identical (sha256) to its staged source in warehouse/; every promoted
+    meta carries the same manifest hash as its staged meta and as the current manifest; every staged meta
+    (warehouse/cubes/*.meta.json and lookup.meta.json) is promoted, and every meta web/assets/js names is staged; a
+    promoted meta's files are all promoted with it and every promoted data file is listed by a promoted meta. Reports PLAN while web/data/ is
+    absent or empty: with nothing promoted there is nothing to compare, and a PASS would read as a checked promotion."""
+    import hashlib
+    tag = f' [override {WEB_DATA}]' if os.environ.get('OPM_WEB_DATA') else ''
+    present = sorted(os.path.relpath(os.path.join(r, f), WEB_DATA) for r, _, fs in os.walk(WEB_DATA) for f in fs) if os.path.isdir(WEB_DATA) else []
+    if not present: return None, f'nothing promoted ({WEB_DATA} {"empty" if os.path.isdir(WEB_DATA) else "absent"}); checks every file once present (D-036)' + tag
+    h = lambda p: hashlib.sha256(open(p, 'rb').read()).hexdigest()
+    bad, want = [], canonical_manifest_hash()
+    for rel in present:
+        stg = staged_source(rel)
+        if not os.path.isfile(stg): bad.append(f'{rel} has no staged source ({stg})'); continue
+        if h(f'{WEB_DATA}/{rel}') != h(stg): bad.append(f'{rel} differs from {stg}')
+    metas = [r for r in present if r.endswith('.meta.json')]
+    # a promotion is all or nothing: every staged meta (the full set the pages are built on) must be promoted, so a
+    # dropped cube, a dropped Look-Up or a partial promotion fails. The required set is the staged metas, not a parse
+    # of web/assets/js, because the pages build some meta names at run time (page-who.js: CUBE + '.meta.json'); every
+    # literal meta the scripts do fetch must be in that set, so a page fetching a meta nobody stages also fails.
+    required = sorted([f for f in os.listdir(CUBES) if f.endswith('.meta.json')] + (['lookup.meta.json'] if os.path.isfile(f'{LOOKUP}/lookup.meta.json') else []))
+    js = 'web/assets/js'
+    fetched = sorted({m for f in os.listdir(js) if f.endswith('.js') for m in re.findall(r"data/([\w-]+\.meta\.json)", open(f'{js}/{f}', encoding='utf-8').read())})
+    unstaged = sorted(set(fetched) - set(required))
+    if unstaged: bad.append(f'pages fetch meta(s) with no staged source: {unstaged}')
+    absent = sorted(set(required) - set(metas))
+    if absent: bad.append(f'{len(absent)} of {len(required)} staged metas not promoted: {absent}')
+    listed = set()
+    for rel in metas:
+        m, stg = json.load(open(f'{WEB_DATA}/{rel}')), staged_source(rel)
+        sm = json.load(open(stg)) if os.path.isfile(stg) else {}
+        if m.get('manifest_sha256') != sm.get('manifest_sha256'): bad.append(f'{rel} manifest {str(m.get("manifest_sha256"))[:12]} != staged {str(sm.get("manifest_sha256"))[:12]}')
+        if m.get('manifest_sha256') != want: bad.append(f'{rel} manifest {str(m.get("manifest_sha256"))[:12]} != current manifest {want[:12]}')
+        paths = {fi['path'] for fi in m.get('files', {}).values()}
+        listed |= paths
+        miss = sorted(paths - set(present))
+        if miss: bad.append(f'{rel} lists {len(miss)} file(s) not promoted, e.g. {miss[:2]}')
+    orphan = sorted(set(present) - set(metas) - listed)
+    if orphan: bad.append(f'{len(orphan)} promoted file(s) no promoted meta lists, e.g. {orphan[:2]}')
+    if bad: return False, '; '.join(bad[:6]) + (f' (+{len(bad) - 6} more)' if len(bad) > 6 else '') + tag
+    return True, (f'{len(present):,} files in {WEB_DATA} ({len(metas)} metas) = their staged sources byte for byte (sha256); '
+                  f'all {len(required)} staged metas promoted ({", ".join(m[:-10] for m in required)}; covers the {len(fetched)} the pages name literally); '
+                  f'every meta on manifest {want[:12]} as staged; no meta missing its files, no file outside a meta' + tag)
+
 
 n_pass = sum(ok for _, ok in RESULTS)
-print(f"\n{n_pass} of {len(RESULTS)} checks pass ({len(PLANNED)} planned)" + (f'; SUBSET only: GATE_ONLY={",".join(ONLY)}' if ONLY else ''))
+print(f"\n{n_pass} of {len(RESULTS)} checks pass ({len(PENDING)} planned)" + (f'; SUBSET only: GATE_ONLY={",".join(ONLY)}' if ONLY else ''))
 sys.exit(0 if n_pass == len(RESULTS) else 1)

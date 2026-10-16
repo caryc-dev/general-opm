@@ -80,3 +80,9 @@ test('the nine page tabs come from shell.nav, in the order of page-spec section 
   assert.deepEqual(strings['shell.nav'].split(' · '), ['Administrations', 'Workforce size', 'Hiring and departures', 'Departments compared',
     'Who is leaving', 'Who is joining', 'Appointments', 'Look-Up', 'Reading the data']);
 });
+
+test('every Look-Up column (page 8) has its p8.col key, including the occupational family (D-037)', () => {
+  const LM = require('../assets/js/lookup-model.js');
+  for (const [k] of LM.COLUMNS) assert.ok(('p8.col.' + k) in strings, 'missing p8.col.' + k);
+  assert.equal(strings['p8.col.family'], 'Occupational family');
+});

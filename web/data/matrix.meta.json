@@ -1,0 +1,1609 @@
+{
+ "cube": "matrix",
+ "format": "one JSON file for all entities, files[\"matrix\"].path: {\"cube\", \"columns\", \"rows\"}; one row per entity, administration and month in office",
+ "manifest_sha256": "86d0cd47076a2a689d314094010e0fdab5794b4e2a5852ad3225eecd5cdd09d1",
+ "manifest_hash_method": "sha256 of data/opm_manifest.json canonical content: records sorted by (dataset, filename), json.dumps(sort_keys=True, separators=(\",\", \":\"))",
+ "time_basis": "effective",
+ "spec": "docs/cube-plan.md (signed, D-016; amendment 1, signed 2026-10-15: matrix cube); definitions as the admin cube: docs/metric-spec.md (signed, D-014, D-015, D-018; sections 2, 3, 4, 9 and the definitions it adopts); docs/cube-plan.md (signed, D-016, section 2)",
+ "range": {
+  "first_month": "2011-10",
+  "last_month": "2026-08"
+ },
+ "provisional_months": [
+  "2026-06",
+  "2026-07",
+  "2026-08"
+ ],
+ "reissued_months": [],
+ "revision_baseline": {
+  "file": "revision_baseline.json",
+  "manifest_sha256": "86d0cd47076a2a689d314094010e0fdab5794b4e2a5852ad3225eecd5cdd09d1",
+  "prior_manifest_sha256": null
+ },
+ "small_base_threshold": 30,
+ "known_data_issues": {
+  "file": "pipeline/known_data_issues.csv",
+  "sha256": "aa0056a088bd7a6914969b3e9bd3be8af77ee9cb3ee87efb043c11de15d157e0",
+  "applied": [
+   {
+    "id": "KDI-001",
+    "treatment": "unknown",
+    "decision": "D-014"
+   },
+   {
+    "id": "KDI-002",
+    "treatment": "unusable",
+    "decision": "D-014"
+   },
+   {
+    "id": "KDI-003",
+    "treatment": "counted_flagged",
+    "decision": "D-011"
+   },
+   {
+    "id": "KDI-004",
+    "treatment": "department_from_agency",
+    "decision": "D-014"
+   },
+   {
+    "id": "KDI-005",
+    "treatment": "department_from_agency",
+    "decision": "D-014"
+   },
+   {
+    "id": "KDI-006",
+    "treatment": "flagged_incomplete",
+    "decision": "D-014"
+   },
+   {
+    "id": "KDI-007",
+    "treatment": "unknown_with_coverage",
+    "decision": "D-014"
+   },
+   {
+    "id": "KDI-008",
+    "treatment": "department_from_agency",
+    "decision": "D-015"
+   },
+   {
+    "id": "KDI-009",
+    "treatment": "unknown",
+    "decision": "D-018"
+   },
+   {
+    "id": "KDI-010",
+    "treatment": "unknown",
+    "decision": "D-021"
+   }
+  ]
+ },
+ "administrations": {
+  "file": "pipeline/crosswalks/administrations.csv",
+  "sha256": "0e11c41a84d7841c6acd50f452c00a5021cee295082d2d6c1cbaf9b4ea784ea8",
+  "list": [
+   {
+    "id": "obama2",
+    "name": "Obama II",
+    "month_0": "2012-12",
+    "first_month": "2013-01",
+    "last_month": "2016-12",
+    "open": false
+   },
+   {
+    "id": "trump1",
+    "name": "Trump I",
+    "month_0": "2016-12",
+    "first_month": "2017-01",
+    "last_month": "2020-12",
+    "open": false
+   },
+   {
+    "id": "biden",
+    "name": "Biden",
+    "month_0": "2020-12",
+    "first_month": "2021-01",
+    "last_month": "2024-12",
+    "open": false
+   },
+   {
+    "id": "trump2",
+    "name": "Trump II",
+    "month_0": "2024-12",
+    "first_month": "2025-01",
+    "last_month": "2026-08",
+    "open": true
+   }
+  ]
+ },
+ "files_digest_method": "sha256 of the lines '<path> <sha256>\\n' for every file, sorted by path",
+ "known_data_issues_in_rows": [
+  "KDI-003",
+  "KDI-004",
+  "KDI-005",
+  "KDI-006",
+  "KDI-008"
+ ],
+ "source": {
+  "cube": "admin",
+  "meta": "admin.meta.json",
+  "files_sha256": "08f77c4c8dece935867422504b02723f33d7a8ee11d4e2e3da76454e2ec2070c",
+  "rule": "every value copied from the admin cube row of the same entity, administration and month in office; no recomputation"
+ },
+ "entities": {
+  "AA": {
+   "level": "department",
+   "code": "AA",
+   "parent": "GOV",
+   "name": "ADMINISTRATIVE CONFERENCE OF THE UNITED STATES",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "AB": {
+   "level": "department",
+   "code": "AB",
+   "parent": "GOV",
+   "name": "AMERICAN BATTLE MONUMENTS COMMISSION",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "AG": {
+   "level": "department",
+   "code": "AG",
+   "parent": "GOV",
+   "name": "DEPARTMENT OF AGRICULTURE",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "AH": {
+   "level": "department",
+   "code": "AH",
+   "parent": "GOV",
+   "name": "NATIONAL FOUNDATION ON THE ARTS AND THE HUMANITIES",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "AM": {
+   "level": "department",
+   "code": "AM",
+   "parent": "GOV",
+   "name": "U.S. AGENCY FOR INTERNATIONAL DEVELOPMENT",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "AN": {
+   "level": "department",
+   "code": "AN",
+   "parent": "GOV",
+   "name": "AFRICAN DEVELOPMENT FOUNDATION",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "AP": {
+   "level": "department",
+   "code": "AP",
+   "parent": "GOV",
+   "name": "APPALACHIAN REGIONAL COMMISSION",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "AU": {
+   "level": "department",
+   "code": "AU",
+   "parent": "GOV",
+   "name": "FEDERAL LABOR RELATIONS AUTHORITY",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "AW": {
+   "level": "department",
+   "code": "AW",
+   "parent": "GOV",
+   "name": "ARCTIC RESEARCH COMMISSION",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "BD": {
+   "level": "department",
+   "code": "BD",
+   "parent": "GOV",
+   "name": "MERIT SYSTEMS PROTECTION BOARD",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "BF": {
+   "level": "department",
+   "code": "BF",
+   "parent": "GOV",
+   "name": "DEFENSE NUCLEAR FACILITIES SAFETY BOARD",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "BG": {
+   "level": "department",
+   "code": "BG",
+   "parent": "GOV",
+   "name": "PENSION BENEFIT GUARANTY CORPORATION",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "BH": {
+   "level": "department",
+   "code": "BH",
+   "parent": "GOV",
+   "name": "COMMISSION FOR THE PRESERVATION OF AMERICA'S HERITAGE ABROAD",
+   "first_month": "2014-03",
+   "last_month": "2026-08"
+  },
+  "BK": {
+   "level": "department",
+   "code": "BK",
+   "parent": "GOV",
+   "name": "JAMES MADISON MEMORIAL FELLOWSHIP FOUNDATION",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "BO": {
+   "level": "department",
+   "code": "BO",
+   "parent": "GOV",
+   "name": "OFFICE OF MANAGEMENT AND BUDGET",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "BT": {
+   "level": "department",
+   "code": "BT",
+   "parent": "GOV",
+   "name": "ARCHITECTURAL AND TRANSPORTATION BARRIERS COMPLIANCE BOARD",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "BW": {
+   "level": "department",
+   "code": "BW",
+   "parent": "GOV",
+   "name": "NUCLEAR WASTE TECHNICAL REVIEW BOARD",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "BZ": {
+   "level": "department",
+   "code": "BZ",
+   "parent": "GOV",
+   "name": "CHRISTOPHER COLUMBUS FELLOWSHIP FOUNDATION",
+   "first_month": "2011-10",
+   "last_month": "2017-01"
+  },
+  "CC": {
+   "level": "department",
+   "code": "CC",
+   "parent": "GOV",
+   "name": "COMMISSION ON CIVIL RIGHTS",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "CE": {
+   "level": "department",
+   "code": "CE",
+   "parent": "GOV",
+   "name": "COUNCIL OF ECONOMIC ADVISERS",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "CF": {
+   "level": "department",
+   "code": "CF",
+   "parent": "GOV",
+   "name": "COMMISSION OF FINE ARTS",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "CM": {
+   "level": "department",
+   "code": "CM",
+   "parent": "GOV",
+   "name": "DEPARTMENT OF COMMERCE",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "CT": {
+   "level": "department",
+   "code": "CT",
+   "parent": "GOV",
+   "name": "COMMODITY FUTURES TRADING COMMISSION",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "CU": {
+   "level": "department",
+   "code": "CU",
+   "parent": "GOV",
+   "name": "NATIONAL CREDIT UNION ADMINISTRATION",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "CX": {
+   "level": "department",
+   "code": "CX",
+   "parent": "GOV",
+   "name": "NATIONAL COMMISSION ON LIBRARIES AND INFORMATION SCIENCE",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "DA": {
+   "level": "department",
+   "code": "DA",
+   "parent": "GOV",
+   "name": "DELTA REGIONAL AUTHORITY",
+   "first_month": "2021-11",
+   "last_month": "2026-08"
+  },
+  "DB": {
+   "level": "department",
+   "code": "DB",
+   "parent": "GOV",
+   "name": "PUBLIC INTEREST DECLASSIFICATION BOARD",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "DF": {
+   "level": "department",
+   "code": "DF",
+   "parent": "GOV",
+   "name": "OFFICE OF THE FEDERAL COORDINATOR FOR ALASKA NATURAL GAS TRANSPORTATION PROJECTS",
+   "first_month": "2011-10",
+   "last_month": "2015-03"
+  },
+  "DG": {
+   "level": "department",
+   "code": "DG",
+   "parent": "GOV",
+   "name": "NORTHERN BORDER REGIONAL COMMISSION",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "DJ": {
+   "level": "department",
+   "code": "DJ",
+   "parent": "GOV",
+   "name": "DEPARTMENT OF JUSTICE",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "DL": {
+   "level": "department",
+   "code": "DL",
+   "parent": "GOV",
+   "name": "DEPARTMENT OF LABOR",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "DN": {
+   "level": "department",
+   "code": "DN",
+   "parent": "GOV",
+   "name": "DEPARTMENT OF ENERGY",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "DO": {
+   "level": "department",
+   "code": "DO",
+   "parent": "GOV",
+   "name": "OFFICE OF THE CYBER DIRECTOR",
+   "first_month": "2021-07",
+   "last_month": "2026-08"
+  },
+  "DOD": {
+   "level": "department",
+   "code": "DOD",
+   "parent": "GOV",
+   "name": "DEPARTMENT OF DEFENSE",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "DQ": {
+   "level": "department",
+   "code": "DQ",
+   "parent": "GOV",
+   "name": "DENALI COMMISSION",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "EB": {
+   "level": "department",
+   "code": "EB",
+   "parent": "GOV",
+   "name": "EXPORT-IMPORT BANK OF THE UNITED STATES",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "EC": {
+   "level": "department",
+   "code": "EC",
+   "parent": "GOV",
+   "name": "OFFICE OF ADMINISTRATION",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "ED": {
+   "level": "department",
+   "code": "ED",
+   "parent": "GOV",
+   "name": "DEPARTMENT OF EDUCATION",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "EE": {
+   "level": "department",
+   "code": "EE",
+   "parent": "GOV",
+   "name": "EQUAL EMPLOYMENT OPPORTUNITY COMMISSION",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "EO": {
+   "level": "department",
+   "code": "EO",
+   "parent": "GOV",
+   "name": "MORRIS K. UDALL AND STEWART L. UDALL FOUNDATION",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "EP": {
+   "level": "department",
+   "code": "EP",
+   "parent": "GOV",
+   "name": "ENVIRONMENTAL PROTECTION AGENCY",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "EQ": {
+   "level": "department",
+   "code": "EQ",
+   "parent": "GOV",
+   "name": "COUNCIL ON ENVIRONMENTAL QUALITY/OFFICE OF ENVIRONMENTAL QUALITY",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "EW": {
+   "level": "department",
+   "code": "EW",
+   "parent": "GOV",
+   "name": "TRADE AND DEVELOPMENT AGENCY",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "FC": {
+   "level": "department",
+   "code": "FC",
+   "parent": "GOV",
+   "name": "FEDERAL COMMUNICATIONS COMMISSION",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "FD": {
+   "level": "department",
+   "code": "FD",
+   "parent": "GOV",
+   "name": "FEDERAL DEPOSIT INSURANCE CORPORATION",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "FI": {
+   "level": "department",
+   "code": "FI",
+   "parent": "GOV",
+   "name": "FEDERAL FINANCIAL INSTITUTIONS EXAMINATION COUNCIL",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "FJ": {
+   "level": "department",
+   "code": "FJ",
+   "parent": "GOV",
+   "name": "CHEMICAL SAFETY AND HAZARD INVESTIGATION BOARD",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "FK": {
+   "level": "department",
+   "code": "FK",
+   "parent": "GOV",
+   "name": "FARM CREDIT SYSTEM INSURANCE CORPORATION",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "FL": {
+   "level": "department",
+   "code": "FL",
+   "parent": "GOV",
+   "name": "FARM CREDIT ADMINISTRATION",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "FM": {
+   "level": "department",
+   "code": "FM",
+   "parent": "GOV",
+   "name": "FEDERAL MEDIATION AND CONCILIATION SERVICE",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "FQ": {
+   "level": "department",
+   "code": "FQ",
+   "parent": "GOV",
+   "name": "COURT SERVICES AND OFFENDER SUPERVISION AGENCY FOR THE DISTRICT OF COLUMBIA",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "FR": {
+   "level": "department",
+   "code": "FR",
+   "parent": "GOV",
+   "name": "FEDERAL RESERVE SYSTEM",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "FT": {
+   "level": "department",
+   "code": "FT",
+   "parent": "GOV",
+   "name": "FEDERAL TRADE COMMISSION",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "FW": {
+   "level": "department",
+   "code": "FW",
+   "parent": "GOV",
+   "name": "OFFICE OF SPECIAL COUNSEL",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "GB": {
+   "level": "department",
+   "code": "GB",
+   "parent": "GOV",
+   "name": "DEVELOPMENT FINANCE CORPORATION",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "GC": {
+   "level": "department",
+   "code": "GC",
+   "parent": "GOV",
+   "name": "GULF COAST ECOSYSTEM RESTORATION COUNCIL",
+   "first_month": "2016-05",
+   "last_month": "2026-08"
+  },
+  "GE": {
+   "level": "department",
+   "code": "GE",
+   "parent": "GOV",
+   "name": "BARRY GOLDWATER SCHOLARSHIP AND EXCELLENCE IN EDUCATION FOUNDATION",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "GG": {
+   "level": "department",
+   "code": "GG",
+   "parent": "GOV",
+   "name": "OFFICE OF GOVERNMENT ETHICS",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "GJ": {
+   "level": "department",
+   "code": "GJ",
+   "parent": "GOV",
+   "name": "PRESIDIO TRUST",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "GM": {
+   "level": "department",
+   "code": "GM",
+   "parent": "GOV",
+   "name": "VALLES CALDERA TRUST",
+   "first_month": "2011-10",
+   "last_month": "2017-08"
+  },
+  "GO": {
+   "level": "department",
+   "code": "GO",
+   "parent": "GOV",
+   "name": "VIETNAM EDUCATION FOUNDATION",
+   "first_month": "2011-10",
+   "last_month": "2019-01"
+  },
+  "GQ": {
+   "level": "department",
+   "code": "GQ",
+   "parent": "GOV",
+   "name": "ELECTION ASSISTANCE COMMISSION",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "GS": {
+   "level": "department",
+   "code": "GS",
+   "parent": "GOV",
+   "name": "GENERAL SERVICES ADMINISTRATION",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "GU": {
+   "level": "department",
+   "code": "GU",
+   "parent": "GOV",
+   "name": "THE US SEMIQUINCENTENNIAL COMMISSION",
+   "first_month": "2019-01",
+   "last_month": "2026-08"
+  },
+  "GW": {
+   "level": "department",
+   "code": "GW",
+   "parent": "GOV",
+   "name": "INTERNATIONAL BOUNDARY AND WATER COMMISSION, U.S. SECTION",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "GX": {
+   "level": "department",
+   "code": "GX",
+   "parent": "GOV",
+   "name": "INTERNATIONAL BOUNDARY COMMISSION:  UNITED STATES AND CANADA",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "GY": {
+   "level": "department",
+   "code": "GY",
+   "parent": "GOV",
+   "name": "INTERNATIONAL JOINT COMMISSION:  UNITED STATES AND CANADA",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "GZ": {
+   "level": "department",
+   "code": "GZ",
+   "parent": "GOV",
+   "name": "THE WOMEN'S SUFFRAGE CENTENNIAL COMMISSION",
+   "first_month": "2019-01",
+   "last_month": "2023-12"
+  },
+  "HB": {
+   "level": "department",
+   "code": "HB",
+   "parent": "GOV",
+   "name": "COMMITTEE FOR PURCHASE FROM PEOPLE WHO ARE BLIND OR SE VERELY DISABLED",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "HD": {
+   "level": "department",
+   "code": "HD",
+   "parent": "GOV",
+   "name": "U.S. HOLOCAUST MEMORIAL MUSEUM",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "HE": {
+   "level": "department",
+   "code": "HE",
+   "parent": "GOV",
+   "name": "DEPARTMENT OF HEALTH AND HUMAN SERVICES",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "HF": {
+   "level": "department",
+   "code": "HF",
+   "parent": "GOV",
+   "name": "FEDERAL HOUSING FINANCE AGENCY",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "HP": {
+   "level": "department",
+   "code": "HP",
+   "parent": "GOV",
+   "name": "ADVISORY COUNCIL ON HISTORIC PRESERVATION",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "HS": {
+   "level": "department",
+   "code": "HS",
+   "parent": "GOV",
+   "name": "DEPARTMENT OF HOMELAND SECURITY",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "HT": {
+   "level": "department",
+   "code": "HT",
+   "parent": "GOV",
+   "name": "HARRY S. TRUMAN SCHOLARSHIP FOUNDATION",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "HU": {
+   "level": "department",
+   "code": "HU",
+   "parent": "GOV",
+   "name": "DEPARTMENT OF HOUSING AND URBAN DEVELOPMENT",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "HW": {
+   "level": "department",
+   "code": "HW",
+   "parent": "GOV",
+   "name": "U.S. INTERAGENCY COUNCIL ON HOMELESSNESS",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "IB": {
+   "level": "department",
+   "code": "IB",
+   "parent": "GOV",
+   "name": "U.S. AGENCY FOR GLOBAL MEDIA",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "IF": {
+   "level": "department",
+   "code": "IF",
+   "parent": "GOV",
+   "name": "INTER-AMERICAN FOUNDATION",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "IG": {
+   "level": "department",
+   "code": "IG",
+   "parent": "GOV",
+   "name": "COUNCIL OF THE INSPECTORS GENERAL ON INTEGRITY AND EFFICIENCY",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "IN": {
+   "level": "department",
+   "code": "IN",
+   "parent": "GOV",
+   "name": "DEPARTMENT OF THE INTERIOR",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "IP": {
+   "level": "department",
+   "code": "IP",
+   "parent": "GOV",
+   "name": "INTELLECTUAL PROPERTY ENFORCEMENT COORDINATOR",
+   "first_month": "2020-06",
+   "last_month": "2025-11"
+  },
+  "JL": {
+   "level": "department",
+   "code": "JL",
+   "parent": "GOV",
+   "name": "JUDICIAL BRANCH",
+   "first_month": "2013-08",
+   "last_month": "2026-08"
+  },
+  "KS": {
+   "level": "department",
+   "code": "KS",
+   "parent": "GOV",
+   "name": "CORPORATION FOR NATIONAL AND COMMUNITY SERVICE",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "KY": {
+   "level": "department",
+   "code": "KY",
+   "parent": "GOV",
+   "name": "PUBLIC BUILDINGS REFORM BOARD",
+   "first_month": "2019-03",
+   "last_month": "2026-08"
+  },
+  "LF": {
+   "level": "department",
+   "code": "LF",
+   "parent": "GOV",
+   "name": "FEDERAL ELECTION COMMISSION",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "LP": {
+   "level": "department",
+   "code": "LP",
+   "parent": "GOV",
+   "name": "GOVERNMENT PUBLISHING OFFICE",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "LT": {
+   "level": "department",
+   "code": "LT",
+   "parent": "GOV",
+   "name": "U.S. TAX COURT",
+   "first_month": "2011-10",
+   "last_month": "2013-08"
+  },
+  "MA": {
+   "level": "department",
+   "code": "MA",
+   "parent": "GOV",
+   "name": "MARINE MAMMAL COMMISSION",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "MC": {
+   "level": "department",
+   "code": "MC",
+   "parent": "GOV",
+   "name": "FEDERAL MARITIME COMMISSION",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "MI": {
+   "level": "department",
+   "code": "MI",
+   "parent": "GOV",
+   "name": "MILLENNIUM CHALLENGE CORPORATION",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "NF": {
+   "level": "department",
+   "code": "NF",
+   "parent": "GOV",
+   "name": "NATIONAL SCIENCE FOUNDATION",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "NK": {
+   "level": "department",
+   "code": "NK",
+   "parent": "GOV",
+   "name": "NATIONAL COUNCIL ON DISABILITY",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "NL": {
+   "level": "department",
+   "code": "NL",
+   "parent": "GOV",
+   "name": "NATIONAL LABOR RELATIONS BOARD",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "NM": {
+   "level": "department",
+   "code": "NM",
+   "parent": "GOV",
+   "name": "NATIONAL MEDIATION BOARD",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "NN": {
+   "level": "department",
+   "code": "NN",
+   "parent": "GOV",
+   "name": "NATIONAL AERONAUTICS AND SPACE ADMINISTRATION",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "NP": {
+   "level": "department",
+   "code": "NP",
+   "parent": "GOV",
+   "name": "NATIONAL CAPITAL PLANNING COMMISSION",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "NQ": {
+   "level": "department",
+   "code": "NQ",
+   "parent": "GOV",
+   "name": "NATIONAL ARCHIVES AND RECORDS ADMINISTRATION",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "NS": {
+   "level": "department",
+   "code": "NS",
+   "parent": "GOV",
+   "name": "NATIONAL SECURITY COUNCIL",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "NU": {
+   "level": "department",
+   "code": "NU",
+   "parent": "GOV",
+   "name": "NUCLEAR REGULATORY COMMISSION",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "OM": {
+   "level": "department",
+   "code": "OM",
+   "parent": "GOV",
+   "name": "OFFICE OF PERSONNEL MANAGEMENT",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "OP": {
+   "level": "department",
+   "code": "OP",
+   "parent": "GOV",
+   "name": "OFFICE OF PANDEMIC PREPAREDNESS AND RESPONSE POLICY",
+   "first_month": "2023-09",
+   "last_month": "2025-03"
+  },
+  "OS": {
+   "level": "department",
+   "code": "OS",
+   "parent": "GOV",
+   "name": "OCCUPATIONAL SAFETY AND HEALTH REVIEW COMMISSION",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "OY": {
+   "level": "department",
+   "code": "OY",
+   "parent": "GOV",
+   "name": "COMMISSION ON THE STATE OF U.S. OLYMPICS AND PARALYMPICS (CSUSOP)",
+   "first_month": "2023-01",
+   "last_month": "2023-09"
+  },
+  "PU": {
+   "level": "department",
+   "code": "PU",
+   "parent": "GOV",
+   "name": "PEACE CORPS",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "QQ": {
+   "level": "department",
+   "code": "QQ",
+   "parent": "GOV",
+   "name": "OFFICE OF NATIONAL DRUG CONTROL POLICY",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "RE": {
+   "level": "department",
+   "code": "RE",
+   "parent": "GOV",
+   "name": "OFFICE OF NAVAJO AND HOPI INDIAN RELOCATION",
+   "first_month": "2011-10",
+   "last_month": "2025-09"
+  },
+  "RF": {
+   "level": "department",
+   "code": "RF",
+   "parent": "GOV",
+   "name": "FEDERAL RETIREMENT THRIFT INVESTMENT BOARD",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "RH": {
+   "level": "department",
+   "code": "RH",
+   "parent": "GOV",
+   "name": "ARMED FORCES RETIREMENT HOME",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "RJ": {
+   "level": "department",
+   "code": "RJ",
+   "parent": "GOV",
+   "name": "CIVIL RIGHTS COLD CASE REVIEW BOARD (CRCCRB)",
+   "first_month": "2023-01",
+   "last_month": "2026-08"
+  },
+  "RO": {
+   "level": "department",
+   "code": "RO",
+   "parent": "GOV",
+   "name": "MEDICAID AND CHIP PAYMENT AND ACCESS COMMISSION",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "RR": {
+   "level": "department",
+   "code": "RR",
+   "parent": "GOV",
+   "name": "RAILROAD RETIREMENT BOARD",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "RS": {
+   "level": "department",
+   "code": "RS",
+   "parent": "GOV",
+   "name": "FEDERAL MINE SAFETY AND HEALTH REVIEW COMMISSION",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "RZ": {
+   "level": "department",
+   "code": "RZ",
+   "parent": "GOV",
+   "name": "RECOVERY ACT ACCOUNTABILITY & TRANSPARENCY BOARD",
+   "first_month": "2011-10",
+   "last_month": "2015-09"
+  },
+  "SB": {
+   "level": "department",
+   "code": "SB",
+   "parent": "GOV",
+   "name": "SMALL BUSINESS ADMINISTRATION",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "SE": {
+   "level": "department",
+   "code": "SE",
+   "parent": "GOV",
+   "name": "SECURITIES AND EXCHANGE COMMISSION",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "SK": {
+   "level": "department",
+   "code": "SK",
+   "parent": "GOV",
+   "name": "CONSUMER PRODUCT SAFETY COMMISSION",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "SM": {
+   "level": "department",
+   "code": "SM",
+   "parent": "GOV",
+   "name": "SMITHSONIAN INSTITUTION",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "SS": {
+   "level": "department",
+   "code": "SS",
+   "parent": "GOV",
+   "name": "SELECTIVE SERVICE SYSTEM",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "ST": {
+   "level": "department",
+   "code": "ST",
+   "parent": "GOV",
+   "name": "DEPARTMENT OF STATE",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "SZ": {
+   "level": "department",
+   "code": "SZ",
+   "parent": "GOV",
+   "name": "SOCIAL SECURITY ADMINISTRATION",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "TB": {
+   "level": "department",
+   "code": "TB",
+   "parent": "GOV",
+   "name": "NATIONAL TRANSPORTATION SAFETY BOARD",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "TC": {
+   "level": "department",
+   "code": "TC",
+   "parent": "GOV",
+   "name": "U.S. INTERNATIONAL TRADE COMMISSION",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "TD": {
+   "level": "department",
+   "code": "TD",
+   "parent": "GOV",
+   "name": "DEPARTMENT OF TRANSPORTATION",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "TN": {
+   "level": "department",
+   "code": "TN",
+   "parent": "GOV",
+   "name": "OFFICE OF THE U.S. TRADE REPRESENTATIVE",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "TR": {
+   "level": "department",
+   "code": "TR",
+   "parent": "GOV",
+   "name": "DEPARTMENT OF THE TREASURY",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "TS": {
+   "level": "department",
+   "code": "TS",
+   "parent": "GOV",
+   "name": "OFFICE OF SCIENCE AND TECHNOLOGY POLICY",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "TW": {
+   "level": "department",
+   "code": "TW",
+   "parent": "GOV",
+   "name": "SURFACE TRANSPORTATION BOARD",
+   "first_month": "2019-07",
+   "last_month": "2026-08"
+  },
+  "UJ": {
+   "level": "department",
+   "code": "UJ",
+   "parent": "GOV",
+   "name": "JAPAN-UNITED STATES FRIENDSHIP COMMISSION",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "UT": {
+   "level": "department",
+   "code": "UT",
+   "parent": "GOV",
+   "name": "UTAH RECLAMATION MITIGATION AND CONSERVATION COMMISSION",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "VA": {
+   "level": "department",
+   "code": "VA",
+   "parent": "GOV",
+   "name": "DEPARTMENT OF VETERANS AFFAIRS",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "VB": {
+   "level": "department",
+   "code": "VB",
+   "parent": "GOV",
+   "name": "COMMISSION TO ELIMINATE CHILD ABUSE AND NEGLECT FATALITIES",
+   "first_month": "2014-01",
+   "last_month": "2016-03"
+  },
+  "VD": {
+   "level": "department",
+   "code": "VD",
+   "parent": "GOV",
+   "name": "PRIVACY AND CIVIL LIBERTIES OVERSIGHT BOARD",
+   "first_month": "2012-08",
+   "last_month": "2026-08"
+  },
+  "WK": {
+   "level": "department",
+   "code": "WK",
+   "parent": "GOV",
+   "name": "FEDERAL PERMITTING IMPROVEMENT STEERING COUNCIL",
+   "first_month": "2019-12",
+   "last_month": "2026-08"
+  },
+  "WU": {
+   "level": "department",
+   "code": "WU",
+   "parent": "GOV",
+   "name": "SOUTHWEST BORDER REGIONAL COMMISSION",
+   "first_month": "2023-01",
+   "last_month": "2026-08"
+  },
+  "WX": {
+   "level": "department",
+   "code": "WX",
+   "parent": "GOV",
+   "name": "WORLD WAR 1 CENTENNIAL COMMISSION",
+   "first_month": "2015-02",
+   "last_month": "2024-09"
+  },
+  "YG": {
+   "level": "department",
+   "code": "YG",
+   "parent": "GOV",
+   "name": "RONALD REAGAN CENTENNIAL COMMISSION",
+   "first_month": "2011-10",
+   "last_month": "2011-12"
+  },
+  "ZL": {
+   "level": "department",
+   "code": "ZL",
+   "parent": "GOV",
+   "name": "MEDICARE PAYMENT ADVISORY COMMISSION",
+   "first_month": "2011-10",
+   "last_month": "2021-09"
+  },
+  "ZP": {
+   "level": "department",
+   "code": "ZP",
+   "parent": "GOV",
+   "name": "U.S. COMMISSION ON INTERNATIONAL RELIGIOUS FREEDOM",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "ZS": {
+   "level": "department",
+   "code": "ZS",
+   "parent": "GOV",
+   "name": "UNITED STATES-CHINA ECONOMIC AND SECURITY REVIEW COMMISSION",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "ZU": {
+   "level": "department",
+   "code": "ZU",
+   "parent": "GOV",
+   "name": "DWIGHT D. EISENHOWER MEMORIAL COMMISSION",
+   "first_month": "2011-10",
+   "last_month": "2021-11"
+  },
+  "DOD-AF": {
+   "level": "agency",
+   "code": "AF",
+   "parent": "DOD",
+   "name": "DEPARTMENT OF THE AIR FORCE",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "DOD-AR": {
+   "level": "agency",
+   "code": "AR",
+   "parent": "DOD",
+   "name": "DEPARTMENT OF THE ARMY",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "DOD-DD": {
+   "level": "agency",
+   "code": "DD",
+   "parent": "DOD",
+   "name": "DEPARTMENT OF DEFENSE",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "DOD-NV": {
+   "level": "agency",
+   "code": "NV",
+   "parent": "DOD",
+   "name": "DEPARTMENT OF THE NAVY",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  }
+ },
+ "entities_without_comparison": {
+  "BH": [
+   "obama2"
+  ],
+  "DA": [
+   "obama2",
+   "trump1",
+   "biden"
+  ],
+  "DO": [
+   "obama2",
+   "trump1",
+   "biden"
+  ],
+  "GC": [
+   "obama2"
+  ],
+  "GU": [
+   "obama2",
+   "trump1"
+  ],
+  "GZ": [
+   "obama2",
+   "trump1"
+  ],
+  "IP": [
+   "obama2",
+   "trump1"
+  ],
+  "JL": [
+   "obama2"
+  ],
+  "KY": [
+   "obama2",
+   "trump1"
+  ],
+  "OP": [
+   "obama2",
+   "trump1",
+   "biden"
+  ],
+  "OY": [
+   "obama2",
+   "trump1",
+   "biden"
+  ],
+  "RJ": [
+   "obama2",
+   "trump1",
+   "biden"
+  ],
+  "TW": [
+   "obama2",
+   "trump1"
+  ],
+  "VB": [
+   "obama2"
+  ],
+  "WK": [
+   "obama2",
+   "trump1"
+  ],
+  "WU": [
+   "obama2",
+   "trump1",
+   "biden"
+  ],
+  "WX": [
+   "obama2"
+  ]
+ },
+ "entities_without_comparison_rule": "an entity whose first month is after an administration's month 0 did not exist when that administration took office: no rows for it",
+ "rows_per_entity": {
+  "AA": 164,
+  "AB": 164,
+  "AG": 164,
+  "AH": 164,
+  "AM": 164,
+  "AN": 164,
+  "AP": 164,
+  "AU": 164,
+  "AW": 164,
+  "BD": 164,
+  "BF": 164,
+  "BG": 164,
+  "BH": 116,
+  "BK": 164,
+  "BO": 164,
+  "BT": 164,
+  "BW": 164,
+  "BZ": 49,
+  "CC": 164,
+  "CE": 164,
+  "CF": 164,
+  "CM": 164,
+  "CT": 164,
+  "CU": 164,
+  "CX": 164,
+  "DA": 20,
+  "DB": 164,
+  "DF": 27,
+  "DG": 164,
+  "DJ": 164,
+  "DL": 164,
+  "DN": 164,
+  "DO": 20,
+  "DOD": 164,
+  "DQ": 164,
+  "EB": 164,
+  "EC": 164,
+  "ED": 164,
+  "EE": 164,
+  "EO": 164,
+  "EP": 164,
+  "EQ": 164,
+  "EW": 164,
+  "FC": 164,
+  "FD": 164,
+  "FI": 164,
+  "FJ": 164,
+  "FK": 164,
+  "FL": 164,
+  "FM": 164,
+  "FQ": 164,
+  "FR": 164,
+  "FT": 164,
+  "FW": 164,
+  "GB": 164,
+  "GC": 116,
+  "GE": 164,
+  "GG": 164,
+  "GJ": 164,
+  "GM": 56,
+  "GO": 73,
+  "GQ": 164,
+  "GS": 164,
+  "GU": 68,
+  "GW": 164,
+  "GX": 164,
+  "GY": 164,
+  "GZ": 36,
+  "HB": 164,
+  "HD": 164,
+  "HE": 164,
+  "HF": 164,
+  "HP": 164,
+  "HS": 164,
+  "HT": 164,
+  "HU": 164,
+  "HW": 164,
+  "IB": 164,
+  "IF": 164,
+  "IG": 164,
+  "IN": 164,
+  "IP": 59,
+  "JL": 116,
+  "KS": 164,
+  "KY": 68,
+  "LF": 164,
+  "LP": 164,
+  "LT": 8,
+  "MA": 164,
+  "MC": 164,
+  "MI": 164,
+  "NF": 164,
+  "NK": 164,
+  "NL": 164,
+  "NM": 164,
+  "NN": 164,
+  "NP": 164,
+  "NQ": 164,
+  "NS": 164,
+  "NU": 164,
+  "OM": 164,
+  "OP": 3,
+  "OS": 164,
+  "OY": 0,
+  "PU": 164,
+  "QQ": 164,
+  "RE": 153,
+  "RF": 164,
+  "RH": 164,
+  "RJ": 20,
+  "RO": 164,
+  "RR": 164,
+  "RS": 164,
+  "RZ": 33,
+  "SB": 164,
+  "SE": 164,
+  "SK": 164,
+  "SM": 164,
+  "SS": 164,
+  "ST": 164,
+  "SZ": 164,
+  "TB": 164,
+  "TC": 164,
+  "TD": 164,
+  "TN": 164,
+  "TR": 164,
+  "TS": 164,
+  "TW": 68,
+  "UJ": 164,
+  "UT": 164,
+  "VA": 164,
+  "VB": 0,
+  "VD": 164,
+  "WK": 68,
+  "WU": 20,
+  "WX": 93,
+  "YG": 0,
+  "ZL": 105,
+  "ZP": 164,
+  "ZS": 164,
+  "ZU": 107,
+  "DOD-AF": 164,
+  "DOD-AR": 164,
+  "DOD-DD": 164,
+  "DOD-NV": 164
+ },
+ "columns": [
+  {
+   "name": "entity",
+   "kind": "dimension",
+   "description": "entity key: a department code or DOD-AF, DOD-AR, DOD-DD, DOD-NV (meta entities); the admin cube file the row is copied from"
+  },
+  {
+   "name": "administration",
+   "kind": "dimension",
+   "description": "administration id (meta administrations; pipeline/crosswalks/administrations.csv)"
+  },
+  {
+   "name": "months_in_office",
+   "kind": "dimension",
+   "description": "N: months in office, month 1 = January of the inauguration year"
+  },
+  {
+   "name": "headcount_0",
+   "kind": "stock",
+   "description": "headcount at month 0"
+  },
+  {
+   "name": "headcount_change",
+   "kind": "stock_change",
+   "description": "employee change in office: headcount_n minus headcount_0 (as a percent: / headcount_0); not derived from flows (invariant 7)"
+  },
+  {
+   "name": "departures",
+   "kind": "flow",
+   "description": "running sum over months 1..N of separation rows by effective month (transfers out and DRP included)"
+  },
+  {
+   "name": "sep_drp",
+   "kind": "flow",
+   "description": "running sum of departures with drp_indicator = 'Y': the seventh reason with the six _nondrp columns"
+  },
+  {
+   "name": "hire_num",
+   "kind": "rate_numerator",
+   "description": "hires over months 1..N x 12 / N (annualized hire rate numerator); rate = hire_num / rate_den",
+   "denominator": "rate_den",
+   "small_base": "rate_small_base",
+   "months": "rate_months"
+  },
+  {
+   "name": "attrition_num",
+   "kind": "rate_numerator",
+   "description": "departures over months 1..N x 12 / N (annualized departure rate numerator); rate = attrition_num / rate_den",
+   "denominator": "rate_den",
+   "small_base": "rate_small_base",
+   "months": "rate_months"
+  },
+  {
+   "name": "rate_den",
+   "kind": "rate_denominator",
+   "description": "mean month-end headcount over months 1..N; null (never 0) when that mean is 0"
+  },
+  {
+   "name": "rate_small_base",
+   "kind": "flag",
+   "description": "rate_den < 30 (invariant 9); null when the rate is empty"
+  },
+  {
+   "name": "provisional",
+   "kind": "flag",
+   "description": "months 1..N contain any of the newest 3 months (invariant 8)"
+  },
+  {
+   "name": "opm_incomplete",
+   "kind": "flag",
+   "description": "month 0 or a month of 1..N is one OPM marks incomplete for this entity (KDI-006)"
+  },
+  {
+   "name": "kdi_ids",
+   "kind": "flag",
+   "description": "entity-month known data issue ids of month 0 and months 1..N"
+  }
+ ],
+ "files": {
+  "matrix": {
+   "path": "matrix/matrix.json",
+   "sha256": "d07dca73a2c4bea7cdaf562e73a66c72510591a5addfb5fe5254dd11158172c1",
+   "bytes": 1543177,
+   "rows": 20854
+  }
+ },
+ "files_sha256": "57a3aac517591f809dac86e7f01a3d266ab842c07af6245c040893c8c5bea1d4",
+ "size": {
+  "files": 1,
+  "total_bytes": 1543177,
+  "mean_bytes": 1543177,
+  "largest": {
+   "key": "matrix",
+   "bytes": 1543177
+  }
+ }
+}

@@ -12,27 +12,60 @@
     ['snapshot', ['snapshot_yyyymm']], ['department', ['department_code', 'department']], ['agency', ['agency_code', 'agency']],
     ['subelement', ['agency_subelement_code', 'agency_subelement']], ['effective', [EFF]], ['processed', ['period']],
     ['reason', ['separation_category']], ['hireType', ['accession_category']], ['drp', ['drp_indicator']],
-    ['occupation', ['occupational_series_code', 'occupational_series']], ['payPlan', ['pay_plan_code']], ['grade', ['grade']],
+    ['occupation', ['occupational_series_code', 'occupational_series']],
+    ['family', ['occupational_group_code', 'occupational_group']], ['payPlan', ['pay_plan_code']], ['grade', ['grade']],
     ['age', ['age_bracket']], ['service', ['length_of_service_years']], ['supervisory', ['supervisory_status']],
-    ['appointment', ['appointment_type']], ['tenure', ['tenure']], ['education', ['education_level']], ['veteran', ['veteran_indicator']],
+    ['appointment', ['appointment_type_code', 'appointment_type']], ['tenure', ['tenure']], ['education', ['education_level']], ['veteran', ['veteran_indicator']],
     ['schedule', ['work_schedule']], ['pay', ['annualized_adjusted_basic_pay']], ['state', ['duty_station_state']]];
   /* filters of page-spec 7.7, by column: department, agency, subelement, effective month, reason or hire type,
-     occupation, grade, age, supervisory status, appointment type */
-  var FILTERS = ['department', 'agency', 'subelement', 'effective', 'reason', 'hireType', 'occupation', 'grade', 'age', 'supervisory', 'appointment'];
+     occupation, occupational family (D-037), grade, age, supervisory status, appointment type. A value OPM did not
+     publish (NULL, e.g. no occupational family) is shown as an empty cell and filters and counts as its own option. */
+  var FILTERS = ['department', 'agency', 'subelement', 'effective', 'reason', 'hireType', 'occupation', 'family', 'grade', 'age', 'supervisory', 'appointment'];
 
-  function columns(fields) {
-    return COLUMNS.filter(function (c) { return c[1].every(function (f) { return fields.indexOf(f) >= 0; }); }).map(function (c) { return { key: c[0], fields: c[1] }; });
+  /* appointment type grouped as on page 7 (D-035): the groups of the appointments cube (its meta groups.list), by
+     appointment_type_code. list: [{ id, level, codes }]; label(id): the group's signed label, or null for a group page 7
+     does not show (the unknown group of code '*'). A code in no labelled group is its own option, labelled with the
+     cell as published (code and name). */
+  function appointmentGroups(list, label) {
+    var byCode = {}, n = 0;
+    (list || []).forEach(function (g) {
+      if (g.level !== 'group') return;
+      var text = label(g.id);
+      if (!text) return;
+      var e = { value: 'group:' + g.id, id: g.id, label: text, order: n++ };
+      g.codes.forEach(function (c) { byCode[c] = e; });
+    });
+    return { byCode: byCode };
+  }
+  /* columns present in the fields; opts.appointment (appointmentGroups) groups the appointment type column */
+  function columns(fields, opts) {
+    return COLUMNS.filter(function (c) { return c[1].every(function (f) { return fields.indexOf(f) >= 0; }); }).map(function (c) {
+      var col = { key: c[0], fields: c[1] };
+      if (c[0] === 'appointment' && opts && opts.appointment) col.group = opts.appointment;
+      return col;
+    });
   }
   function cellText(row, col) {
     return col.fields.map(function (f) { return row[f] === null || row[f] === undefined ? '' : String(row[f]); }).filter(function (v) { return v !== ''; }).join(' ');
   }
-  function filterValue(row, col) { return row[col.fields[0]] === null || row[col.fields[0]] === undefined ? '' : String(row[col.fields[0]]); }
+  function raw(row, col) { return row[col.fields[0]] === null || row[col.fields[0]] === undefined ? '' : String(row[col.fields[0]]); }
+  function groupOf(row, col) { return col.group ? col.group.byCode[raw(row, col)] || null : null; }
+  /* the value a filter or count compares: the first field as published, or the code's group */
+  function filterValue(row, col) { var g = groupOf(row, col); return g ? g.value : raw(row, col); }
 
-  /* distinct values of a column (by its first field, labelled with the whole cell), most frequent first */
+  /* distinct values of a column (by filterValue, labelled with the whole cell or the group label), most frequent first;
+     a grouped column lists its groups first, in page 7 order, then any code outside them */
   function distinct(rows, col) {
     var m = {};
-    rows.forEach(function (r) { var v = filterValue(r, col); var e = m[v] || (m[v] = { value: v, label: cellText(r, col), count: 0 }); e.count++; });
-    return Object.keys(m).map(function (k) { return m[k]; }).sort(function (a, b) { return b.count - a.count || (a.label < b.label ? -1 : 1); });
+    rows.forEach(function (r) {
+      var v = filterValue(r, col), e = m[v];
+      if (!e) { var g = groupOf(r, col); e = m[v] = { value: v, label: g ? g.label : cellText(r, col), count: 0, order: g ? g.order : null }; }
+      e.count++;
+    });
+    return Object.keys(m).map(function (k) { return m[k]; }).sort(function (a, b) {
+      if (a.order !== null || b.order !== null) { if (a.order === null) return 1; if (b.order === null) return -1; if (a.order !== b.order) return a.order - b.order; }
+      return b.count - a.count || (a.label < b.label ? -1 : 1);
+    }).map(function (e) { return { value: e.value, label: e.label, count: e.count }; });
   }
 
   /* rows that pass every chosen filter { columnKey: value } and the search text (any field, case-insensitive) */
@@ -98,6 +131,6 @@
     return out;
   }
 
-  return { EFF: EFF, COLUMNS: COLUMNS, FILTERS: FILTERS, columns: columns, cellText: cellText, filterValue: filterValue, distinct: distinct, apply: apply,
+  return { EFF: EFF, COLUMNS: COLUMNS, FILTERS: FILTERS, appointmentGroups: appointmentGroups, columns: columns, cellText: cellText, filterValue: filterValue, distinct: distinct, apply: apply,
     sortRows: sortRows, counts: counts, csv: csv, kdiMarks: kdiMarks };
 });

@@ -1,0 +1,2437 @@
+{
+ "cube": "admin",
+ "format": "one JSON file per entity, files[<key>].path: {\"cube\", \"entity\", \"columns\", \"rows\"}",
+ "manifest_sha256": "86d0cd47076a2a689d314094010e0fdab5794b4e2a5852ad3225eecd5cdd09d1",
+ "manifest_hash_method": "sha256 of data/opm_manifest.json canonical content: records sorted by (dataset, filename), json.dumps(sort_keys=True, separators=(\",\", \":\"))",
+ "spec": "docs/metric-spec.md (signed, D-014, D-015, D-018; sections 2, 3, 4, 9 and the definitions it adopts); docs/cube-plan.md (signed, D-016, section 2)",
+ "time_basis": "effective",
+ "range": {
+  "first_month": "2011-10",
+  "last_month": "2026-08"
+ },
+ "provisional_months": [
+  "2026-06",
+  "2026-07",
+  "2026-08"
+ ],
+ "reissued_months": [],
+ "revision_baseline": {
+  "file": "revision_baseline.json",
+  "manifest_sha256": "86d0cd47076a2a689d314094010e0fdab5794b4e2a5852ad3225eecd5cdd09d1",
+  "prior_manifest_sha256": null
+ },
+ "small_base_threshold": 30,
+ "known_data_issues": {
+  "file": "pipeline/known_data_issues.csv",
+  "sha256": "aa0056a088bd7a6914969b3e9bd3be8af77ee9cb3ee87efb043c11de15d157e0",
+  "applied": [
+   {
+    "id": "KDI-001",
+    "treatment": "unknown",
+    "decision": "D-014"
+   },
+   {
+    "id": "KDI-002",
+    "treatment": "unusable",
+    "decision": "D-014"
+   },
+   {
+    "id": "KDI-003",
+    "treatment": "counted_flagged",
+    "decision": "D-011"
+   },
+   {
+    "id": "KDI-004",
+    "treatment": "department_from_agency",
+    "decision": "D-014"
+   },
+   {
+    "id": "KDI-005",
+    "treatment": "department_from_agency",
+    "decision": "D-014"
+   },
+   {
+    "id": "KDI-006",
+    "treatment": "flagged_incomplete",
+    "decision": "D-014"
+   },
+   {
+    "id": "KDI-007",
+    "treatment": "unknown_with_coverage",
+    "decision": "D-014"
+   },
+   {
+    "id": "KDI-008",
+    "treatment": "department_from_agency",
+    "decision": "D-015"
+   },
+   {
+    "id": "KDI-009",
+    "treatment": "unknown",
+    "decision": "D-018"
+   },
+   {
+    "id": "KDI-010",
+    "treatment": "unknown",
+    "decision": "D-021"
+   }
+  ]
+ },
+ "entities": {
+  "GOV": {
+   "level": "government",
+   "code": null,
+   "parent": null,
+   "name": "All departments and agencies",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "AA": {
+   "level": "department",
+   "code": "AA",
+   "parent": "GOV",
+   "name": "ADMINISTRATIVE CONFERENCE OF THE UNITED STATES",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "AB": {
+   "level": "department",
+   "code": "AB",
+   "parent": "GOV",
+   "name": "AMERICAN BATTLE MONUMENTS COMMISSION",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "AG": {
+   "level": "department",
+   "code": "AG",
+   "parent": "GOV",
+   "name": "DEPARTMENT OF AGRICULTURE",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "AH": {
+   "level": "department",
+   "code": "AH",
+   "parent": "GOV",
+   "name": "NATIONAL FOUNDATION ON THE ARTS AND THE HUMANITIES",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "AM": {
+   "level": "department",
+   "code": "AM",
+   "parent": "GOV",
+   "name": "U.S. AGENCY FOR INTERNATIONAL DEVELOPMENT",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "AN": {
+   "level": "department",
+   "code": "AN",
+   "parent": "GOV",
+   "name": "AFRICAN DEVELOPMENT FOUNDATION",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "AP": {
+   "level": "department",
+   "code": "AP",
+   "parent": "GOV",
+   "name": "APPALACHIAN REGIONAL COMMISSION",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "AU": {
+   "level": "department",
+   "code": "AU",
+   "parent": "GOV",
+   "name": "FEDERAL LABOR RELATIONS AUTHORITY",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "AW": {
+   "level": "department",
+   "code": "AW",
+   "parent": "GOV",
+   "name": "ARCTIC RESEARCH COMMISSION",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "BD": {
+   "level": "department",
+   "code": "BD",
+   "parent": "GOV",
+   "name": "MERIT SYSTEMS PROTECTION BOARD",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "BF": {
+   "level": "department",
+   "code": "BF",
+   "parent": "GOV",
+   "name": "DEFENSE NUCLEAR FACILITIES SAFETY BOARD",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "BG": {
+   "level": "department",
+   "code": "BG",
+   "parent": "GOV",
+   "name": "PENSION BENEFIT GUARANTY CORPORATION",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "BH": {
+   "level": "department",
+   "code": "BH",
+   "parent": "GOV",
+   "name": "COMMISSION FOR THE PRESERVATION OF AMERICA'S HERITAGE ABROAD",
+   "first_month": "2014-03",
+   "last_month": "2026-08"
+  },
+  "BK": {
+   "level": "department",
+   "code": "BK",
+   "parent": "GOV",
+   "name": "JAMES MADISON MEMORIAL FELLOWSHIP FOUNDATION",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "BO": {
+   "level": "department",
+   "code": "BO",
+   "parent": "GOV",
+   "name": "OFFICE OF MANAGEMENT AND BUDGET",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "BT": {
+   "level": "department",
+   "code": "BT",
+   "parent": "GOV",
+   "name": "ARCHITECTURAL AND TRANSPORTATION BARRIERS COMPLIANCE BOARD",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "BW": {
+   "level": "department",
+   "code": "BW",
+   "parent": "GOV",
+   "name": "NUCLEAR WASTE TECHNICAL REVIEW BOARD",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "BZ": {
+   "level": "department",
+   "code": "BZ",
+   "parent": "GOV",
+   "name": "CHRISTOPHER COLUMBUS FELLOWSHIP FOUNDATION",
+   "first_month": "2011-10",
+   "last_month": "2017-01"
+  },
+  "CC": {
+   "level": "department",
+   "code": "CC",
+   "parent": "GOV",
+   "name": "COMMISSION ON CIVIL RIGHTS",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "CE": {
+   "level": "department",
+   "code": "CE",
+   "parent": "GOV",
+   "name": "COUNCIL OF ECONOMIC ADVISERS",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "CF": {
+   "level": "department",
+   "code": "CF",
+   "parent": "GOV",
+   "name": "COMMISSION OF FINE ARTS",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "CM": {
+   "level": "department",
+   "code": "CM",
+   "parent": "GOV",
+   "name": "DEPARTMENT OF COMMERCE",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "CT": {
+   "level": "department",
+   "code": "CT",
+   "parent": "GOV",
+   "name": "COMMODITY FUTURES TRADING COMMISSION",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "CU": {
+   "level": "department",
+   "code": "CU",
+   "parent": "GOV",
+   "name": "NATIONAL CREDIT UNION ADMINISTRATION",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "CX": {
+   "level": "department",
+   "code": "CX",
+   "parent": "GOV",
+   "name": "NATIONAL COMMISSION ON LIBRARIES AND INFORMATION SCIENCE",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "DA": {
+   "level": "department",
+   "code": "DA",
+   "parent": "GOV",
+   "name": "DELTA REGIONAL AUTHORITY",
+   "first_month": "2021-11",
+   "last_month": "2026-08"
+  },
+  "DB": {
+   "level": "department",
+   "code": "DB",
+   "parent": "GOV",
+   "name": "PUBLIC INTEREST DECLASSIFICATION BOARD",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "DF": {
+   "level": "department",
+   "code": "DF",
+   "parent": "GOV",
+   "name": "OFFICE OF THE FEDERAL COORDINATOR FOR ALASKA NATURAL GAS TRANSPORTATION PROJECTS",
+   "first_month": "2011-10",
+   "last_month": "2015-03"
+  },
+  "DG": {
+   "level": "department",
+   "code": "DG",
+   "parent": "GOV",
+   "name": "NORTHERN BORDER REGIONAL COMMISSION",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "DJ": {
+   "level": "department",
+   "code": "DJ",
+   "parent": "GOV",
+   "name": "DEPARTMENT OF JUSTICE",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "DL": {
+   "level": "department",
+   "code": "DL",
+   "parent": "GOV",
+   "name": "DEPARTMENT OF LABOR",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "DN": {
+   "level": "department",
+   "code": "DN",
+   "parent": "GOV",
+   "name": "DEPARTMENT OF ENERGY",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "DO": {
+   "level": "department",
+   "code": "DO",
+   "parent": "GOV",
+   "name": "OFFICE OF THE CYBER DIRECTOR",
+   "first_month": "2021-07",
+   "last_month": "2026-08"
+  },
+  "DOD": {
+   "level": "department",
+   "code": "DOD",
+   "parent": "GOV",
+   "name": "DEPARTMENT OF DEFENSE",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "DQ": {
+   "level": "department",
+   "code": "DQ",
+   "parent": "GOV",
+   "name": "DENALI COMMISSION",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "EB": {
+   "level": "department",
+   "code": "EB",
+   "parent": "GOV",
+   "name": "EXPORT-IMPORT BANK OF THE UNITED STATES",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "EC": {
+   "level": "department",
+   "code": "EC",
+   "parent": "GOV",
+   "name": "OFFICE OF ADMINISTRATION",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "ED": {
+   "level": "department",
+   "code": "ED",
+   "parent": "GOV",
+   "name": "DEPARTMENT OF EDUCATION",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "EE": {
+   "level": "department",
+   "code": "EE",
+   "parent": "GOV",
+   "name": "EQUAL EMPLOYMENT OPPORTUNITY COMMISSION",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "EO": {
+   "level": "department",
+   "code": "EO",
+   "parent": "GOV",
+   "name": "MORRIS K. UDALL AND STEWART L. UDALL FOUNDATION",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "EP": {
+   "level": "department",
+   "code": "EP",
+   "parent": "GOV",
+   "name": "ENVIRONMENTAL PROTECTION AGENCY",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "EQ": {
+   "level": "department",
+   "code": "EQ",
+   "parent": "GOV",
+   "name": "COUNCIL ON ENVIRONMENTAL QUALITY/OFFICE OF ENVIRONMENTAL QUALITY",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "EW": {
+   "level": "department",
+   "code": "EW",
+   "parent": "GOV",
+   "name": "TRADE AND DEVELOPMENT AGENCY",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "FC": {
+   "level": "department",
+   "code": "FC",
+   "parent": "GOV",
+   "name": "FEDERAL COMMUNICATIONS COMMISSION",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "FD": {
+   "level": "department",
+   "code": "FD",
+   "parent": "GOV",
+   "name": "FEDERAL DEPOSIT INSURANCE CORPORATION",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "FI": {
+   "level": "department",
+   "code": "FI",
+   "parent": "GOV",
+   "name": "FEDERAL FINANCIAL INSTITUTIONS EXAMINATION COUNCIL",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "FJ": {
+   "level": "department",
+   "code": "FJ",
+   "parent": "GOV",
+   "name": "CHEMICAL SAFETY AND HAZARD INVESTIGATION BOARD",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "FK": {
+   "level": "department",
+   "code": "FK",
+   "parent": "GOV",
+   "name": "FARM CREDIT SYSTEM INSURANCE CORPORATION",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "FL": {
+   "level": "department",
+   "code": "FL",
+   "parent": "GOV",
+   "name": "FARM CREDIT ADMINISTRATION",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "FM": {
+   "level": "department",
+   "code": "FM",
+   "parent": "GOV",
+   "name": "FEDERAL MEDIATION AND CONCILIATION SERVICE",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "FQ": {
+   "level": "department",
+   "code": "FQ",
+   "parent": "GOV",
+   "name": "COURT SERVICES AND OFFENDER SUPERVISION AGENCY FOR THE DISTRICT OF COLUMBIA",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "FR": {
+   "level": "department",
+   "code": "FR",
+   "parent": "GOV",
+   "name": "FEDERAL RESERVE SYSTEM",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "FT": {
+   "level": "department",
+   "code": "FT",
+   "parent": "GOV",
+   "name": "FEDERAL TRADE COMMISSION",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "FW": {
+   "level": "department",
+   "code": "FW",
+   "parent": "GOV",
+   "name": "OFFICE OF SPECIAL COUNSEL",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "GB": {
+   "level": "department",
+   "code": "GB",
+   "parent": "GOV",
+   "name": "DEVELOPMENT FINANCE CORPORATION",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "GC": {
+   "level": "department",
+   "code": "GC",
+   "parent": "GOV",
+   "name": "GULF COAST ECOSYSTEM RESTORATION COUNCIL",
+   "first_month": "2016-05",
+   "last_month": "2026-08"
+  },
+  "GE": {
+   "level": "department",
+   "code": "GE",
+   "parent": "GOV",
+   "name": "BARRY GOLDWATER SCHOLARSHIP AND EXCELLENCE IN EDUCATION FOUNDATION",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "GG": {
+   "level": "department",
+   "code": "GG",
+   "parent": "GOV",
+   "name": "OFFICE OF GOVERNMENT ETHICS",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "GJ": {
+   "level": "department",
+   "code": "GJ",
+   "parent": "GOV",
+   "name": "PRESIDIO TRUST",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "GM": {
+   "level": "department",
+   "code": "GM",
+   "parent": "GOV",
+   "name": "VALLES CALDERA TRUST",
+   "first_month": "2011-10",
+   "last_month": "2017-08"
+  },
+  "GO": {
+   "level": "department",
+   "code": "GO",
+   "parent": "GOV",
+   "name": "VIETNAM EDUCATION FOUNDATION",
+   "first_month": "2011-10",
+   "last_month": "2019-01"
+  },
+  "GQ": {
+   "level": "department",
+   "code": "GQ",
+   "parent": "GOV",
+   "name": "ELECTION ASSISTANCE COMMISSION",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "GS": {
+   "level": "department",
+   "code": "GS",
+   "parent": "GOV",
+   "name": "GENERAL SERVICES ADMINISTRATION",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "GU": {
+   "level": "department",
+   "code": "GU",
+   "parent": "GOV",
+   "name": "THE US SEMIQUINCENTENNIAL COMMISSION",
+   "first_month": "2019-01",
+   "last_month": "2026-08"
+  },
+  "GW": {
+   "level": "department",
+   "code": "GW",
+   "parent": "GOV",
+   "name": "INTERNATIONAL BOUNDARY AND WATER COMMISSION, U.S. SECTION",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "GX": {
+   "level": "department",
+   "code": "GX",
+   "parent": "GOV",
+   "name": "INTERNATIONAL BOUNDARY COMMISSION:  UNITED STATES AND CANADA",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "GY": {
+   "level": "department",
+   "code": "GY",
+   "parent": "GOV",
+   "name": "INTERNATIONAL JOINT COMMISSION:  UNITED STATES AND CANADA",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "GZ": {
+   "level": "department",
+   "code": "GZ",
+   "parent": "GOV",
+   "name": "THE WOMEN'S SUFFRAGE CENTENNIAL COMMISSION",
+   "first_month": "2019-01",
+   "last_month": "2023-12"
+  },
+  "HB": {
+   "level": "department",
+   "code": "HB",
+   "parent": "GOV",
+   "name": "COMMITTEE FOR PURCHASE FROM PEOPLE WHO ARE BLIND OR SE VERELY DISABLED",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "HD": {
+   "level": "department",
+   "code": "HD",
+   "parent": "GOV",
+   "name": "U.S. HOLOCAUST MEMORIAL MUSEUM",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "HE": {
+   "level": "department",
+   "code": "HE",
+   "parent": "GOV",
+   "name": "DEPARTMENT OF HEALTH AND HUMAN SERVICES",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "HF": {
+   "level": "department",
+   "code": "HF",
+   "parent": "GOV",
+   "name": "FEDERAL HOUSING FINANCE AGENCY",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "HP": {
+   "level": "department",
+   "code": "HP",
+   "parent": "GOV",
+   "name": "ADVISORY COUNCIL ON HISTORIC PRESERVATION",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "HS": {
+   "level": "department",
+   "code": "HS",
+   "parent": "GOV",
+   "name": "DEPARTMENT OF HOMELAND SECURITY",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "HT": {
+   "level": "department",
+   "code": "HT",
+   "parent": "GOV",
+   "name": "HARRY S. TRUMAN SCHOLARSHIP FOUNDATION",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "HU": {
+   "level": "department",
+   "code": "HU",
+   "parent": "GOV",
+   "name": "DEPARTMENT OF HOUSING AND URBAN DEVELOPMENT",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "HW": {
+   "level": "department",
+   "code": "HW",
+   "parent": "GOV",
+   "name": "U.S. INTERAGENCY COUNCIL ON HOMELESSNESS",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "IB": {
+   "level": "department",
+   "code": "IB",
+   "parent": "GOV",
+   "name": "U.S. AGENCY FOR GLOBAL MEDIA",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "IF": {
+   "level": "department",
+   "code": "IF",
+   "parent": "GOV",
+   "name": "INTER-AMERICAN FOUNDATION",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "IG": {
+   "level": "department",
+   "code": "IG",
+   "parent": "GOV",
+   "name": "COUNCIL OF THE INSPECTORS GENERAL ON INTEGRITY AND EFFICIENCY",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "IN": {
+   "level": "department",
+   "code": "IN",
+   "parent": "GOV",
+   "name": "DEPARTMENT OF THE INTERIOR",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "IP": {
+   "level": "department",
+   "code": "IP",
+   "parent": "GOV",
+   "name": "INTELLECTUAL PROPERTY ENFORCEMENT COORDINATOR",
+   "first_month": "2020-06",
+   "last_month": "2025-11"
+  },
+  "JL": {
+   "level": "department",
+   "code": "JL",
+   "parent": "GOV",
+   "name": "JUDICIAL BRANCH",
+   "first_month": "2013-08",
+   "last_month": "2026-08"
+  },
+  "KS": {
+   "level": "department",
+   "code": "KS",
+   "parent": "GOV",
+   "name": "CORPORATION FOR NATIONAL AND COMMUNITY SERVICE",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "KY": {
+   "level": "department",
+   "code": "KY",
+   "parent": "GOV",
+   "name": "PUBLIC BUILDINGS REFORM BOARD",
+   "first_month": "2019-03",
+   "last_month": "2026-08"
+  },
+  "LF": {
+   "level": "department",
+   "code": "LF",
+   "parent": "GOV",
+   "name": "FEDERAL ELECTION COMMISSION",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "LP": {
+   "level": "department",
+   "code": "LP",
+   "parent": "GOV",
+   "name": "GOVERNMENT PUBLISHING OFFICE",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "LT": {
+   "level": "department",
+   "code": "LT",
+   "parent": "GOV",
+   "name": "U.S. TAX COURT",
+   "first_month": "2011-10",
+   "last_month": "2013-08"
+  },
+  "MA": {
+   "level": "department",
+   "code": "MA",
+   "parent": "GOV",
+   "name": "MARINE MAMMAL COMMISSION",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "MC": {
+   "level": "department",
+   "code": "MC",
+   "parent": "GOV",
+   "name": "FEDERAL MARITIME COMMISSION",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "MI": {
+   "level": "department",
+   "code": "MI",
+   "parent": "GOV",
+   "name": "MILLENNIUM CHALLENGE CORPORATION",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "NF": {
+   "level": "department",
+   "code": "NF",
+   "parent": "GOV",
+   "name": "NATIONAL SCIENCE FOUNDATION",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "NK": {
+   "level": "department",
+   "code": "NK",
+   "parent": "GOV",
+   "name": "NATIONAL COUNCIL ON DISABILITY",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "NL": {
+   "level": "department",
+   "code": "NL",
+   "parent": "GOV",
+   "name": "NATIONAL LABOR RELATIONS BOARD",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "NM": {
+   "level": "department",
+   "code": "NM",
+   "parent": "GOV",
+   "name": "NATIONAL MEDIATION BOARD",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "NN": {
+   "level": "department",
+   "code": "NN",
+   "parent": "GOV",
+   "name": "NATIONAL AERONAUTICS AND SPACE ADMINISTRATION",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "NP": {
+   "level": "department",
+   "code": "NP",
+   "parent": "GOV",
+   "name": "NATIONAL CAPITAL PLANNING COMMISSION",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "NQ": {
+   "level": "department",
+   "code": "NQ",
+   "parent": "GOV",
+   "name": "NATIONAL ARCHIVES AND RECORDS ADMINISTRATION",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "NS": {
+   "level": "department",
+   "code": "NS",
+   "parent": "GOV",
+   "name": "NATIONAL SECURITY COUNCIL",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "NU": {
+   "level": "department",
+   "code": "NU",
+   "parent": "GOV",
+   "name": "NUCLEAR REGULATORY COMMISSION",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "OM": {
+   "level": "department",
+   "code": "OM",
+   "parent": "GOV",
+   "name": "OFFICE OF PERSONNEL MANAGEMENT",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "OP": {
+   "level": "department",
+   "code": "OP",
+   "parent": "GOV",
+   "name": "OFFICE OF PANDEMIC PREPAREDNESS AND RESPONSE POLICY",
+   "first_month": "2023-09",
+   "last_month": "2025-03"
+  },
+  "OS": {
+   "level": "department",
+   "code": "OS",
+   "parent": "GOV",
+   "name": "OCCUPATIONAL SAFETY AND HEALTH REVIEW COMMISSION",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "OY": {
+   "level": "department",
+   "code": "OY",
+   "parent": "GOV",
+   "name": "COMMISSION ON THE STATE OF U.S. OLYMPICS AND PARALYMPICS (CSUSOP)",
+   "first_month": "2023-01",
+   "last_month": "2023-09"
+  },
+  "PU": {
+   "level": "department",
+   "code": "PU",
+   "parent": "GOV",
+   "name": "PEACE CORPS",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "QQ": {
+   "level": "department",
+   "code": "QQ",
+   "parent": "GOV",
+   "name": "OFFICE OF NATIONAL DRUG CONTROL POLICY",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "RE": {
+   "level": "department",
+   "code": "RE",
+   "parent": "GOV",
+   "name": "OFFICE OF NAVAJO AND HOPI INDIAN RELOCATION",
+   "first_month": "2011-10",
+   "last_month": "2025-09"
+  },
+  "RF": {
+   "level": "department",
+   "code": "RF",
+   "parent": "GOV",
+   "name": "FEDERAL RETIREMENT THRIFT INVESTMENT BOARD",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "RH": {
+   "level": "department",
+   "code": "RH",
+   "parent": "GOV",
+   "name": "ARMED FORCES RETIREMENT HOME",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "RJ": {
+   "level": "department",
+   "code": "RJ",
+   "parent": "GOV",
+   "name": "CIVIL RIGHTS COLD CASE REVIEW BOARD (CRCCRB)",
+   "first_month": "2023-01",
+   "last_month": "2026-08"
+  },
+  "RO": {
+   "level": "department",
+   "code": "RO",
+   "parent": "GOV",
+   "name": "MEDICAID AND CHIP PAYMENT AND ACCESS COMMISSION",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "RR": {
+   "level": "department",
+   "code": "RR",
+   "parent": "GOV",
+   "name": "RAILROAD RETIREMENT BOARD",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "RS": {
+   "level": "department",
+   "code": "RS",
+   "parent": "GOV",
+   "name": "FEDERAL MINE SAFETY AND HEALTH REVIEW COMMISSION",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "RZ": {
+   "level": "department",
+   "code": "RZ",
+   "parent": "GOV",
+   "name": "RECOVERY ACT ACCOUNTABILITY & TRANSPARENCY BOARD",
+   "first_month": "2011-10",
+   "last_month": "2015-09"
+  },
+  "SB": {
+   "level": "department",
+   "code": "SB",
+   "parent": "GOV",
+   "name": "SMALL BUSINESS ADMINISTRATION",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "SE": {
+   "level": "department",
+   "code": "SE",
+   "parent": "GOV",
+   "name": "SECURITIES AND EXCHANGE COMMISSION",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "SK": {
+   "level": "department",
+   "code": "SK",
+   "parent": "GOV",
+   "name": "CONSUMER PRODUCT SAFETY COMMISSION",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "SM": {
+   "level": "department",
+   "code": "SM",
+   "parent": "GOV",
+   "name": "SMITHSONIAN INSTITUTION",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "SS": {
+   "level": "department",
+   "code": "SS",
+   "parent": "GOV",
+   "name": "SELECTIVE SERVICE SYSTEM",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "ST": {
+   "level": "department",
+   "code": "ST",
+   "parent": "GOV",
+   "name": "DEPARTMENT OF STATE",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "SZ": {
+   "level": "department",
+   "code": "SZ",
+   "parent": "GOV",
+   "name": "SOCIAL SECURITY ADMINISTRATION",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "TB": {
+   "level": "department",
+   "code": "TB",
+   "parent": "GOV",
+   "name": "NATIONAL TRANSPORTATION SAFETY BOARD",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "TC": {
+   "level": "department",
+   "code": "TC",
+   "parent": "GOV",
+   "name": "U.S. INTERNATIONAL TRADE COMMISSION",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "TD": {
+   "level": "department",
+   "code": "TD",
+   "parent": "GOV",
+   "name": "DEPARTMENT OF TRANSPORTATION",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "TN": {
+   "level": "department",
+   "code": "TN",
+   "parent": "GOV",
+   "name": "OFFICE OF THE U.S. TRADE REPRESENTATIVE",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "TR": {
+   "level": "department",
+   "code": "TR",
+   "parent": "GOV",
+   "name": "DEPARTMENT OF THE TREASURY",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "TS": {
+   "level": "department",
+   "code": "TS",
+   "parent": "GOV",
+   "name": "OFFICE OF SCIENCE AND TECHNOLOGY POLICY",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "TW": {
+   "level": "department",
+   "code": "TW",
+   "parent": "GOV",
+   "name": "SURFACE TRANSPORTATION BOARD",
+   "first_month": "2019-07",
+   "last_month": "2026-08"
+  },
+  "UJ": {
+   "level": "department",
+   "code": "UJ",
+   "parent": "GOV",
+   "name": "JAPAN-UNITED STATES FRIENDSHIP COMMISSION",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "UT": {
+   "level": "department",
+   "code": "UT",
+   "parent": "GOV",
+   "name": "UTAH RECLAMATION MITIGATION AND CONSERVATION COMMISSION",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "VA": {
+   "level": "department",
+   "code": "VA",
+   "parent": "GOV",
+   "name": "DEPARTMENT OF VETERANS AFFAIRS",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "VB": {
+   "level": "department",
+   "code": "VB",
+   "parent": "GOV",
+   "name": "COMMISSION TO ELIMINATE CHILD ABUSE AND NEGLECT FATALITIES",
+   "first_month": "2014-01",
+   "last_month": "2016-03"
+  },
+  "VD": {
+   "level": "department",
+   "code": "VD",
+   "parent": "GOV",
+   "name": "PRIVACY AND CIVIL LIBERTIES OVERSIGHT BOARD",
+   "first_month": "2012-08",
+   "last_month": "2026-08"
+  },
+  "WK": {
+   "level": "department",
+   "code": "WK",
+   "parent": "GOV",
+   "name": "FEDERAL PERMITTING IMPROVEMENT STEERING COUNCIL",
+   "first_month": "2019-12",
+   "last_month": "2026-08"
+  },
+  "WU": {
+   "level": "department",
+   "code": "WU",
+   "parent": "GOV",
+   "name": "SOUTHWEST BORDER REGIONAL COMMISSION",
+   "first_month": "2023-01",
+   "last_month": "2026-08"
+  },
+  "WX": {
+   "level": "department",
+   "code": "WX",
+   "parent": "GOV",
+   "name": "WORLD WAR 1 CENTENNIAL COMMISSION",
+   "first_month": "2015-02",
+   "last_month": "2024-09"
+  },
+  "YG": {
+   "level": "department",
+   "code": "YG",
+   "parent": "GOV",
+   "name": "RONALD REAGAN CENTENNIAL COMMISSION",
+   "first_month": "2011-10",
+   "last_month": "2011-12"
+  },
+  "ZL": {
+   "level": "department",
+   "code": "ZL",
+   "parent": "GOV",
+   "name": "MEDICARE PAYMENT ADVISORY COMMISSION",
+   "first_month": "2011-10",
+   "last_month": "2021-09"
+  },
+  "ZP": {
+   "level": "department",
+   "code": "ZP",
+   "parent": "GOV",
+   "name": "U.S. COMMISSION ON INTERNATIONAL RELIGIOUS FREEDOM",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "ZS": {
+   "level": "department",
+   "code": "ZS",
+   "parent": "GOV",
+   "name": "UNITED STATES-CHINA ECONOMIC AND SECURITY REVIEW COMMISSION",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "ZU": {
+   "level": "department",
+   "code": "ZU",
+   "parent": "GOV",
+   "name": "DWIGHT D. EISENHOWER MEMORIAL COMMISSION",
+   "first_month": "2011-10",
+   "last_month": "2021-11"
+  },
+  "DOD-AF": {
+   "level": "agency",
+   "code": "AF",
+   "parent": "DOD",
+   "name": "DEPARTMENT OF THE AIR FORCE",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "DOD-AR": {
+   "level": "agency",
+   "code": "AR",
+   "parent": "DOD",
+   "name": "DEPARTMENT OF THE ARMY",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "DOD-DD": {
+   "level": "agency",
+   "code": "DD",
+   "parent": "DOD",
+   "name": "DEPARTMENT OF DEFENSE",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  },
+  "DOD-NV": {
+   "level": "agency",
+   "code": "NV",
+   "parent": "DOD",
+   "name": "DEPARTMENT OF THE NAVY",
+   "first_month": "2011-10",
+   "last_month": "2026-08"
+  }
+ },
+ "administrations": {
+  "file": "pipeline/crosswalks/administrations.csv",
+  "sha256": "0e11c41a84d7841c6acd50f452c00a5021cee295082d2d6c1cbaf9b4ea784ea8",
+  "list": [
+   {
+    "id": "obama2",
+    "name": "Obama II",
+    "month_0": "2012-12",
+    "first_month": "2013-01",
+    "last_month": "2016-12",
+    "open": false
+   },
+   {
+    "id": "trump1",
+    "name": "Trump I",
+    "month_0": "2016-12",
+    "first_month": "2017-01",
+    "last_month": "2020-12",
+    "open": false
+   },
+   {
+    "id": "biden",
+    "name": "Biden",
+    "month_0": "2020-12",
+    "first_month": "2021-01",
+    "last_month": "2024-12",
+    "open": false
+   },
+   {
+    "id": "trump2",
+    "name": "Trump II",
+    "month_0": "2024-12",
+    "first_month": "2025-01",
+    "last_month": "2026-08",
+    "open": true
+   }
+  ]
+ },
+ "files_digest_method": "sha256 of the lines '<path> <sha256>\\n' for every file, sorted by path",
+ "entities_without_comparison": {
+  "BH": [
+   "obama2"
+  ],
+  "DA": [
+   "obama2",
+   "trump1",
+   "biden"
+  ],
+  "DO": [
+   "obama2",
+   "trump1",
+   "biden"
+  ],
+  "GC": [
+   "obama2"
+  ],
+  "GU": [
+   "obama2",
+   "trump1"
+  ],
+  "GZ": [
+   "obama2",
+   "trump1"
+  ],
+  "IP": [
+   "obama2",
+   "trump1"
+  ],
+  "JL": [
+   "obama2"
+  ],
+  "KY": [
+   "obama2",
+   "trump1"
+  ],
+  "OP": [
+   "obama2",
+   "trump1",
+   "biden"
+  ],
+  "OY": [
+   "obama2",
+   "trump1",
+   "biden"
+  ],
+  "RJ": [
+   "obama2",
+   "trump1",
+   "biden"
+  ],
+  "TW": [
+   "obama2",
+   "trump1"
+  ],
+  "VB": [
+   "obama2"
+  ],
+  "WK": [
+   "obama2",
+   "trump1"
+  ],
+  "WU": [
+   "obama2",
+   "trump1",
+   "biden"
+  ],
+  "WX": [
+   "obama2"
+  ]
+ },
+ "entities_without_comparison_rule": "an entity whose first month is after an administration's month 0 did not exist when that administration took office: no rows for it",
+ "columns": [
+  {
+   "name": "administration",
+   "kind": "dimension",
+   "description": "administration id (meta administrations; pipeline/crosswalks/administrations.csv)"
+  },
+  {
+   "name": "months_in_office",
+   "kind": "dimension",
+   "description": "N: months in office, month 1 = January of the inauguration year"
+  },
+  {
+   "name": "admin_months",
+   "kind": "dimension",
+   "description": "published months of the administration's window within the entity's span"
+  },
+  {
+   "name": "month_0",
+   "kind": "dimension",
+   "description": "the month before month 1 (YYYY-MM): the baseline of the employee change"
+  },
+  {
+   "name": "month_n",
+   "kind": "dimension",
+   "description": "calendar month of month N (YYYY-MM)"
+  },
+  {
+   "name": "time_basis",
+   "kind": "dimension",
+   "description": "'effective': flows counted by personnel_action_effective_date_yyyymm (invariant 6)"
+  },
+  {
+   "name": "provisional",
+   "kind": "flag",
+   "description": "months 1..N contain any of the newest 3 months (invariant 8)"
+  },
+  {
+   "name": "partial",
+   "kind": "flag",
+   "description": "the administration is still in office (Trump II), or the entity's rows end inside the window"
+  },
+  {
+   "name": "reissued",
+   "kind": "flag",
+   "description": "month 0 or a month of 1..N changed file version since the previous manifest"
+  },
+  {
+   "name": "opm_incomplete",
+   "kind": "flag",
+   "description": "month 0 or a month of 1..N is one OPM marks incomplete for this entity (KDI-006)"
+  },
+  {
+   "name": "kdi_ids",
+   "kind": "flag",
+   "description": "entity-month known data issue ids of month 0 and months 1..N"
+  },
+  {
+   "name": "headcount_0",
+   "kind": "stock",
+   "description": "headcount at month 0"
+  },
+  {
+   "name": "headcount_n",
+   "kind": "stock",
+   "description": "headcount at the end of month N"
+  },
+  {
+   "name": "headcount_change",
+   "kind": "stock_change",
+   "description": "employee change in office: headcount_n minus headcount_0 (as a percent: / headcount_0); not derived from flows (invariant 7)"
+  },
+  {
+   "name": "hires",
+   "kind": "flow",
+   "description": "running sum over months 1..N of accession rows by effective month"
+  },
+  {
+   "name": "departures",
+   "kind": "flow",
+   "description": "running sum over months 1..N of separation rows by effective month (transfers out and DRP included)"
+  },
+  {
+   "name": "sep_transfer_out",
+   "kind": "flow",
+   "description": "running sum of departures with separation code SA + SB (DRP included)"
+  },
+  {
+   "name": "sep_quit",
+   "kind": "flow",
+   "description": "running sum of departures with separation code SC (DRP included)"
+  },
+  {
+   "name": "sep_retirement",
+   "kind": "flow",
+   "description": "running sum of departures with separation code SD + SE + SG (DRP included)"
+  },
+  {
+   "name": "sep_rif",
+   "kind": "flow",
+   "description": "running sum of departures with separation code SH (DRP included)"
+  },
+  {
+   "name": "sep_termination",
+   "kind": "flow",
+   "description": "running sum of departures with separation code SJ (DRP included)"
+  },
+  {
+   "name": "sep_other",
+   "kind": "flow",
+   "description": "running sum of departures with separation code SL (DRP included)"
+  },
+  {
+   "name": "sep_drp",
+   "kind": "flow",
+   "description": "running sum of departures with drp_indicator = 'Y': the seventh reason with the six _nondrp columns"
+  },
+  {
+   "name": "sep_transfer_out_nondrp",
+   "kind": "flow",
+   "description": "running sum of departures with separation code SA + SB and drp_indicator not 'Y'; with sep_drp the seven reasons partition departures (why people left)"
+  },
+  {
+   "name": "sep_quit_nondrp",
+   "kind": "flow",
+   "description": "running sum of departures with separation code SC and drp_indicator not 'Y'; with sep_drp the seven reasons partition departures (why people left)"
+  },
+  {
+   "name": "sep_retirement_nondrp",
+   "kind": "flow",
+   "description": "running sum of departures with separation code SD + SE + SG and drp_indicator not 'Y'; with sep_drp the seven reasons partition departures (why people left)"
+  },
+  {
+   "name": "sep_rif_nondrp",
+   "kind": "flow",
+   "description": "running sum of departures with separation code SH and drp_indicator not 'Y'; with sep_drp the seven reasons partition departures (why people left)"
+  },
+  {
+   "name": "sep_termination_nondrp",
+   "kind": "flow",
+   "description": "running sum of departures with separation code SJ and drp_indicator not 'Y'; with sep_drp the seven reasons partition departures (why people left)"
+  },
+  {
+   "name": "sep_other_nondrp",
+   "kind": "flow",
+   "description": "running sum of departures with separation code SL and drp_indicator not 'Y'; with sep_drp the seven reasons partition departures (why people left)"
+  },
+  {
+   "name": "acc_transfer_in",
+   "kind": "flow",
+   "description": "running sum of hires with accession code AA + AB"
+  },
+  {
+   "name": "acc_new_hire",
+   "kind": "flow",
+   "description": "running sum of hires with accession code AC + AD + AE"
+  },
+  {
+   "name": "attrition_num",
+   "kind": "rate_numerator",
+   "description": "departures over months 1..N x 12 / N (annualized departure rate numerator); rate = attrition_num / rate_den",
+   "denominator": "rate_den",
+   "small_base": "rate_small_base",
+   "months": "rate_months"
+  },
+  {
+   "name": "hire_num",
+   "kind": "rate_numerator",
+   "description": "hires over months 1..N x 12 / N (annualized hire rate numerator); rate = hire_num / rate_den",
+   "denominator": "rate_den",
+   "small_base": "rate_small_base",
+   "months": "rate_months"
+  },
+  {
+   "name": "rate_den",
+   "kind": "rate_denominator",
+   "description": "mean month-end headcount over months 1..N; null (never 0) when that mean is 0"
+  },
+  {
+   "name": "rate_months",
+   "kind": "rate_denominator",
+   "description": "N, the months averaged into rate_den"
+  },
+  {
+   "name": "rate_small_base",
+   "kind": "flag",
+   "description": "rate_den < 30 (invariant 9); null when the rate is empty"
+  }
+ ],
+ "files": {
+  "GOV": {
+   "path": "admin/GOV.json",
+   "sha256": "fb22daf804ed5cf7fa8fde1fe8b18f8b678ec69ac0a16f6aa48973878236121b",
+   "bytes": 40446,
+   "rows": 164
+  },
+  "AA": {
+   "path": "admin/AA.json",
+   "sha256": "36577fedf37b695fd5fb050343d4931c555bfc8786dcda2ea79d289cd2fb149c",
+   "bytes": 24340,
+   "rows": 164
+  },
+  "AB": {
+   "path": "admin/AB.json",
+   "sha256": "e4d5eaeb4051a8b6fd41ea0fb03ab0f3356cdf5b1ed81c321af7ecd31ec90340",
+   "bytes": 24774,
+   "rows": 164
+  },
+  "AG": {
+   "path": "admin/AG.json",
+   "sha256": "969af585daf65b299e19d7a262ecad03cdeab4d72add9eace866780e0ac01281",
+   "bytes": 34990,
+   "rows": 164
+  },
+  "AH": {
+   "path": "admin/AH.json",
+   "sha256": "267b96e959d7f89de1f16462dc5ddbca22b9ba7875bb6f14d99ab6c8e5f0f78b",
+   "bytes": 27510,
+   "rows": 164
+  },
+  "AM": {
+   "path": "admin/AM.json",
+   "sha256": "7895a1c7c80dd79c2749403e18198380fba8e4302e4a4ef6783316e363230ecf",
+   "bytes": 30179,
+   "rows": 164
+  },
+  "AN": {
+   "path": "admin/AN.json",
+   "sha256": "83ddc55edfbe51d8760004cfe76ecc24d60e8428f202ea431cdf61ea7e2fbab5",
+   "bytes": 24795,
+   "rows": 164
+  },
+  "AP": {
+   "path": "admin/AP.json",
+   "sha256": "ccd579b2b29476e441407d7f41fcdd32c4afcb60a8269e42057f182d5c9f408a",
+   "bytes": 23761,
+   "rows": 164
+  },
+  "AU": {
+   "path": "admin/AU.json",
+   "sha256": "6845df095a4cb6efa430d6d960bcf2758d73e18227cac671545452c6cb5c62ee",
+   "bytes": 26339,
+   "rows": 164
+  },
+  "AW": {
+   "path": "admin/AW.json",
+   "sha256": "c5542e07abe9837950bfb882129858af291687f421299c1a936684b3a68fd6f5",
+   "bytes": 23703,
+   "rows": 164
+  },
+  "BD": {
+   "path": "admin/BD.json",
+   "sha256": "1af3465298309508a8e5eab5af6f28c05ba9e068d142df1194e9f7a68aefa43d",
+   "bytes": 26344,
+   "rows": 164
+  },
+  "BF": {
+   "path": "admin/BF.json",
+   "sha256": "c51c1fd3604679e1b4569a08089fababd0fb3ca369633039f9a0873e249b97c2",
+   "bytes": 25793,
+   "rows": 164
+  },
+  "BG": {
+   "path": "admin/BG.json",
+   "sha256": "92f6d20b49627594247d4f8333e1504dac30ad5942db75496f702939cd8eae04",
+   "bytes": 27795,
+   "rows": 164
+  },
+  "BH": {
+   "path": "admin/BH.json",
+   "sha256": "fe2be4f54fa66ed415194e5635b0f040ac3a3fe2f5789bdd349001b0c495b1f2",
+   "bytes": 17085,
+   "rows": 116
+  },
+  "BK": {
+   "path": "admin/BK.json",
+   "sha256": "bf9526f39b65cdc7590e2ac86ac889d11d9a19b7c8a365737f3c5d4d39b6a307",
+   "bytes": 23587,
+   "rows": 164
+  },
+  "BO": {
+   "path": "admin/BO.json",
+   "sha256": "650bda8762c70234d5643048f58fd0f8a38ab2b042f45208a1435e8e89bdd33e",
+   "bytes": 27955,
+   "rows": 164
+  },
+  "BT": {
+   "path": "admin/BT.json",
+   "sha256": "5b4ff8dd88e1d3dd5468e7866f15e8e8555da6d9763f05c3c7f8ab7a0233e674",
+   "bytes": 24525,
+   "rows": 164
+  },
+  "BW": {
+   "path": "admin/BW.json",
+   "sha256": "a4770843bec9785fe266210b22239ce097f0e756694851827226f30a36afc457",
+   "bytes": 24290,
+   "rows": 164
+  },
+  "BZ": {
+   "path": "admin/BZ.json",
+   "sha256": "b1c64e3031d418fa13f64ecd451d886ce4bde96a77642853d9e4b34c1942e99f",
+   "bytes": 7680,
+   "rows": 49
+  },
+  "CC": {
+   "path": "admin/CC.json",
+   "sha256": "ec5c05089043e7be470a267112d684eb90f33a13c34b161b790bf2b025c33773",
+   "bytes": 24866,
+   "rows": 164
+  },
+  "CE": {
+   "path": "admin/CE.json",
+   "sha256": "bcb67553bbf59b8aa64e3fb37d8d501ce13454d2c4a82955395b938737320a90",
+   "bytes": 25316,
+   "rows": 164
+  },
+  "CF": {
+   "path": "admin/CF.json",
+   "sha256": "618f790b8433a0c20f4015f5d27095470c2c6ee3c15cc520bf57863fd1239f62",
+   "bytes": 24119,
+   "rows": 164
+  },
+  "CM": {
+   "path": "admin/CM.json",
+   "sha256": "9d298d33c16d772213be14bb399d82abefcc9309c70d13678a9b96be93c98953",
+   "bytes": 33906,
+   "rows": 164
+  },
+  "CT": {
+   "path": "admin/CT.json",
+   "sha256": "343d5089d64fd576e9fb65a162e1ec820b0625a11faf39a03ad3469aafdf4cef",
+   "bytes": 27174,
+   "rows": 164
+  },
+  "CU": {
+   "path": "admin/CU.json",
+   "sha256": "49d621db5cf8caba3e4b36a8d9699de0f538889d078ad12ab6166ecab46016f3",
+   "bytes": 28043,
+   "rows": 164
+  },
+  "CX": {
+   "path": "admin/CX.json",
+   "sha256": "703637f2d04c0ddf09d4d937fb55e2c76dcaae36aa4f218e20d74990b79031c1",
+   "bytes": 23248,
+   "rows": 164
+  },
+  "DA": {
+   "path": "admin/DA.json",
+   "sha256": "7625051ef4a7005ad57372e3a5a3762e952d1db9705a79121b1540a8adc68b6e",
+   "bytes": 3319,
+   "rows": 20
+  },
+  "DB": {
+   "path": "admin/DB.json",
+   "sha256": "f46d7f392540f242e63f613fdb301339eeba8196a310c13a38d3aa2eff29472f",
+   "bytes": 23678,
+   "rows": 164
+  },
+  "DF": {
+   "path": "admin/DF.json",
+   "sha256": "ca10a594a9617d1365d445fa017d23e0b9335a95a921570579344128366db7e8",
+   "bytes": 4353,
+   "rows": 27
+  },
+  "DG": {
+   "path": "admin/DG.json",
+   "sha256": "09ca359482e01a04f30a0504989f861798e7ef546c8994c21479e0d627f3c3dd",
+   "bytes": 23578,
+   "rows": 164
+  },
+  "DJ": {
+   "path": "admin/DJ.json",
+   "sha256": "cd9eb2f4f88dcba7368aeb69197fecc723fb21d375d0f5d41e595dcce4729328",
+   "bytes": 34331,
+   "rows": 164
+  },
+  "DL": {
+   "path": "admin/DL.json",
+   "sha256": "f7770b8da888845c62db01c7b9bebc5853262d26dcfa5abde441535c889f9f2e",
+   "bytes": 32141,
+   "rows": 164
+  },
+  "DN": {
+   "path": "admin/DN.json",
+   "sha256": "072353f55d0ba2324977c0ebfa1049d0394f4fdb5a35c0ab0ba8780794b7aab4",
+   "bytes": 32147,
+   "rows": 164
+  },
+  "DO": {
+   "path": "admin/DO.json",
+   "sha256": "c010455bd3eddf9c46f3813caddb312dbbabaf70413b2a12c6e7627fe6b35fc0",
+   "bytes": 3581,
+   "rows": 20
+  },
+  "DOD": {
+   "path": "admin/DOD.json",
+   "sha256": "1b987db1bf08d305290864911db3236f8990dcf2a31dea33c7917711d06d7e02",
+   "bytes": 37983,
+   "rows": 164
+  },
+  "DQ": {
+   "path": "admin/DQ.json",
+   "sha256": "4a496c5e09e7f8b7a0af40d8f160d16f3675d8576f77bc3ad653fceacaf8f092",
+   "bytes": 24409,
+   "rows": 164
+  },
+  "EB": {
+   "path": "admin/EB.json",
+   "sha256": "b5e41895d04555dbfc5bc622dbe50c3bc9515d7eb918e016887f49aeea5774ea",
+   "bytes": 27323,
+   "rows": 164
+  },
+  "EC": {
+   "path": "admin/EC.json",
+   "sha256": "04f770a9f4e65feb1c8b7b6cce30a49007de672279a1747ffa482e3ca3f68b16",
+   "bytes": 26775,
+   "rows": 164
+  },
+  "ED": {
+   "path": "admin/ED.json",
+   "sha256": "0a5e15edb2a9280bd3f04a8cbea6be3fadd1e2e204cea0bc42e2659ae5cb0345",
+   "bytes": 30166,
+   "rows": 164
+  },
+  "EE": {
+   "path": "admin/EE.json",
+   "sha256": "2b31726d7b96f04597a89744daa93862790c500abe98aa0ce88a28f6fa94664b",
+   "bytes": 29167,
+   "rows": 164
+  },
+  "EO": {
+   "path": "admin/EO.json",
+   "sha256": "b3db0283f81f3adf1500191913188bc86c216431ba01d463958ac7d1732b8913",
+   "bytes": 24971,
+   "rows": 164
+  },
+  "EP": {
+   "path": "admin/EP.json",
+   "sha256": "ef9b3d70f99fa140c873b0b780fe0e3837c410865b0c664bde9f5a2b19a3c967",
+   "bytes": 31932,
+   "rows": 164
+  },
+  "EQ": {
+   "path": "admin/EQ.json",
+   "sha256": "226be55da5f165c06c8ff9197b78d7b862f9c63c9d6f89c4edf84ff0f5ca05d3",
+   "bytes": 24999,
+   "rows": 164
+  },
+  "EW": {
+   "path": "admin/EW.json",
+   "sha256": "ee4081c5414c5df1c13e9ccaa761955b6ccf91b52fdccd6a1bb60e155bce17a8",
+   "bytes": 25230,
+   "rows": 164
+  },
+  "FC": {
+   "path": "admin/FC.json",
+   "sha256": "93ec6a73c9b5a895f15899f9f3ee5e6d44808f3e76109a4545842d4ca93a25db",
+   "bytes": 28739,
+   "rows": 164
+  },
+  "FD": {
+   "path": "admin/FD.json",
+   "sha256": "631888f359e3836ebeb07b4722fb38e3bd7af1a920e8efee13702ba7159b54f1",
+   "bytes": 30279,
+   "rows": 164
+  },
+  "FI": {
+   "path": "admin/FI.json",
+   "sha256": "1d0631a8df754a2744d1d67a52a47860506f865d3da833bd3756021610d77d22",
+   "bytes": 23988,
+   "rows": 164
+  },
+  "FJ": {
+   "path": "admin/FJ.json",
+   "sha256": "075669a01ba7611ad14617754816e3a26bfb5990edaf529197fe3a52498d236e",
+   "bytes": 24771,
+   "rows": 164
+  },
+  "FK": {
+   "path": "admin/FK.json",
+   "sha256": "c5cb354c4a749f24758ea5894017ab6ccf7c72274ea3f384b929ab4dd65194ae",
+   "bytes": 24051,
+   "rows": 164
+  },
+  "FL": {
+   "path": "admin/FL.json",
+   "sha256": "0db44751118e0b37f239803eece3b45cfad700ea7b1949cf04960b336825291a",
+   "bytes": 26650,
+   "rows": 164
+  },
+  "FM": {
+   "path": "admin/FM.json",
+   "sha256": "1ade8d09da12945844779df1f6681661f9d84518c0666e99e697937f93832457",
+   "bytes": 26069,
+   "rows": 164
+  },
+  "FQ": {
+   "path": "admin/FQ.json",
+   "sha256": "a9758ef6e7f60333f4a534e71c625d16f87e83c88d7d74253a8d82ffe5fd8912",
+   "bytes": 27872,
+   "rows": 164
+  },
+  "FR": {
+   "path": "admin/FR.json",
+   "sha256": "b1d528a7037153e303b98af205831e561e8382341f2d0b9a2cd89e1d82aa7385",
+   "bytes": 28872,
+   "rows": 164
+  },
+  "FT": {
+   "path": "admin/FT.json",
+   "sha256": "7b5e69d9816e39d601fbcc344485d08389ef572d441d0903094b10eed6f2848a",
+   "bytes": 28515,
+   "rows": 164
+  },
+  "FW": {
+   "path": "admin/FW.json",
+   "sha256": "9f11c9b5ccd4702f3e0174e0a18c33d6fbd08aa9510dad4cb8476d9df2d19dc2",
+   "bytes": 26249,
+   "rows": 164
+  },
+  "GB": {
+   "path": "admin/GB.json",
+   "sha256": "76fc3dbeca9367eb13b7e30a67c7a3812a5765314398a2cdce39a175bcaa3dda",
+   "bytes": 27118,
+   "rows": 164
+  },
+  "GC": {
+   "path": "admin/GC.json",
+   "sha256": "abc80059611c49793cb27fa1065dd7f7da955b1974f5acb4b858dd3982812ff9",
+   "bytes": 17204,
+   "rows": 116
+  },
+  "GE": {
+   "path": "admin/GE.json",
+   "sha256": "ecdcf595b13618cddf86fb7c64604e5a3a8584b92faea25ec2d8517869c3efb7",
+   "bytes": 23397,
+   "rows": 164
+  },
+  "GG": {
+   "path": "admin/GG.json",
+   "sha256": "ceb4e1ce2c27ae87bc13f42dab89997a9ddc66c4f96ac0d676a8e33bc2ef7b81",
+   "bytes": 24803,
+   "rows": 164
+  },
+  "GJ": {
+   "path": "admin/GJ.json",
+   "sha256": "945bad0a5e4e3c4189b4e49362d5a1ed3d1ab304dc2de8ba4aa49754e2cb5e52",
+   "bytes": 26485,
+   "rows": 164
+  },
+  "GM": {
+   "path": "admin/GM.json",
+   "sha256": "abc6d72a4aa9a19f5ba1f1e68d2c05301bfb635caea66b8acc96364130e7d75c",
+   "bytes": 9097,
+   "rows": 56
+  },
+  "GO": {
+   "path": "admin/GO.json",
+   "sha256": "acc25101e9d4e3d1ebe6f5a74cad471385b701d08d67019f82ac218b559dd4a0",
+   "bytes": 11057,
+   "rows": 73
+  },
+  "GQ": {
+   "path": "admin/GQ.json",
+   "sha256": "6c0cbb14dff0ee1c5711e3d35492332f721d0b7993cc0f7130dd1cb7c33b2a07",
+   "bytes": 24980,
+   "rows": 164
+  },
+  "GS": {
+   "path": "admin/GS.json",
+   "sha256": "7a06902448879e8184dfa9a7a5bf332ceca9895c4b78c60ec5fdeb16d3be1e47",
+   "bytes": 31661,
+   "rows": 164
+  },
+  "GU": {
+   "path": "admin/GU.json",
+   "sha256": "daf92b0d2375bbb685fa58ddf950dca6bb694e1105fcaff411a080afe5905a6f",
+   "bytes": 10062,
+   "rows": 68
+  },
+  "GW": {
+   "path": "admin/GW.json",
+   "sha256": "73f958ec279ee2682df84cbed11df04846d4bd7261e8398e1e6f0db4f7c917f1",
+   "bytes": 26616,
+   "rows": 164
+  },
+  "GX": {
+   "path": "admin/GX.json",
+   "sha256": "9cd0356348aebb10628d0e0a45b7ada394f03b1d14ec4189233934c2fda2fc49",
+   "bytes": 24834,
+   "rows": 164
+  },
+  "GY": {
+   "path": "admin/GY.json",
+   "sha256": "27b3c52f600f90c2d8c3641bde83472b95ad7827e02a237c64d64e449bd3b2b4",
+   "bytes": 24191,
+   "rows": 164
+  },
+  "GZ": {
+   "path": "admin/GZ.json",
+   "sha256": "f27f9e2d5ae03daf64781bdbb1c391ceaa3cd0e694bc945e79347e320d9908ca",
+   "bytes": 5524,
+   "rows": 36
+  },
+  "HB": {
+   "path": "admin/HB.json",
+   "sha256": "9d515479e90854f958e781ef368c2fe22c8152cf4a6fc7257ed244df9b47e589",
+   "bytes": 24656,
+   "rows": 164
+  },
+  "HD": {
+   "path": "admin/HD.json",
+   "sha256": "f699a26cd14d839386b4ed7073ead42905b40a670c230b6f5f42fd6dd34a65dc",
+   "bytes": 25666,
+   "rows": 164
+  },
+  "HE": {
+   "path": "admin/HE.json",
+   "sha256": "5ed000f36a9b7ad7bea21ed3aa5b5a2959242727b489f37ddf99563ca7bd5bb7",
+   "bytes": 34442,
+   "rows": 164
+  },
+  "HF": {
+   "path": "admin/HF.json",
+   "sha256": "8e146761d96a660e48d6489ef70a50da4fcf1885858d792504a3eb75d7e06013",
+   "bytes": 27599,
+   "rows": 164
+  },
+  "HP": {
+   "path": "admin/HP.json",
+   "sha256": "b45a6d5c145ff16725e5316766a06eba4df51679041180c86271036ebf4e73c2",
+   "bytes": 24734,
+   "rows": 164
+  },
+  "HS": {
+   "path": "admin/HS.json",
+   "sha256": "073e42d5c7fa6c0f7be50dd3aa07f7bd07b4c3e347eda2aafb748f5fd23076e0",
+   "bytes": 35885,
+   "rows": 164
+  },
+  "HT": {
+   "path": "admin/HT.json",
+   "sha256": "cb63c69a9a96bdbca91a0be1d17807191bde4fafa58f158c3938e7d0de628e15",
+   "bytes": 23588,
+   "rows": 164
+  },
+  "HU": {
+   "path": "admin/HU.json",
+   "sha256": "0d6956d65b5b5f2de4d4081d466f9be17e4c22f0adad00af5defd6cf523468e4",
+   "bytes": 30852,
+   "rows": 164
+  },
+  "HW": {
+   "path": "admin/HW.json",
+   "sha256": "91c9ca5a2bf2c26a37f779fa92bb4ef1891e7efb41f10370904f8362dd050eec",
+   "bytes": 24459,
+   "rows": 164
+  },
+  "IB": {
+   "path": "admin/IB.json",
+   "sha256": "265caaf404c3bd18240a5fe006e0417e067590de84472d4f33cdce1383631423",
+   "bytes": 28356,
+   "rows": 164
+  },
+  "IF": {
+   "path": "admin/IF.json",
+   "sha256": "95acc73cd1823909122c784778b4509aee437df211f4256e52b997b2f3691355",
+   "bytes": 24826,
+   "rows": 164
+  },
+  "IG": {
+   "path": "admin/IG.json",
+   "sha256": "83ec25c2aa8b96a7bdeede016da02f70313985892fbd5763bf73593a4a73987e",
+   "bytes": 24360,
+   "rows": 164
+  },
+  "IN": {
+   "path": "admin/IN.json",
+   "sha256": "8906e021bf4528db1127b79861513dccbe0ad5957ee7395af03df3174f349c75",
+   "bytes": 34933,
+   "rows": 164
+  },
+  "IP": {
+   "path": "admin/IP.json",
+   "sha256": "f92c3f03dc702e8b9b193e204f870182e678cd802af144dcf5f922b56b68a92a",
+   "bytes": 8776,
+   "rows": 59
+  },
+  "JL": {
+   "path": "admin/JL.json",
+   "sha256": "793003f07cc67ed9d52d44b98ca6dab7c69de3ec9ea0f4d8e29b9f14d51338fd",
+   "bytes": 18937,
+   "rows": 116
+  },
+  "KS": {
+   "path": "admin/KS.json",
+   "sha256": "b9d1103bd98e88ae821fe3600c07fd619079dc80275a678035bae983e83ba00e",
+   "bytes": 28171,
+   "rows": 164
+  },
+  "KY": {
+   "path": "admin/KY.json",
+   "sha256": "aac45bacf83b78be0c5fca2cc2ac70a0b2944c712b6e25fceb965aa81b5f61ad",
+   "bytes": 9965,
+   "rows": 68
+  },
+  "LF": {
+   "path": "admin/LF.json",
+   "sha256": "1c5d76a6ff8d39bc1ae7d827144a1f1462ba02d23adf7b45766a0525311add3c",
+   "bytes": 26583,
+   "rows": 164
+  },
+  "LP": {
+   "path": "admin/LP.json",
+   "sha256": "86d1d0163c70620718fe54a007c9d89291e4d5512d3bab8877e84e353b032b49",
+   "bytes": 28540,
+   "rows": 164
+  },
+  "LT": {
+   "path": "admin/LT.json",
+   "sha256": "ddabd7c1e7d4d90ebaf65db285db25ce9f02eb3817b2ce198c37e72c036a4f35",
+   "bytes": 1771,
+   "rows": 8
+  },
+  "MA": {
+   "path": "admin/MA.json",
+   "sha256": "f49bcdffd05e52a46be321542d5db0ae10af68c516dc4ee667bb0985b3d8b304",
+   "bytes": 24150,
+   "rows": 164
+  },
+  "MC": {
+   "path": "admin/MC.json",
+   "sha256": "a899ca173a204fabd3922af753de8f799d607ee91c12ee4027921f385694919e",
+   "bytes": 26147,
+   "rows": 164
+  },
+  "MI": {
+   "path": "admin/MI.json",
+   "sha256": "da2790365c26f2b52ed1690c2e490f29c5944c62faf676ea8915babb657eaffa",
+   "bytes": 26817,
+   "rows": 164
+  },
+  "NF": {
+   "path": "admin/NF.json",
+   "sha256": "979083bb560c46f1800e654906deefc0ada4c300254e5cb1a9409a3f2ac22b04",
+   "bytes": 29396,
+   "rows": 164
+  },
+  "NK": {
+   "path": "admin/NK.json",
+   "sha256": "b90010b330ae57925120be915fc2869b223ee58bcca8ec58d2699b2f98e8bfdd",
+   "bytes": 24387,
+   "rows": 164
+  },
+  "NL": {
+   "path": "admin/NL.json",
+   "sha256": "d9cec32eb55d84c31f75387e8293f37d203177e10813aab8dea81044c0ed7e43",
+   "bytes": 28539,
+   "rows": 164
+  },
+  "NM": {
+   "path": "admin/NM.json",
+   "sha256": "9e6fd1fd787f2cbf048740d328852ec94e71f80c81658e416b2f14d8eb19a0dc",
+   "bytes": 24601,
+   "rows": 164
+  },
+  "NN": {
+   "path": "admin/NN.json",
+   "sha256": "cafb9b9763f3f9935c8373bc98b423ab454f052b6b18669e3de95f797f1f6063",
+   "bytes": 31318,
+   "rows": 164
+  },
+  "NP": {
+   "path": "admin/NP.json",
+   "sha256": "3ed91df743393530580910ec938e7c5d2cfbfaa0aca271d45ff26f5f0081ccb9",
+   "bytes": 24599,
+   "rows": 164
+  },
+  "NQ": {
+   "path": "admin/NQ.json",
+   "sha256": "85b732a56b8f1972a400fbd6cacd69e529970e478c4372358df1e29f01432eb3",
+   "bytes": 29694,
+   "rows": 164
+  },
+  "NS": {
+   "path": "admin/NS.json",
+   "sha256": "a3d805e7cfe08edd996a04275ca8a20c848dc8650f6c723d793e8c1f5a84dd18",
+   "bytes": 25886,
+   "rows": 164
+  },
+  "NU": {
+   "path": "admin/NU.json",
+   "sha256": "3034e3e1fdd7e9574257ecefb20eeeb2d48f12159388a4e79f7fb034924aa9ce",
+   "bytes": 29180,
+   "rows": 164
+  },
+  "OM": {
+   "path": "admin/OM.json",
+   "sha256": "a0be4219b90cd3cf9a226d1228604f98c8bb3e4033bfe44004db3c97eced5bdf",
+   "bytes": 30374,
+   "rows": 164
+  },
+  "OP": {
+   "path": "admin/OP.json",
+   "sha256": "21277124abcbaf505c05cc6021d52ce4c9461cb84cac454783955dbe7d35133c",
+   "bytes": 1004,
+   "rows": 3
+  },
+  "OS": {
+   "path": "admin/OS.json",
+   "sha256": "646c1690cf07cae34a889e8178f3d5b772361365f20c58ff20d2ef96be8c8eb0",
+   "bytes": 24793,
+   "rows": 164
+  },
+  "OY": {
+   "path": "admin/OY.json",
+   "sha256": "808fc2358697662b42dc19fcb1deeb4a1bca0bee60cd492972f736d1df4a8067",
+   "bytes": 596,
+   "rows": 0
+  },
+  "PU": {
+   "path": "admin/PU.json",
+   "sha256": "64c40c974f0d91da69361524b0265b9595c4ae6ffa2d00c64b1cd7147670f980",
+   "bytes": 28543,
+   "rows": 164
+  },
+  "QQ": {
+   "path": "admin/QQ.json",
+   "sha256": "603d198ad6cf922a41b3dd42f3bc24a8a9f3c9935e537e4fa44bd68266d295ae",
+   "bytes": 25518,
+   "rows": 164
+  },
+  "RE": {
+   "path": "admin/RE.json",
+   "sha256": "8c383710e3f77f62a8166b095075cc7eb652abe93fc9286801800183f1c32bc1",
+   "bytes": 22586,
+   "rows": 153
+  },
+  "RF": {
+   "path": "admin/RF.json",
+   "sha256": "ff4804b589d2d2330d2781d6a9a23d6975eb47aa2ec2c7fbf8a126c18232d7f4",
+   "bytes": 26647,
+   "rows": 164
+  },
+  "RH": {
+   "path": "admin/RH.json",
+   "sha256": "72c6d3b11bebee24391bf90336d4283578447367c4465024cb17f76c9b8ff5d5",
+   "bytes": 27058,
+   "rows": 164
+  },
+  "RJ": {
+   "path": "admin/RJ.json",
+   "sha256": "67f9988064a6fcf226f44ee3ff18c06832d5ba51a170549492fce7684462601a",
+   "bytes": 3407,
+   "rows": 20
+  },
+  "RO": {
+   "path": "admin/RO.json",
+   "sha256": "3a0c0dc9702543a731295b16dabf29a81cf3286ce345bb6969c85d4999a75703",
+   "bytes": 25106,
+   "rows": 164
+  },
+  "RR": {
+   "path": "admin/RR.json",
+   "sha256": "3df342fa828b29838f2cc7f13df174c7b9831e8bc6b7a06e86a255c4c0ba7ab3",
+   "bytes": 27520,
+   "rows": 164
+  },
+  "RS": {
+   "path": "admin/RS.json",
+   "sha256": "aa90ee68fc6b884c0619130488a95ee389b25ee0388e44843470d27604699959",
+   "bytes": 25308,
+   "rows": 164
+  },
+  "RZ": {
+   "path": "admin/RZ.json",
+   "sha256": "b6fdb6454cf41388d101b11c9ce211d4f4883ddb385489e6447a993dba427e75",
+   "bytes": 5432,
+   "rows": 33
+  },
+  "SB": {
+   "path": "admin/SB.json",
+   "sha256": "31e813a3f8860580d72bf30458550dedfe27b100b11153dcf0dfef55f0ef4ccc",
+   "bytes": 31733,
+   "rows": 164
+  },
+  "SE": {
+   "path": "admin/SE.json",
+   "sha256": "ed49cab0db63ae708254a2584662749d4996a3d5bb0e36385f3b4b2b20efe684",
+   "bytes": 29389,
+   "rows": 164
+  },
+  "SK": {
+   "path": "admin/SK.json",
+   "sha256": "5f4e3a5a96177460d9a69dec761a5e1095fc581753a5ef965ff2f501e3c05b2f",
+   "bytes": 27328,
+   "rows": 164
+  },
+  "SM": {
+   "path": "admin/SM.json",
+   "sha256": "be10599f8e36178a89218886123e5c91554762745985903e999c95f19f5923c7",
+   "bytes": 30118,
+   "rows": 164
+  },
+  "SS": {
+   "path": "admin/SS.json",
+   "sha256": "2bdc9c29cfc714767a0c2fef607a3d39cfd69c11efc87f151f4413b392ec364a",
+   "bytes": 26469,
+   "rows": 164
+  },
+  "ST": {
+   "path": "admin/ST.json",
+   "sha256": "0584d79714fd54de9454fa4098d71222eca56284bfcf7b94ae20b9f519191d47",
+   "bytes": 32223,
+   "rows": 164
+  },
+  "SZ": {
+   "path": "admin/SZ.json",
+   "sha256": "5277e16551ae8914b2463c9c6111302cb1e5380d22f3edf162c7f9443034b1ae",
+   "bytes": 32959,
+   "rows": 164
+  },
+  "TB": {
+   "path": "admin/TB.json",
+   "sha256": "22abc3e7dd3b81d93534e43946145e525bd081a845199261554db5616cfdb5b4",
+   "bytes": 26750,
+   "rows": 164
+  },
+  "TC": {
+   "path": "admin/TC.json",
+   "sha256": "44e5cf83ece5da13b33b16af1c49d0328c048d84965b316799ac1e1dd457ea74",
+   "bytes": 26989,
+   "rows": 164
+  },
+  "TD": {
+   "path": "admin/TD.json",
+   "sha256": "f0d9d572d3e2c4192700bfc0e9fa92c490b05cdcaadd16ae2285d48075346fe0",
+   "bytes": 33190,
+   "rows": 164
+  },
+  "TN": {
+   "path": "admin/TN.json",
+   "sha256": "f3b6dd3960e053c867b56a2c7ed4d1a4fb424f2993f10ddd8cb2e63a99a30d94",
+   "bytes": 26844,
+   "rows": 164
+  },
+  "TR": {
+   "path": "admin/TR.json",
+   "sha256": "6246541d058df3c54ff58f41ee4dcc1615e85e72166074700323637d1ff0173a",
+   "bytes": 35023,
+   "rows": 164
+  },
+  "TS": {
+   "path": "admin/TS.json",
+   "sha256": "7cf3d1c1170c576704fd3c72cb21823154919a75090fc3f458108eae2e2f8451",
+   "bytes": 25231,
+   "rows": 164
+  },
+  "TW": {
+   "path": "admin/TW.json",
+   "sha256": "7a7a1ee8d9ace86fcd66f159702333e6527c64aefc8dd28ded422d6b28f7ad69",
+   "bytes": 10991,
+   "rows": 68
+  },
+  "UJ": {
+   "path": "admin/UJ.json",
+   "sha256": "d04bb7bf621a61ae41daec36983e439b8d1c8d5192127b8e5ca0351c62f11a2d",
+   "bytes": 23934,
+   "rows": 164
+  },
+  "UT": {
+   "path": "admin/UT.json",
+   "sha256": "bfb018c8f1f1ba2b939056d2603effbdc749ad21e8fe2802aaa2e8b78ad0659e",
+   "bytes": 23854,
+   "rows": 164
+  },
+  "VA": {
+   "path": "admin/VA.json",
+   "sha256": "a5af454c3d7594caced6d1091985b6cfb9f4988f01336b196c7a833a4786d64f",
+   "bytes": 36387,
+   "rows": 164
+  },
+  "VB": {
+   "path": "admin/VB.json",
+   "sha256": "f78bf69a283f6aa64ce7b62954cfac38e8bb15526e27912b4a88fa3b59a84a21",
+   "bytes": 596,
+   "rows": 0
+  },
+  "VD": {
+   "path": "admin/VD.json",
+   "sha256": "3d0d954d7bbd52a1ab73c8abd5002bf56c15530ade8821ecfe1c58701527b474",
+   "bytes": 24642,
+   "rows": 164
+  },
+  "WK": {
+   "path": "admin/WK.json",
+   "sha256": "4c7c3f28280af7440de970e56fb7d7d6fa9245f22b782315616018b729497c9a",
+   "bytes": 10426,
+   "rows": 68
+  },
+  "WU": {
+   "path": "admin/WU.json",
+   "sha256": "fcea77b4088ec184b9f2b754f501e0c71445bab1c82367760b982119acaa2e12",
+   "bytes": 3300,
+   "rows": 20
+  },
+  "WX": {
+   "path": "admin/WX.json",
+   "sha256": "583cf5247bcbb6b37bb2f0a47294c0a0085056a06d388d9902a244a2ac413672",
+   "bytes": 13669,
+   "rows": 93
+  },
+  "YG": {
+   "path": "admin/YG.json",
+   "sha256": "45a90da4b77493a173aea13959b2bd7b0e2391f4874436c043bc448aca6d9bd4",
+   "bytes": 596,
+   "rows": 0
+  },
+  "ZL": {
+   "path": "admin/ZL.json",
+   "sha256": "fa5b630254e43e09a5d2e13f8b1d3fbc7267c2b70eac925e0a61962d1fb72e70",
+   "bytes": 16075,
+   "rows": 105
+  },
+  "ZP": {
+   "path": "admin/ZP.json",
+   "sha256": "5682422f4bed883ee64c94ca28e5c1ee315602d8818fdb91ae793947aa4ae93c",
+   "bytes": 24779,
+   "rows": 164
+  },
+  "ZS": {
+   "path": "admin/ZS.json",
+   "sha256": "ef46ae6918dfb6ff9adca7527c7430fb189ac96495d3f0a618872626b756fa3d",
+   "bytes": 24980,
+   "rows": 164
+  },
+  "ZU": {
+   "path": "admin/ZU.json",
+   "sha256": "58c4bb6f9d76cfca02c2b278750e6e8c32ac413ffe3272d0f1c29f9ee7047998",
+   "bytes": 15724,
+   "rows": 107
+  },
+  "DOD-AF": {
+   "path": "admin/DOD-AF.json",
+   "sha256": "119d9ab6ea1275b45fd4e93e55f6396b6178818c5015bcc63db86a2948e6eec8",
+   "bytes": 36177,
+   "rows": 164
+  },
+  "DOD-AR": {
+   "path": "admin/DOD-AR.json",
+   "sha256": "c7f4963793778943889c410ecaaf28217dd72c0d4995f4b1fd9af6fe40eb131a",
+   "bytes": 36646,
+   "rows": 164
+  },
+  "DOD-DD": {
+   "path": "admin/DOD-DD.json",
+   "sha256": "d8a57c3db4482b3b03dbc69138756081dfa741a692a546360da6de85558cecfc",
+   "bytes": 35835,
+   "rows": 164
+  },
+  "DOD-NV": {
+   "path": "admin/DOD-NV.json",
+   "sha256": "ed7a5682129bd2a1eb4b89564ed9ddc012586a8e34932f8df4e8a4d5b14ab568",
+   "bytes": 35837,
+   "rows": 164
+  }
+ },
+ "files_sha256": "08f77c4c8dece935867422504b02723f33d7a8ee11d4e2e3da76454e2ec2070c",
+ "size": {
+  "files": 146,
+  "total_bytes": 3540129,
+  "mean_bytes": 24247,
+  "largest": {
+   "key": "GOV",
+   "bytes": 40446
+  }
+ }
+}

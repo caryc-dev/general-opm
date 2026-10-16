@@ -18,6 +18,9 @@ actions), October 2011 to the latest published month. All figures are counts of 
 - An entity's rows begin at its first month with headcount or actions and end at its last; its first and last
   quarter and fiscal year are partial. A
   month with no rows keeps headcount 0 as published; rates with a zero denominator are empty, never 0/0.
+  Exception (D-034): the trailing-12-month comparison includes every entity with a month inside the window, so
+  children sum exactly to their parent; an entity that ended inside the window carries its in-window flows and
+  has headcount 0 after its last month.
 - Rows whose department code is missing or "No Data Reported" are placed in the department of their
   agency code (every agency code belongs to exactly one department in every other month), and flagged as a known
   data issue (KDI-004, KDI-005). This keeps every person in exactly one department.
@@ -103,13 +106,13 @@ federal wage system; all other plans). Occupation per department is left to the 
 Every accession and separation row, all agencies, split into files by effective fiscal year (actions effective
 before October 2011 in their own file); the latest month's employment snapshot, split by department. Only fields
 OPM published, REDACTED kept as written, no join across months. Each file under 100 MB. Fields:
-- Departures (24): department_code, department, agency_code, agency, agency_subelement_code, agency_subelement,
+- Departures (27): department_code, department, agency_code, agency, agency_subelement_code, agency_subelement,
   personnel_action_effective_date_yyyymm, period (the source file's month, as YYYYMM), separation_category,
-  drp_indicator, occupational_series_code, occupational_series, pay_plan_code, grade, age_bracket,
-  length_of_service_years, supervisory_status, appointment_type, tenure, education_level, veteran_indicator,
+  drp_indicator, occupational_series_code, occupational_series, occupational_group_code, occupational_group, pay_plan_code, grade, age_bracket,
+  length_of_service_years, supervisory_status, appointment_type_code, appointment_type, tenure, education_level, veteran_indicator,
   work_schedule, annualized_adjusted_basic_pay, duty_station_state.
-- Hires (23): the same without drp_indicator, with accession_category in place of separation_category.
-- Employees (21): snapshot_yyyymm, the six organization fields and the 14 fields from occupational_series_code to
+- Hires (26): the same without drp_indicator, with accession_category in place of separation_category.
+- Employees (24): snapshot_yyyymm, the six organization fields and the 17 fields from occupational_series_code to
   duty_station_state above.
 Department, agency and subelement are as published; the department used in cubes when the published one is missing
 (KDI-004, KDI-005, KDI-008) is not added.

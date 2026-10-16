@@ -11,18 +11,21 @@ separations,9,separation_category,separation_category,D-021,
 separations,10,drp_indicator,drp_indicator,D-021,
 separations,11,occupational_series_code,occupational_series_code,D-021,
 separations,12,occupational_series,occupational_series,D-021,
-separations,13,pay_plan_code,pay_plan_code,D-021,
-separations,14,grade,grade,D-021,REDACTED kept as published (KDI-007)
-separations,15,age_bracket,age_bracket,D-021,
-separations,16,length_of_service_years,length_of_service_years,D-021,"KDI-001, KDI-009 and KDI-010 values kept as published"
-separations,17,supervisory_status,supervisory_status,D-021,
-separations,18,appointment_type,appointment_type,D-021,
-separations,19,tenure,tenure,D-021,
-separations,20,education_level,education_level,D-021,
-separations,21,veteran_indicator,veteran_indicator,D-021,
-separations,22,work_schedule,work_schedule,D-021,
-separations,23,annualized_adjusted_basic_pay,annualized_adjusted_basic_pay,D-021,
-separations,24,duty_station_state,duty_station_state,D-021,
+separations,13,occupational_group_code,occupational_group_code,D-037,"OPM's published occupational family, as written"
+separations,14,occupational_group,occupational_group,D-037,"OPM's published occupational family, as written"
+separations,15,pay_plan_code,pay_plan_code,D-021,
+separations,16,grade,grade,D-021,REDACTED kept as published (KDI-007)
+separations,17,age_bracket,age_bracket,D-021,
+separations,18,length_of_service_years,length_of_service_years,D-021,"KDI-001, KDI-009 and KDI-010 values kept as published"
+separations,19,supervisory_status,supervisory_status,D-021,
+separations,20,appointment_type_code,appointment_type_code,D-035,"as published, beside appointment_type"
+separations,21,appointment_type,appointment_type,D-021,
+separations,22,tenure,tenure,D-021,
+separations,23,education_level,education_level,D-021,
+separations,24,veteran_indicator,veteran_indicator,D-021,
+separations,25,work_schedule,work_schedule,D-021,
+separations,26,annualized_adjusted_basic_pay,annualized_adjusted_basic_pay,D-021,
+separations,27,duty_station_state,duty_station_state,D-021,
 accessions,1,department_code,department_code,D-021,"as published; the file name of an employment snapshot file; the department used in cubes when the published one is missing (KDI-004, KDI-005, KDI-008) is not added"
 accessions,2,department,department,D-021,
 accessions,3,agency_code,agency_code,D-021,
@@ -34,18 +37,21 @@ accessions,8,period,FILE_MONTH,D-021,"processing month: the source file's month 
 accessions,9,accession_category,accession_category,D-021,
 accessions,10,occupational_series_code,occupational_series_code,D-021,
 accessions,11,occupational_series,occupational_series,D-021,
-accessions,12,pay_plan_code,pay_plan_code,D-021,
-accessions,13,grade,grade,D-021,REDACTED kept as published (KDI-007)
-accessions,14,age_bracket,age_bracket,D-021,
-accessions,15,length_of_service_years,length_of_service_years,D-021,"KDI-001, KDI-009 and KDI-010 values kept as published"
-accessions,16,supervisory_status,supervisory_status,D-021,
-accessions,17,appointment_type,appointment_type,D-021,
-accessions,18,tenure,tenure,D-021,
-accessions,19,education_level,education_level,D-021,
-accessions,20,veteran_indicator,veteran_indicator,D-021,
-accessions,21,work_schedule,work_schedule,D-021,
-accessions,22,annualized_adjusted_basic_pay,annualized_adjusted_basic_pay,D-021,
-accessions,23,duty_station_state,duty_station_state,D-021,
+accessions,12,occupational_group_code,occupational_group_code,D-037,"OPM's published occupational family, as written"
+accessions,13,occupational_group,occupational_group,D-037,"OPM's published occupational family, as written"
+accessions,14,pay_plan_code,pay_plan_code,D-021,
+accessions,15,grade,grade,D-021,REDACTED kept as published (KDI-007)
+accessions,16,age_bracket,age_bracket,D-021,
+accessions,17,length_of_service_years,length_of_service_years,D-021,"KDI-001, KDI-009 and KDI-010 values kept as published"
+accessions,18,supervisory_status,supervisory_status,D-021,
+accessions,19,appointment_type_code,appointment_type_code,D-035,"as published, beside appointment_type"
+accessions,20,appointment_type,appointment_type,D-021,
+accessions,21,tenure,tenure,D-021,
+accessions,22,education_level,education_level,D-021,
+accessions,23,veteran_indicator,veteran_indicator,D-021,
+accessions,24,work_schedule,work_schedule,D-021,
+accessions,25,annualized_adjusted_basic_pay,annualized_adjusted_basic_pay,D-021,
+accessions,26,duty_station_state,duty_station_state,D-021,
 employment,1,snapshot_yyyymm,snapshot_yyyymm,D-021,
 employment,2,department_code,department_code,D-021,"as published; the file name of an employment snapshot file; the department used in cubes when the published one is missing (KDI-004, KDI-005, KDI-008) is not added"
 employment,3,department,department,D-021,
@@ -55,15 +61,18 @@ employment,6,agency_subelement_code,agency_subelement_code,D-021,
 employment,7,agency_subelement,agency_subelement,D-021,
 employment,8,occupational_series_code,occupational_series_code,D-021,
 employment,9,occupational_series,occupational_series,D-021,
-employment,10,pay_plan_code,pay_plan_code,D-021,
-employment,11,grade,grade,D-021,REDACTED kept as published (KDI-007)
-employment,12,age_bracket,age_bracket,D-021,
-employment,13,length_of_service_years,length_of_service_years,D-021,"KDI-001, KDI-009 and KDI-010 values kept as published"
-employment,14,supervisory_status,supervisory_status,D-021,
-employment,15,appointment_type,appointment_type,D-021,
-employment,16,tenure,tenure,D-021,
-employment,17,education_level,education_level,D-021,
-employment,18,veteran_indicator,veteran_indicator,D-021,
-employment,19,work_schedule,work_schedule,D-021,
-employment,20,annualized_adjusted_basic_pay,annualized_adjusted_basic_pay,D-021,
-employment,21,duty_station_state,duty_station_state,D-021,
+employment,10,occupational_group_code,occupational_group_code,D-037,"OPM's published occupational family, as written"
+employment,11,occupational_group,occupational_group,D-037,"OPM's published occupational family, as written"
+employment,12,pay_plan_code,pay_plan_code,D-021,
+employment,13,grade,grade,D-021,REDACTED kept as published (KDI-007)
+employment,14,age_bracket,age_bracket,D-021,
+employment,15,length_of_service_years,length_of_service_years,D-021,"KDI-001, KDI-009 and KDI-010 values kept as published"
+employment,16,supervisory_status,supervisory_status,D-021,
+employment,17,appointment_type_code,appointment_type_code,D-035,"as published, beside appointment_type"
+employment,18,appointment_type,appointment_type,D-021,
+employment,19,tenure,tenure,D-021,
+employment,20,education_level,education_level,D-021,
+employment,21,veteran_indicator,veteran_indicator,D-021,
+employment,22,work_schedule,work_schedule,D-021,
+employment,23,annualized_adjusted_basic_pay,annualized_adjusted_basic_pay,D-021,
+employment,24,duty_station_state,duty_station_state,D-021,

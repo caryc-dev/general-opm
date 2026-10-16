@@ -197,6 +197,19 @@ try {
   await go(BASE + 'departments-compared.html');
   check('page 4 GOV FY2026: the government row first, departures 196,674', await evaluate(`(() => { const r = document.querySelector('#cmp-table tbody tr'); return r.classList.contains('is-pinned') && r.children[3].textContent === '196,674'; })()`));
   check('page 4 GOV: heat map shows 20 departments of 5,000 or more and the government', (await evaluate(`document.querySelectorAll('#cmp-heat tbody tr').length`)) === 21);
+  await go(BASE + 'departments-compared.html?view=t12');
+  const t12rows = await evaluate(`[...document.querySelectorAll('#cmp-table tbody tr')].map(r => [...r.children].map(c => c.textContent))`);
+  const ipRow = t12rows.find(r => /intellectual property enforcement/i.test(r[0])), reRow = t12rows.find(r => /navajo and hopi/i.test(r[0]));
+  check('page 4 past 12 months (D-034): 127 departments and the government row', t12rows.length === 128, t12rows.length);
+  check('page 4 past 12 months: IP and RE shown with 0 employees, departures 2 and 14, small-base rates', !!ipRow && !!reRow &&
+    ipRow[1] === '0' && ipRow[3] === '2' && reRow[1] === '0' && reRow[3] === '14' && / \*$/.test(ipRow[6]) && / \*$/.test(reRow[6]), JSON.stringify([ipRow, reRow]));
+  check('page 4 past 12 months: departments sum to the government row (employees, hires, departures)', [1, 2, 3].every(i => t12rows.slice(1).reduce((s, r) => s + Number(r[i].replace(/,/g, '')), 0) === Number(t12rows[0][i].replace(/,/g, ''))),
+    JSON.stringify(t12rows[0]));
+  await evaluate(`document.querySelector('#ranking .frame__head > button').click()`);
+  await evaluate(`document.querySelector('#reasons .frame__head > button').click()`);
+  check('page 4 past 12 months, show all: ranking and reasons list every department, no NaN', (await evaluate(`document.querySelectorAll('#ranking .hbar-row').length`)) === 127 &&
+    (await evaluate(`document.querySelectorAll('#reasons .hbar-row').length`)) === 127 && !/NaN|undefined/.test(await text('main')));
+  await frameChecks('page 4 past 12 months, show all');
   await go(BASE + 'departments-compared.html?entity=DOD');
   check('page 4 Defense: its 4 agencies', JSON.stringify((await evaluate(`[...document.querySelectorAll('#cmp-heat tbody tr')].map(r => r.dataset.entity)`)).slice(1).sort()) === JSON.stringify(['DOD-AF', 'DOD-AR', 'DOD-DD', 'DOD-NV']));
   await go(BASE + 'departments-compared.html?entity=AF02');
@@ -240,6 +253,41 @@ try {
   await evaluate(`document.querySelector('#lookup-table button[data-sort="grade"]').click()`);
   check('page 8: a withheld grade in a known data issue is marked and linked', await evaluate(`(() => { const a = document.querySelector('#lookup-table td.is-kdi a'); return !!a && a.textContent === 'REDACTED' && /reading-the-data\.html.*#kdi-007$/.test(a.getAttribute('href')); })()`));
   check('page 8: Download CSV raises no error', await evaluate(`(() => { document.getElementById('lookup-download').click(); return true; })()`));
+  // D-035: appointment type grouped as on page 7, code and name in one cell, the code its own CSV column
+  await go(BASE + 'look-up.html?file=separations_FY2025');
+  await waitFor(`!!document.querySelector('#lookup-table')`, 30000);
+  const apOpts = await evaluate(`[...document.querySelectorAll('[data-filter="appointment"] option')].map(o => [o.value, o.textContent])`);
+  const P7 = ['career', 'career_conditional', 'excepted', 'temporary', 'ses', 'political'].map(k => COPY['p7.group.' + k]);
+  check('page 8: appointment filter lists the page 7 groups in order, then "* INVALID"', JSON.stringify(apOpts.slice(1).map(o => o[1].replace(/ \([\d,]+\)$/, ''))) === JSON.stringify(P7.concat(['* INVALID'])) &&
+    apOpts[apOpts.length - 1][1] === '* INVALID (133)', JSON.stringify(apOpts));
+  await evaluate(`(() => { const s = document.querySelector('[data-filter="appointment"] select'); s.value = 'group:political'; s.dispatchEvent(new Event('change')); })()`);
+  check('page 8: political appointees in FY2025 departures, 2,931 (the appointments cube)', (await text('.lookup-count')) === '2,931 matching records');
+  const apCells = await evaluate(`(() => { const i = [...document.querySelectorAll('#lookup-table thead th')].findIndex(th => th.textContent.trim().startsWith(${JSON.stringify(COPY['p8.col.appointment'])}));
+    return [...document.querySelectorAll('#lookup-table tbody tr')].map(r => r.children[i].textContent); })()`);
+  check('page 8: appointment cell shows the code and its name', apCells.length === 50 && apCells.every(c => /^(36|44|46|55) [A-Z]/.test(c)), JSON.stringify(apCells.slice(0, 3)));
+  const csvHead = await evaluate(`(() => { const d = OPM.page.data(); return OPM.lookupModel.csv(d.current.slice(0, 1), d.fields).split(String.fromCharCode(13, 10))[0].split(','); })()`);
+  check('page 8: CSV has appointment_type_code beside appointment_type', csvHead.indexOf('appointment_type_code') >= 0 && csvHead.indexOf('appointment_type') === csvHead.indexOf('appointment_type_code') + 1, csvHead.join(','));
+  await evaluate(`(() => { const s = [...document.querySelectorAll('.lookup-filters select')].pop(); s.value = 'appointment'; s.dispatchEvent(new Event('change')); })()`);
+  check('page 8: count by appointment type uses the group label', (await evaluate(`[...document.querySelectorAll('.lookup-summary tbody tr')].map(r => r.children[0].textContent).join('|')`)) === COPY['p7.group.political']);
+  // D-037: occupational family, code and name in one cell after Occupation; a filter and a count-by field; the 8 FY2025
+  // departures with no family published are an empty cell and their own option (figures: DuckDB on the Look-Up file)
+  await go(BASE + 'look-up.html?file=separations_FY2025');
+  await waitFor(`!!document.querySelector('#lookup-table')`, 30000);
+  const heads = await evaluate(`[...document.querySelectorAll('#lookup-table thead th')].map(th => th.textContent.trim())`);
+  check('page 8: Occupational family column follows Occupation', heads.indexOf(COPY['p8.col.family']) === heads.indexOf(COPY['p8.col.occupation']) + 1 && heads.indexOf(COPY['p8.col.family']) > 0, heads.join('|'));
+  const famOpts = await evaluate(`[...document.querySelectorAll('[data-filter="family"] option')].map(o => [o.value, o.textContent])`);
+  check('page 8: family filter lists 62 values, largest 03 (71,096), no family published (8)', famOpts.length === 63 &&
+    famOpts[1][1] === '03 GENERAL ADMINISTRATIVE, CLERICAL, AND OFFICE SERVICES GROUP (71,096)' && famOpts.some(o => o[0] === '' && o[1] === ' (8)'), JSON.stringify(famOpts.slice(0, 3)));
+  await evaluate(`(() => { const s = document.querySelector('[data-filter="family"] select'); s.value = ''; s.dispatchEvent(new Event('change')); })()`);
+  check('page 8: family filter on no published family gives 8', (await text('.lookup-count')) === '8 matching records');
+  const famCells = await evaluate(`(() => { const i = [...document.querySelectorAll('#lookup-table thead th')].findIndex(th => th.textContent.trim().startsWith(${JSON.stringify(COPY['p8.col.family'])}));
+    return [...document.querySelectorAll('#lookup-table tbody tr')].map(r => r.children[i].textContent); })()`);
+  check('page 8: no published family shows as an empty cell', famCells.length === 8 && famCells.every(c => c === ''), JSON.stringify(famCells));
+  await evaluate(`(() => { const s = document.querySelector('[data-filter="family"] select'); s.value = '03'; s.dispatchEvent(new Event('change')); })()`);
+  check('page 8: family filter 03 gives 71,096', (await text('.lookup-count')) === '71,096 matching records');
+  await evaluate(`(() => { const s = [...document.querySelectorAll('.lookup-filters select')].pop(); s.value = 'family'; s.dispatchEvent(new Event('change')); })()`);
+  check('page 8: count by occupational family', (await evaluate(`[...document.querySelectorAll('.lookup-summary tbody tr')].map(r => r.children[0].textContent + '=' + r.children[1].textContent).join('|')`)) ===
+    '03 GENERAL ADMINISTRATIVE, CLERICAL, AND OFFICE SERVICES GROUP=71,096');
   check('page 8: no console errors', events.length === 0, events.join(' | '));
   await go(BASE + 'look-up.html?records=employment');
   check('page 8: employees wait for a department', (await evaluate(`!document.querySelector('#lookup-table') && /Choose a department/.test(document.getElementById('lookup').textContent)`)));
