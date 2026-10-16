@@ -1,0 +1,10 @@
+dimension,value,value_order,source_field,rule,codes,label_status,decision,note
+prior_service,lt1,1,band_los,codes,lt1,pending_signoff,D-100,"length of service at hire under 1 year (the los band of breakdown_bands.csv); share of hires with a known value, no rate"
+prior_service,1_4,2,band_los,codes,1_4,pending_signoff,D-100,"1 to under 5 years at hire"
+prior_service,5_9,3,band_los,codes,5_9,pending_signoff,D-100,"5 to under 10 years at hire"
+prior_service,10plus,4,band_los,codes,10_19|20_24|25_29|30plus,pending_signoff,D-100,"10 years or more at hire"
+prior_service,unknown,5,band_los,unknown,unknown,pending_signoff,D-100,"the los band's unknown value: NULL, REDACTED, or a KDI-001, KDI-009 or KDI-010 value; count only, outside the share"
+pathways,intern_student,1,pathways_group,codes,INTERN|STUDENT TRAINEE,pending_signoff,D-100,"Pathways intern and student trainee together; share, no rate"
+pathways,recent_grad,2,pathways_group,codes,RECENT GRAD,pending_signoff,D-100,"Pathways recent graduate"
+pathways,pmf,3,pathways_group,codes,PMF,pending_signoff,D-100,"Presidential Management Fellow"
+pathways,other,4,pathways_group,null,,pending_signoff,D-100,"pathways_group NULL: all other hires; any other value stops the build"

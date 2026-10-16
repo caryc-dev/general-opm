@@ -1,0 +1,22 @@
+code,opm_label,group,group_order,display_label,subgroup,subgroup_label,label_status,decision,note
+10,CAREER (COMPETITIVE SERVICE PERMANENT),career,1,Career,,,pending_signoff,D-014,"competitive service, permanent"
+15,CAREER-CONDITIONAL (COMPETITIVE SERVICE PERMANENT),career_conditional,2,Career-conditional,,,pending_signoff,D-014,"competitive service, first three years"
+30,SCHEDULE A (EXCEPTED SERVICE PERMANENT),excepted,3,Excepted service,,,pending_signoff,D-014,"permanent excepted"
+32,SCHEDULE B (EXCEPTED SERVICE PERMANENT),excepted,3,Excepted service,,,pending_signoff,D-014,"permanent excepted"
+35,SCHEDULE D (EXCEPTED SERVICE PERMANENT),excepted,3,Excepted service,,,pending_signoff,D-014,"permanent excepted; Pathways"
+38,OTHER (EXCEPTED SERVICE PERMANENT),excepted,3,Excepted service,,,pending_signoff,D-014,"permanent excepted"
+20,NONPERMANENT (COMPETITTIVE SERVICE NONPERMANENT),temporary,4,Temporary and term,,,pending_signoff,D-014,"OPM label spelled as published"
+40,SCHEDULE A (EXCEPTED SERVICE NONPERMANENT),temporary,4,Temporary and term,,,pending_signoff,D-014,
+42,SCHEDULE B (EXCEPTED SERVICE NONPERMANENT),temporary,4,Temporary and term,,,pending_signoff,D-014,
+45,SCHEDULE D (EXCEPTED SERVICE NONPERMANENT),temporary,4,Temporary and term,,,pending_signoff,D-014,"Pathways interns"
+48,OTHER (EXCEPTED SERVICE NONPERMANENT),temporary,4,Temporary and term,,,pending_signoff,D-014,
+50,CAREER (SENIOR EXECUTIVE SERVICE PERMANENT),ses,5,Senior Executive Service,,,pending_signoff,D-014,"career SES"
+60,LIMITED TERM (SENIOR EXECUTIVE SERVICE NONPERMANENT),ses,5,Senior Executive Service,,,pending_signoff,D-014,"limited-term SES"
+65,LIMITED EMERGENCY (SENIOR EXECUTIVE SERVICE NONPERMANENT),ses,5,Senior Executive Service,,,pending_signoff,D-012,"limited emergency SES; not in the predecessor crosswalk (8 accessions, 9 separations)"
+44,SCHEDULE C (EXCEPTED SERVICE NONPERMANENT),political,6,Political appointees,schedule_c,Schedule C,pending_signoff,D-014,
+55,NONCAREER (SENIOR EXECUTIVE SERVICE PERMANENT),political,6,Political appointees,noncareer_ses,Noncareer SES,pending_signoff,D-014,
+46,EXECUTIVE (EXCEPTED SERVICE NONPERMANENT),political,6,Political appointees,executive,Executive appointments,pending_signoff,D-014,"OPM does not label these political; grouped as in the predecessor crosswalk"
+36,EXECUTIVE (EXCEPTED SERVICE PERMANENT),political,6,Political appointees,executive,Executive appointments,pending_signoff,D-014,
+67,SCHEDULE POLICY/CAREER (EXCEPTED SERVICE PERMANENT),schedule_policy,7,Schedule Policy/Career,,,pending_signoff,D-014,"from 2026; OPM classes it as career, shown on its own"
+68,SCHEDULE POLICY/CAREER (EXCEPTED SERVICE NONPERMANENT),schedule_policy,7,Schedule Policy/Career,,,pending_signoff,D-014,"from 2026"
+*,INVALID,unknown,8,,,,not_shown,D-012,"its own unknown group: counted in totals, not shown as a group"

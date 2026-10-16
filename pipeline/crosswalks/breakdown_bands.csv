@@ -1,0 +1,42 @@
+dimension,value,value_order,source_field,rule,lo,hi,codes,decision,note
+age,lt20,1,age_bracket,codes,,,LESS THAN 20,D-014,"OPM brackets as published; page specs may merge them"
+age,20_24,2,age_bracket,codes,,,20-24,D-014,
+age,25_29,3,age_bracket,codes,,,25-29,D-014,
+age,30_34,4,age_bracket,codes,,,30-34,D-014,
+age,35_39,5,age_bracket,codes,,,35-39,D-014,
+age,40_44,6,age_bracket,codes,,,40-44,D-014,
+age,45_49,7,age_bracket,codes,,,45-49,D-014,
+age,50_54,8,age_bracket,codes,,,50-54,D-014,
+age,55_59,9,age_bracket,codes,,,55-59,D-014,
+age,60_64,10,age_bracket,codes,,,60-64,D-014,
+age,65plus,11,age_bracket,codes,,,65 OR MORE,D-014,
+age,unknown,12,age_bracket,unknown,,,UNSPECIFIED,D-014,"listed codes, NULL, blank, REDACTED or any value not listed above"
+los,lt1,1,length_of_service_years,range,0,1,,D-014,"under 1 year; lower bound inclusive, upper exclusive"
+los,1_4,2,length_of_service_years,range,1,5,,D-014,
+los,5_9,3,length_of_service_years,range,5,10,,D-014,
+los,10_19,4,length_of_service_years,range,10,20,,D-014,
+los,20_24,5,length_of_service_years,range,20,25,,D-014,
+los,25_29,6,length_of_service_years,range,25,30,,D-014,
+los,30plus,7,length_of_service_years,range,30,,,D-014,"30 years or more"
+los,unknown,8,length_of_service_years,unknown,,,,D-014,"NULL, REDACTED, or a value on a row in scope of a known data issue with treatment unknown (KDI-001)"
+supervisory,supervisor,1,supervisory_status_code,codes,,,2|4|5,D-014,"supervisor or manager: codes 2, 4, 5"
+supervisory,other,2,supervisory_status_code,codes,,,6|7|8,D-014,"leaders and all other positions: codes 6, 7, 8"
+supervisory,unknown,3,supervisory_status_code,unknown,,,*,D-014,"OPM code * (INVALID), NULL or any other value"
+education,hs_or_less,1,education_level_bracket,codes,,,HIGH SCHOOL OR LESS,D-014,
+education,some_college,2,education_level_bracket,codes,,,SOME COLLEGE OR ASSOCIATES DEGREE,D-014,
+education,bachelors,3,education_level_bracket,codes,,,BACHELORS DEGREE,D-014,
+education,masters_prof,4,education_level_bracket,codes,,,MASTERS OR PROFESSIONAL DEGREE,D-014,
+education,doctorate,5,education_level_bracket,codes,,,DOCTORATE DEGREE,D-014,
+education,unknown,6,education_level_bracket,unknown,,,NO DATA REPORTED,D-014,"OPM NO DATA REPORTED, NULL or any other value"
+veteran,veteran,1,veteran_indicator,codes,,,Y,D-014,
+veteran,nonveteran,2,veteran_indicator,codes,,,N,D-014,
+veteran,unknown,3,veteran_indicator,unknown,,,,D-014,"any other value or NULL"
+grade,gs_1_7,1,pay_plan_code|grade,plan_grade,1,8,GS|GL|GP|GM|GG|GW,D-015,"GS and equivalent plans (GS, GL, GP, GM, GG, GW), grades 1 to 7"
+grade,gs_8_11,2,pay_plan_code|grade,plan_grade,8,12,GS|GL|GP|GM|GG|GW,D-015,"grades 8 to 11"
+grade,gs_12_13,3,pay_plan_code|grade,plan_grade,12,14,GS|GL|GP|GM|GG|GW,D-015,"grades 12 and 13"
+grade,gs_14_15,4,pay_plan_code|grade,plan_grade,14,16,GS|GL|GP|GM|GG|GW,D-015,"grades 14 and 15"
+grade,senior_exec,5,pay_plan_code|grade,codes,,,ES|SL|EX,D-014,"senior executives: pay plans ES, SL, EX"
+grade,wage,6,pay_plan_code|grade,prefix,,,W,D-014,"federal wage system: pay plans starting W"
+grade,other_plans,7,pay_plan_code|grade,rest,,,,D-014,"all other pay plans"
+grade,unknown,8,pay_plan_code|grade,unknown,,,*,D-014,"pay plan NULL, blank or *; grade REDACTED (KDI-007); or a GS-equivalent plan whose grade fits no band"
+appointment,*,1,appointment_type_code,raw,,,,D-014,"stored as the published code; grouped by appointment_groups.csv when cubes are built"

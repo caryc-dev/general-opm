@@ -1,0 +1,13 @@
+# Source data and the local database (large; rebuilt from the OPM API)
+/data/
+/warehouse/
+*.duckdb
+*.duckdb.wal
+*.parquet
+# the published Look-Up files are served by the site, so they are tracked
+!web/data/**/*.parquet
+# macOS, Python, editors
+.DS_Store
+__pycache__/
+.venv/
+.vscode/

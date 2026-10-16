@@ -1,0 +1,10 @@
+code,opm_label,category,counts_in_departures,display_label,label_status,decision,note
+SA,TRANSFER OUT - INDIVIDUAL TRANSFER,transfer_out,Y,Transfer out,signed,D-014,"transfer out = SA + SB; its own series and counted in departures (spec sections 4 and 5)"
+SB,TRANSFER OUT - MASS TRANSFER,transfer_out,Y,Transfer out,signed,D-014,"transfer out = SA + SB; its own series and counted in departures (spec sections 4 and 5)"
+SC,QUIT,quit,Y,Quit,signed,D-014,
+SD,RETIREMENT - VOLUNTARY,retirement,Y,Retirement,signed,D-014,"retirement = SD + SE + SG"
+SE,RETIREMENT - EARLY OUT,retirement,Y,Retirement,signed,D-014,"retirement = SD + SE + SG"
+SG,RETIREMENT - OTHER,retirement,Y,Retirement,signed,D-014,"retirement = SD + SE + SG"
+SH,REDUCTION IN FORCE (RIF),rif,Y,RIF,signed,D-014,
+SJ,TERMINATION (EXPIRED APPT/OTHER),termination,Y,Termination: expired appointment or other,signed,D-014,
+SL,OTHER SEPARATION,other,Y,Other,signed,D-014,

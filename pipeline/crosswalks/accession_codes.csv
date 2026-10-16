@@ -1,0 +1,6 @@
+code,opm_label,category,counts_in_hires,display_label,label_status,decision,note
+AA,TRANSFER IN - INDIVIDUAL TRANSFER,transfer_in,Y,Transfer in,signed,D-014,"transfer in = AA + AB"
+AB,TRANSFER IN - MASS TRANSFER,transfer_in,Y,Transfer in,signed,D-012,"mass transfer in; joins AA in transfer in (48,040 rows Oct 2011 to Aug 2026 files)"
+AC,NEW HIRE - COMPETITIVE SERVICE APPOINTMENT,new_hire,Y,New hire,signed,D-014,"new hire = AC + AD + AE"
+AD,NEW HIRE - EXCEPTED SERVICE APPOINTMENT,new_hire,Y,New hire,signed,D-014,"new hire = AC + AD + AE"
+AE,NEW HIRE - SENIOR EXECUTIVE SERVICE (SES) APPT,new_hire,Y,New hire,signed,D-014,"new hire = AC + AD + AE"

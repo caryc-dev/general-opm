@@ -1,0 +1,5 @@
+id,name,first_month,last_month,decision,note
+obama2,Obama II,2013-01,2016-12,D-014,"month 1 = January of the inauguration year; month 0 = the month before"
+trump1,Trump I,2017-01,2020-12,D-014,
+biden,Biden,2021-01,2024-12,D-014,
+trump2,Trump II,2025-01,latest,D-014,"runs to the latest published month"
