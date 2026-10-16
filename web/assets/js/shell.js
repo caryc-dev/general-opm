@@ -1,10 +1,11 @@
-/* The shell on every page: header with the site name and the nine page tabs, footer, the entity carried in the URL,
+/* The shell on every page: header with the site name and the ten page tabs, footer, the entity carried in the URL,
    the section frame (title, body, "Show table", "Download SVG", notes) and stamped fetches. Browser only. */
 (function (root) {
   'use strict';
   var C = root.OPM.core;
   var SOURCE_URL = 'https://data.opm.gov/get-data/api-access';
-  /* the nine pages of page-spec section 2, in order; labels are shell.nav split on its separators */
+  /* the ten pages of page-spec section 2, in menu order (Occupations between Appointments and Look-Up, D-040);
+     labels are shell.nav split on its separators */
   var PAGES = [
     { id: 'administrations', file: 'index.html' },
     { id: 'workforce-size', file: 'workforce-size.html' },
@@ -13,6 +14,7 @@
     { id: 'who-is-leaving', file: 'who-is-leaving.html' },
     { id: 'who-is-joining', file: 'who-is-joining.html' },
     { id: 'appointments', file: 'appointments.html' },
+    { id: 'occupations', file: 'occupations.html' },
     { id: 'look-up', file: 'look-up.html' },
     { id: 'reading-the-data', file: 'reading-the-data.html' }
   ];

@@ -25,7 +25,10 @@ code reads `web/data/` once cubes are promoted. Nothing is copied into `web/data
 
 ## Files
 
-- `index.html` (Administrations) and the other eight pages; `assets/css/site.css` (tokens and layout)
+- `index.html` (Administrations) and the other nine pages (`occupations.html` is page 10, shown between Appointments and Look-Up); `assets/css/site.css` (tokens and layout)
 - `assets/js/core.js` (copy, formats, entity names), `svg.js` (SVG export), `shell.js` (header, nav, footer, URL,
   section frame), `admin-model.js` (page 1 figures), `page-admin.js` (page 1)
 - `tools/dev-server.js`, `tools/bump-stamp.js`, `tools/stamp-lib.js`
+- `assets/js/occ-model.js` (page 10 lists; rows of one occupation for the filter on pages 2 and 3, rates as core defines them),
+  `occ-filter.js` (the filter's control, banner and URL: `family=<code>`, or `series=<code>` at government level),
+  `page-occupations.js` (page 10); the Look-Up takes `occ=<series>` from page 10's links

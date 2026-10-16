@@ -21,6 +21,10 @@ Objects
   emp_dim_month       employment headcount per month x department x agency x breakdown dimension x band (agency
                       equals department except DOD, whose four agencies the breakdown cubes need)
   emp_cov_month       employment rows, REDACTED and NULL counts per month x department x field
+  emp_occ_month       employment headcount per month x department x agency x subelement x occupational series x
+                      occupational group, codes as published (occupation cubes, D-040); latest names carried as
+                      aggregates, never grouping keys. Backfilled one employment file per step for months loaded
+                      before the table existed (resumable like any load).
   known_data_issues   pipeline/known_data_issues.csv
   xw_*                the crosswalks in pipeline/crosswalks/
   kdi_scope           view: known data issue scope expanded to (dataset, file month, entity level, code)
@@ -38,7 +42,7 @@ Organization (invariant 2, spec section 1)
     "No Data Reported", the department of the row's agency code (department_from_agency = true, KDI-004, KDI-005, KDI-008).
     The published value is kept in department_code_published.
 """
-import csv, hashlib, json, os, sys, time
+import csv, datetime, hashlib, json, os, sys, time
 import duckdb
 
 T0 = time.time()
@@ -290,7 +294,9 @@ EMP_COLS = ['department_code', 'department', 'agency_code', 'agency', 'agency_su
             'age_bracket', 'length_of_service_years', 'supervisory_status_code', 'education_level_bracket',
             'veteran_indicator', 'pay_plan_code', 'grade', 'appointment_type_code', 'annualized_adjusted_basic_pay',
             'duty_station_state', 'bargaining_unit_code', 'personnel_office_identifier_code', 'occupational_series_code',
-            'occupational_category_code']
+            'occupational_category_code', 'occupational_series', 'occupational_group_code', 'occupational_group']
+OCC_COLS = ['department_code', 'agency_code', 'agency_subelement_code', 'occupational_series_code', 'occupational_series',
+            'occupational_group_code', 'occupational_group']
 
 
 def create_emp_tables(con):
@@ -310,6 +316,36 @@ def create_emp_tables(con):
         print('emp_dim_month: agency_code added; every employment month marked for reload')
     con.execute("""CREATE TABLE IF NOT EXISTS emp_cov_month (period DATE, department_code VARCHAR, field VARCHAR,
         rows BIGINT, n_redacted BIGINT, n_null BIGINT)""")
+    con.execute("""CREATE TABLE IF NOT EXISTS emp_occ_month (period DATE, department_code VARCHAR, agency_code VARCHAR,
+        agency_subelement_code VARCHAR, occupational_series_code VARCHAR, occupational_group_code VARCHAR, headcount BIGINT,
+        series_name VARCHAR, group_name VARCHAR)""")
+
+
+def insert_emp_occ(con, p, n_read):
+    """emp_occ_month for one month from the temp table mr (resolved department): codes as published; the names are
+    aggregates for the cube metas, never grouping keys (invariant 2). Stops unless the month sums to the file's rows."""
+    con.execute(f"DELETE FROM emp_occ_month WHERE period = {p}")
+    con.execute(f"""INSERT INTO emp_occ_month SELECT {p}, department_code, agency_code, agency_subelement_code,
+                      occupational_series_code, occupational_group_code, count(*), min(occupational_series), min(occupational_group)
+                    FROM mr GROUP BY department_code, agency_code, agency_subelement_code, occupational_series_code,
+                      occupational_group_code""")
+    got = con.execute(f"SELECT sum(headcount) FROM emp_occ_month WHERE period = {p}").fetchone()[0]
+    if got != n_read:
+        raise SystemExit(f'emp_occ_month {p}: sum {got} != {n_read} rows read')
+
+
+def load_emp_occ(con, x):
+    """Backfill emp_occ_month for one employment file already loaded (the other employment tables are untouched)."""
+    p = q(period_of(x)) + '::DATE'
+    rel = f"read_parquet({q(src(x))})"
+    con.execute(f"CREATE OR REPLACE TEMP TABLE m AS SELECT {', '.join(OCC_COLS)} FROM {rel}")
+    resolve_departments(con, x, 'm')
+    con.execute(f"""CREATE OR REPLACE TEMP TABLE mr AS SELECT t.* EXCLUDE (department_code), {DEPT_RESOLVED} AS department_code
+                    FROM m t LEFT JOIN dmap USING (agency_code)""")
+    n_read = con.execute("SELECT count(*) FROM m").fetchone()[0]
+    insert_emp_occ(con, p, n_read)
+    con.execute("DROP TABLE m; DROP TABLE mr")
+    return n_read
 
 
 def load_employment(con, x, bsets):
@@ -352,6 +388,7 @@ def load_employment(con, x, bsets):
                                   (SELECT count(DISTINCT dimension) FROM emp_dim_month WHERE period = {p})""").fetchone()
     if sums[0] != n_read or sums[1] != n_read * len(dims):
         raise SystemExit(f"{x['filename']}: read {n_read}, org sum {sums[0]}, dimension sum {sums[1]} over {sums[2]} dimensions")
+    insert_emp_occ(con, p, n_read)
     con.execute("DROP TABLE m; DROP TABLE mr")
     return n_read, sums[0], None
 
@@ -497,7 +534,7 @@ def main():
     current = {x['filename'] for x in man}
     for ds, sf in con.execute("SELECT dataset, source_file FROM load_log").fetchall():
         if sf not in current:
-            tables = [ACTION_TABLE[ds]] if ds in ACTION_TABLE else ['emp_org_month', 'emp_dim_month', 'emp_cov_month']
+            tables = [ACTION_TABLE[ds]] if ds in ACTION_TABLE else ['emp_org_month', 'emp_dim_month', 'emp_cov_month', 'emp_occ_month']
             per = con.execute("SELECT period FROM load_log WHERE source_file = ?", [sf]).fetchone()[0]
             con.execute("BEGIN")
             for t in tables:
@@ -507,8 +544,14 @@ def main():
             con.execute("COMMIT")
             print('superseded, removed:', sf)
     work = todo(con, man, bsha)
+    occ_done = {r[0] for r in con.execute("SELECT DISTINCT period FROM emp_occ_month").fetchall()}
+    loaded = {f for d, f in con.execute("SELECT dataset, source_file FROM load_log WHERE dataset = 'employment'").fetchall()}
+    work_ids = {x['filename'] for x in work}
+    occ_work = [x for x in sorted(man, key=lambda x: (x['year'], x['month'])) if x['dataset'] == 'employment'
+                and x['filename'] in loaded and x['filename'] not in work_ids
+                and datetime.date(int(x['year']), int(x['month']), 1) not in occ_done]
     if sys.argv[1:2] == ['status']:
-        print(f"{len(work)} files to load; next: {[x['filename'] for x in work[:3]]}")
+        print(f"{len(work)} files to load; next: {[x['filename'] for x in work[:3]]}; emp_occ_month backfill {len(occ_work)} months")
         return
     done = 0
     est = {'employment': 12.0, 'accessions': 2.0, 'separations': 2.0}
@@ -530,7 +573,18 @@ def main():
         est[x['dataset']] = max(est[x['dataset']] * 0.5, (time.time() - t) * 1.5)
         done += 1
         print(f"{x['filename']:28s} {n_read:>10,} rows {time.time() - t:5.1f}s", flush=True)
-    left = len(work) - done
+    occ_n = 0
+    if done == len(work):
+        for x in occ_work:
+            if time.time() - T0 + 3 > budget:
+                break
+            t = time.time()
+            con.execute("BEGIN")
+            n = load_emp_occ(con, x)
+            con.execute("COMMIT")
+            occ_n += 1
+            print(f"emp_occ_month {x['filename']:28s} {n:>10,} rows {time.time() - t:5.1f}s", flush=True)
+    left = len(work) - done + len(occ_work) - occ_n
     sep, acc = build_views(con, bsets)
     if left == 0:
         build_monthly(con, sep, acc)

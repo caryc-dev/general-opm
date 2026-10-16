@@ -8,7 +8,7 @@
     ['data-origin', 'p9.source.title', ['p9.source.p1', 'p9.source.p2', 'p9.source.p3', 'p9.source.p4']],
     ['counting', 'p9.count.title', ['p9.count.p1', 'p9.count.p2', 'p9.count.p3', 'p9.count.p4', 'p9.count.p5', 'p9.count.p6']],
     ['rates', 'p9.rates.title', ['p9.rates.p1', 'p9.rates.p2', 'p9.rates.p3', 'p9.rates.p4', 'p9.rates.p5']],
-    ['known-data-issues', 'p9.issues.title', ['p9.issues.intro'], ['001', '002', '003', '004', '005', '006', '007', '008', '009', '010']],
+    ['known-data-issues', 'p9.issues.title', ['p9.issues.intro'], ['001', '002', '003', '004', '005', '006', '007', '008', '009', '010', '011']],
     ['known-breaks', 'p9.breaks.title', ['p9.breaks.p1']],
     ['withheld-values', 'p9.redact.title', ['p9.redact.p1']],
     ['revised-files', 'p9.revisions.title', ['p9.revisions.p1']]

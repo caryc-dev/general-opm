@@ -18,13 +18,13 @@ test('every key of page-spec 6.1 (shell) and 6.2 (page 1) is in copy.json with t
   }
 });
 
-test('every key of page-spec 8.0 to 8.9 (pages 2 to 9) is in copy.json with the exact text', () => {
+test('every key of page-spec 8.0 to 8.10 (pages 2 to 10 and the occupation filter) is in copy.json with the exact text', () => {
   const { SPEC } = require('./_spec.js');
   const heads = SPEC.split('\n').filter(l => /^### 8\.\d+ /.test(l)).map(l => l.slice(4));
-  assert.deepEqual(heads.map(x => x.split(' ')[0]), ['8.0', '8.1', '8.2', '8.3', '8.4', '8.5', '8.6', '8.7', '8.8', '8.9']);
+  assert.deepEqual(heads.map(x => x.split(' ')[0]), ['8.0', '8.1', '8.2', '8.3', '8.4', '8.5', '8.6', '8.7', '8.8', '8.9', '8.10']);
   let n = 0;
   for (const sec of heads) for (const [k, v] of Object.entries(specTable(sec))) { assert.equal(strings[k], v, sec + ': ' + k); n++; }
-  assert.ok(n > 250, 'section 8 keys: ' + n);
+  assert.ok(n > 285, 'section 8 keys: ' + n);
 });
 
 test('no key appears twice in the page-spec copy tables with different text', () => {
@@ -52,16 +52,16 @@ test('copy.json is plain text: no markup, no links', () => {
 });
 
 test('every copy key named in the page scripts exists', () => {
-  const js = fs.readdirSync(path.join(WEB, 'assets', 'js')).filter(f => /^(shell|page-.*)\.js$/.test(f)).map(f => fs.readFileSync(path.join(WEB, 'assets', 'js', f), 'utf8')).join('\n');
+  const js = fs.readdirSync(path.join(WEB, 'assets', 'js')).filter(f => /^(shell|page-.*|occ-filter)\.js$/.test(f)).map(f => fs.readFileSync(path.join(WEB, 'assets', 'js', f), 'utf8')).join('\n');
   const keys = new Set();
   for (const m of js.matchAll(/\bt\('([a-z0-9_.]+)'/g)) keys.add(m[1]);
-  for (const m of js.matchAll(/'((?:p\d|shell|shared|group|dim)\.[a-zA-Z0-9_.]+)'/g)) keys.add(m[1]);
+  for (const m of js.matchAll(/'((?:p\d+|shell|shared|group|dim|filter)\.[a-zA-Z0-9_.]+)'/g)) keys.add(m[1]);
   assert.ok(keys.size > 30, 'found ' + keys.size);
   for (const k of keys) {
     // a key prefix completed in code (p1.heat.sub. + metric, p9.issues.kdi + number) must start a real key
     if (!(k in strings)) assert.ok(/[.a-z]$/.test(k) && Object.keys(strings).some(x => x.startsWith(k) && x !== k), 'missing ' + k);
   }
-  for (let i = 1; i <= 10; i++) assert.ok('p9.issues.kdi' + String(i).padStart(3, '0') in strings);
+  for (let i = 1; i <= 11; i++) assert.ok('p9.issues.kdi' + String(i).padStart(3, '0') in strings);
   // keys built from a prefix: every completion exists
   for (const m of ['change', 'dep', 'hire', 'drp']) assert.ok('p1.heat.sub.' + m in strings);
   for (const r of ['drp', 'transfer', 'quit', 'retire', 'rif', 'term', 'other']) assert.ok('p1.reason.' + r in strings);
@@ -76,9 +76,21 @@ test('the HTML title is the site name, and pages carry no hard-coded visible tex
   }
 });
 
-test('the nine page tabs come from shell.nav, in the order of page-spec section 2', () => {
+test('the ten page tabs come from shell.nav, Occupations between Appointments and Look-Up (page-spec section 2, D-040)', () => {
   assert.deepEqual(strings['shell.nav'].split(' · '), ['Administrations', 'Workforce size', 'Hiring and departures', 'Departments compared',
-    'Who is leaving', 'Who is joining', 'Appointments', 'Look-Up', 'Reading the data']);
+    'Who is leaving', 'Who is joining', 'Appointments', 'Occupations', 'Look-Up', 'Reading the data']);
+  const shell = fs.readFileSync(path.join(WEB, 'assets', 'js', 'shell.js'), 'utf8');
+  const files = [...shell.matchAll(/\{ id: '[a-z-]+', file: '([a-z-]+\.html)' \}/g)].map(m => m[1]);
+  assert.deepEqual(files, ['index.html', 'workforce-size.html', 'hiring-and-departures.html', 'departments-compared.html', 'who-is-leaving.html',
+    'who-is-joining.html', 'appointments.html', 'occupations.html', 'look-up.html', 'reading-the-data.html']);
+  for (const f of files) assert.ok(fs.existsSync(path.join(WEB, f)), f);
+});
+
+test('page 10 and the occupation filter: every string of page-spec 8.10 is used by the code', () => {
+  const { specTable } = require('./_spec.js');
+  const js = ['page-occupations.js', 'occ-filter.js', 'page-flows.js', 'page-size.js'].map(f => fs.readFileSync(path.join(WEB, 'assets', 'js', f), 'utf8')).join('\n');
+  for (const k of Object.keys(specTable('8.10 Page 10, Occupations, and the occupation filter (approved under D-029, signed D-040)'))) assert.ok(js.includes("'" + k + "'"), k + ' is not used');
+  assert.ok(strings['p9.issues.kdi011'].startsWith('Job series missing'));
 });
 
 test('every Look-Up column (page 8) has its p8.col key, including the occupational family (D-037)', () => {

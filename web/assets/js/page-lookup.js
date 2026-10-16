@@ -26,6 +26,8 @@
   function readState() {
     var p = S.params(), rec = ['separations', 'accessions', 'employment'].indexOf(p.get('records')) >= 0 ? p.get('records') : 'separations';
     var pre = entityPreset();
+    // a job series from the Occupations page (occ=<series code>) presets the occupation filter
+    if (p.get('occ')) pre.filters.occupation = p.get('occ');
     return { rec: rec, file: p.get('file') || null, dept: p.get('dept') || pre.dept, filters: pre.filters, search: '', countBy: 'reason', sort: null, page: 0 };
   }
   function writeState() { S.setParams({ records: state.rec === 'separations' ? null : state.rec, file: state.rec !== 'employment' && state.file ? state.file : null, dept: state.rec === 'employment' ? state.dept : null }); }
@@ -84,7 +86,7 @@
     var grid = h('div', { class: 'controls lookup-filters' });
     data.filterCols.forEach(function (c) {
       var f = S.selectField({ label: colLabel(c), options: [{ value: '__all', text: t('p8.ctl.filter.all') }].concat(data.options[c.key].map(function (o) { return { value: o.value, text: (o.label || o.value) + ' (' + C.int(o.count) + ')' }; })),
-        value: state.filters[c.key] || '__all', onChange: function (v) { if (v === '__all') delete state.filters[c.key]; else state.filters[c.key] = v; state.page = 0; refresh(); } });
+        value: state.filters[c.key] || '__all', onChange: function (v) { if (v === '__all') delete state.filters[c.key]; else state.filters[c.key] = v; if (c.key === 'occupation') S.setParams({ occ: null }); state.page = 0; refresh(); } });
       f.el.setAttribute('data-filter', c.key);
       grid.appendChild(f.el);
     });
@@ -95,7 +97,7 @@
     var countBy = S.selectField({ label: t('p8.ctl.countBy'), options: data.filterCols.map(function (c) { return { value: c.key, text: colLabel(c) }; }), value: state.countBy,
       onChange: function (v) { state.countBy = v; refresh(); } });
     grid.appendChild(countBy.el);
-    grid.appendChild(h('div', { class: 'field' }, [h('span', { class: 'field__label', text: ' ' }), h('button', { type: 'button', class: 'btn', id: 'lookup-clear', text: t('p8.ctl.clear'), onclick: function () { state.filters = {}; state.search = ''; state.page = 0; buildFilters(); refresh(); } })]));
+    grid.appendChild(h('div', { class: 'field' }, [h('span', { class: 'field__label', text: ' ' }), h('button', { type: 'button', class: 'btn', id: 'lookup-clear', text: t('p8.ctl.clear'), onclick: function () { state.filters = {}; state.search = ''; state.page = 0; S.setParams({ occ: null }); buildFilters(); refresh(); } })]));
     box.results.appendChild(h('h2', { class: 'visually-hidden', text: t('p8.ctl.filters') }));
     box.results.appendChild(grid);
     box.summary = h('div', { class: 'lookup-summary' });

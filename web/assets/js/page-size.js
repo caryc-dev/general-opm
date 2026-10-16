@@ -1,8 +1,9 @@
-/* Page 2, Workforce size (page-spec 7.1, copy 8.1). Core cube of the selected entity; compare cube for 7.1.4. */
+/* Page 2, Workforce size (page-spec 7.1, copy 8.1). Core cube of the selected entity; compare cube for 7.1.4. Under the
+   occupation filter (occupation-spec 5.2), rows built from the monthly occupation cubes by OPM.occFilter. */
 (function (root) {
   'use strict';
-  var C = root.OPM.core, S = root.OPM.shell, SM = root.OPM.seriesModel, CH = root.OPM.charts, K = root.OPM.common, h = S.h;
-  var t, meta, adminList, names, rows, state, F = {}, ctl = {}, compareCache = {};
+  var C = root.OPM.core, S = root.OPM.shell, SM = root.OPM.seriesModel, CH = root.OPM.charts, K = root.OPM.common, OF = root.OPM.occFilter, h = S.h;
+  var t, meta, adminList, names, coreRows, rows, state, F = {}, ctl = {}, compareCache = {}, seq = 0;
   var VIEWS = [['fy', 'shared.view.fy'], ['fq', 'shared.view.fq'], ['month', 'shared.view.month']];
 
   function readState() {
@@ -10,19 +11,29 @@
     return { entity: S.resolveEntity(function (e) { return !!meta.files[e]; }), view: ['fy', 'fq', 'month'].indexOf(p.get('view')) >= 0 ? p.get('view') : 'fy',
       range: p.get('range') && adminList.some(function (a) { return a.id === p.get('range'); }) ? p.get('range') : 'full', all: p.get('all') === '1' };
   }
-  function writeState() { S.setParams({ entity: state.entity === 'GOV' ? null : state.entity, view: state.view === 'fy' ? null : state.view, range: state.range === 'full' ? null : state.range, all: state.all ? '1' : null }); }
+  function writeState() { S.setParams(Object.assign({ entity: state.entity === 'GOV' ? null : state.entity, view: state.view === 'fy' ? null : state.view, range: state.range === 'full' ? null : state.range, all: state.all ? '1' : null }, OF.params())); }
 
   function controls() {
     ctl.entity = S.selectField({ label: t('p1.control.entity'), cls: 'field--entity', options: S.entityChoices(meta.entities, names, ['department', 'agency', 'subelement'], t('p1.control.entity.all')),
-      value: state.entity, onChange: function (v) { state.entity = v; load(); } });
+      value: state.entity, onChange: function (v) { state.entity = v; OF.setEntity(v); load(); } });
     ctl.view = S.segmented({ label: t('shared.view'), options: VIEWS.map(function (v) { return { value: v[0], text: t(v[1]) }; }), value: state.view, note: t('shared.view.note'),
       onChange: function (v) { state.view = v; render(); } });
     ctl.range = S.selectField({ label: t('shared.range'), options: [{ value: 'full', text: t('shared.range.full') }].concat(adminList.map(function (a) { return { value: a.id, text: a.name }; })),
       value: state.range, onChange: function (v) { state.range = v; render(); } });
-    return h('div', { class: 'controls' }, [ctl.entity.el, ctl.view.el, ctl.range.el]);
+    ctl.occ = OF.control();
+    return h('div', { class: 'controls' }, [ctl.entity.el, ctl.occ, ctl.view.el, ctl.range.el]);
   }
 
+  /* the rows on view: core's, or the chosen occupation's (fetched for the months the view needs) */
   function render() {
+    var token = ++seq, preset = SM.presets(adminList).filter(function (p) { return p.id === state.range; })[0];
+    document.body.removeAttribute('data-ready');
+    return OF.rows(coreRows, state.entity, SM.inRange(SM.byGrain(coreRows, SM.GRAINS[state.view]), preset)).then(function (rs) { if (token === seq) { rows = rs; return draw(); } }, failed);
+  }
+  function failed(e) { console.warn(String(e)); S.clear(document.getElementById('main')); S.empty(document.getElementById('main')); document.body.setAttribute('data-ready', 'true'); }
+
+  function draw() {
+    var occ = OF.current();
     var grain = SM.GRAINS[state.view], view = SM.byGrain(rows, grain), months = SM.byGrain(rows, 'month');
     var preset = SM.presets(adminList).filter(function (p) { return p.id === state.range; })[0];
     var range = SM.inRange(view, preset);
@@ -52,14 +63,14 @@
     // 7.1.3 change in employees vs hires minus departures, known breaks marked at Yearly view
     var breaks = {};
     (meta.known_breaks && meta.known_breaks.signed || []).forEach(function (b) { if (b.entity === state.entity) breaks['FY' + b.fiscal_year] = true; });
-    var marks = state.view === 'fy' ? range.map(function (r) { return !!breaks[r.period]; }) : null;
+    var marks = state.view === 'fy' && !occ ? range.map(function (r) { return !!breaks[r.period]; }) : null;
     F.flow.setTitle(t('p2.chart.flow'));
     F.flow.setSub(t('p2.chart.flow.note'));
     F.flow.draw({ type: 'bar', data: { labels: labels, datasets: [
       { label: t('p2.chart.flow.change'), data: range.map(function (r) { return r.headcount_change; }), backgroundColor: CH.PALETTE.change, _provisional: prov },
       { label: t('p2.chart.flow.net'), data: range.map(function (r) { return r.net_flow; }), backgroundColor: CH.PALETTE.net, _provisional: prov }] },
       options: K.baseOptions({ bands: bands, signed: true, marks: marks }), aria: t('p2.chart.flow') }, 300);
-    F.flow.setNotes(notes.concat(marks && marks.some(Boolean) ? [S.readingLink(t('shared.flag.break'), 'known-breaks')] : []));
+    F.flow.setNotes(notes.concat(marks && marks.some(Boolean) ? [S.readingLink(t('shared.flag.break'), 'known-breaks')] : [], occ ? [t('p10.note.moves')] : []));
     F.flow.setTable(S.dataTable(t('p2.chart.flow'), [t('shared.period'), t('p2.chart.flow.change'), t('p2.chart.flow.net')],
       range.map(function (r) { return [K.periodText(r) + (marks && breaks[r.period] ? ' !' : ''), C.signedInt(r.headcount_change), C.signedInt(r.net_flow)]; })));
 
@@ -79,6 +90,12 @@
     var src = childSource();
     F.kids.el.hidden = !src;
     if (!src) { F.kids.clearChart(); document.body.setAttribute('data-ready', 'true'); return Promise.resolve(); }
+    if (OF.current()) { // not available for one occupation (occupation-spec 5.2)
+      F.kids.setTitle(t(src.title)); F.kids.setSub(''); ctl.more.hidden = true;
+      OF.unavailable(F.kids, 'workforce-size-by-child');
+      document.body.setAttribute('data-ready', 'true');
+      return Promise.resolve();
+    }
     var p = compareCache[src.parent] ? Promise.resolve(compareCache[src.parent]) : S.getJson('data/compare/' + src.parent + '.json').then(function (f) { compareCache[src.parent] = SM.objects(f); return compareCache[src.parent]; });
     return p.then(function (cr) {
       var list = cr.filter(function (r) { return r.grain === 't12' && r.child_level === src.level && (!src.within || (meta.entities[r.child] && meta.entities[r.child].parent === src.within)); })
@@ -100,18 +117,20 @@
 
   function load() {
     document.body.removeAttribute('data-ready');
-    return S.getJson('data/' + meta.files[state.entity].path).then(function (f) { rows = SM.objects(f); return render(); }, function () { S.clear(document.getElementById('main')); S.empty(document.getElementById('main')); document.body.setAttribute('data-ready', 'true'); });
+    return S.getJson('data/' + meta.files[state.entity].path).then(function (f) { coreRows = SM.objects(f); return render(); }, failed);
   }
 
   S.init('workforce-size').then(function (cp) {
     t = cp.t;
-    return Promise.all([S.getJson('data/core.meta.json'), K.admins()]).then(function (ms) {
+    return Promise.all([S.getJson('data/core.meta.json'), K.admins(), OF.init(cp, function () { writeState(); render(); })]).then(function (ms) {
       meta = ms[0]; adminList = ms[1].administrations.list;
       S.setDataMonth(meta.range.last_month);
       names = C.displayNames(meta.entities, t('p1.control.entity.all'));
       state = readState();
+      OF.read(state.entity);
       var main = document.getElementById('main');
-      main.appendChild(h('div', { class: 'page-head' }, [h('h1', { text: t('p2.title') }), h('p', { text: t('p2.intro') }), controls()]));
+      main.appendChild(h('div', { class: 'page-head' }, [h('h1', { text: t('p2.title') }), OF.banner(), h('p', { text: t('p2.intro') }), controls()]));
+      OF.setEntity(state.entity);
       F.tiles = h('div', { class: 'tiles' });
       main.appendChild(F.tiles);
       F.head = K.chartFrame({ id: 'headcount', file: 'workforce-size-headcount' });

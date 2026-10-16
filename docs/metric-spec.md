@@ -86,6 +86,7 @@ a partly redacted field shows its coverage. Pay, location, bargaining unit and p
 | KDI-008 | One accession in the Aug 2016 file (agency HB, subelement HB00) with no department code. | Department from agency code (HB); flagged. |
 | KDI-009 | Length of service over 100 years outside KDI-001 (for example 1,826.7 years, DOD, Feb 2025 separations file; 123.0, Transportation, Jun 2024). | Unknown in cubes, with coverage; kept as published in the Look-Up. |
 | KDI-010 | Length of service below 0 on 7 accessions (Mar, Jun and Aug 2026 files). | Unknown in cubes, with coverage; kept as published in the Look-Up. |
+| KDI-011 | Occupational series blank (" ", "NO DATA REPORTED") or `*` INVALID: under 0.15% of records in most years; separations 1.72% in FY2016, 0.63% in FY2024, 2.77% in FY2025, 1.94% in FY2026 (from the Jun 2024 file, alongside KDI-002); and rows with a series but no published family (21 separations, 17 accessions). | Counted as their own "Not reported" occupation in every occupation cube and list; never dropped or shared out; kept as published in the Look-Up. |
 
 ## 8. Reconciliation and known breaks
 For each department and the government, each fiscal year: gap = headcount change - net flow. The gate fails when the
@@ -101,6 +102,11 @@ trailing-12-month and administration grain only, never month or quarter, so smal
 Look-Up rows: age bracket, length of service bands (<1, 1-4, 5-9, 10-19, 20-24, 25-29, 30+), supervisory group,
 education, veteran status, grade level bands (GS and equivalents, meaning pay plans GS, GL, GP, GM, GG and GW, at grades 1-7, 8-11, 12-13, 14-15; senior executives;
 federal wage system; all other plans). Occupation per department is left to the page specs.
+Occupation (job series and OPM's published occupational family) is exempt from this section's level and grain
+limits (M-1, D-040): it is published by government, department, DOD agency and subelement, and monthly by family (by
+series at government level only), because the Look-Up already publishes every action with its subelement, effective
+month and series, so these counts disclose nothing the Look-Up does not. Small-base flags apply as everywhere.
+Families are OPM's published occupational_group_code and occupational_group, never derived from the series (D-039).
 
 ## 10. Look-Up
 Every accession and separation row, all agencies, split into files by effective fiscal year (actions effective

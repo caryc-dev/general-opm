@@ -140,6 +140,13 @@ APPT_SIGNED = {'10': ('career', ''), '15': ('career_conditional', ''), '30': ('e
                '46': ('political', 'executive'), '36': ('political', 'executive'), '67': ('schedule_policy', ''),
                '68': ('schedule_policy', ''), '*': ('unknown', '')}
 BAD_DEPT = "({c} IS NULL OR trim({c}) = '' OR upper({c}) = 'NO DATA REPORTED')"
+# KDI-011 (signed, D-040), written here independently of the pipeline: a series is not reported when blank (' ',
+# published as "NO DATA REPORTED") or '*' (INVALID); the family is not reported when the series is, or when the published
+# occupational_group_code is NULL or blank. Both are the occupation 'NR' in the occupation cubes.
+OCC_SERIES_NR = "({c} IS NULL OR trim({c}) = '' OR {c} = '*')"
+OCC_NR = 'NR'
+EFF_FY = ("(CAST(substr(personnel_action_effective_date_yyyymm, 1, 4) AS INTEGER) "
+          "+ CAST(CAST(substr(personnel_action_effective_date_yyyymm, 5, 2) AS INTEGER) >= 10 AS INTEGER))")
 FILE_YM = "regexp_extract(filename, '_(\\d{4})(\\d{2})_\\d+\\.parquet$', ['y', 'm'])"
 _DB, _CACHE = None, {}
 
@@ -457,7 +464,8 @@ def _():
     if len(keys) != len(set(keys)): bad.append('duplicate (id, dataset, field, first_file_month)')
     decisions = set(re.findall(r'^## (D-\d+)', open('ops/DECISIONS.md', encoding='utf-8').read(), re.M)) if os.path.exists('ops/DECISIONS.md') else None
     if decisions is not None: bad += [f"{k['id']} cites {k['decision']}, not a decision" for k in ks if k['decision'] not in decisions]
-    T = {'unknown', 'unusable', 'counted_flagged', 'department_from_agency', 'flagged_incomplete', 'unknown_with_coverage'}
+    T = {'unknown', 'unusable', 'counted_flagged', 'department_from_agency', 'flagged_incomplete', 'unknown_with_coverage',
+         'not_reported_occupation'}
     bad += [f"{k['id']} treatment {k['treatment']}" for k in ks if k['treatment'] not in T]
     act = [k for k in ks if k['status'] == 'active']
     notes = []
@@ -564,6 +572,28 @@ def _():
     for p, d, n in rows("SELECT period, department_code, n_redacted FROM emp_cov_month WHERE field = 'grade' AND n_redacted > 0"):
         if not any(in_scope(k, 'employment', fmt_ym(p), d) for k in k7): out7.append(f'employment {fmt_ym(p)} {d} {n}')
     if out7: bad.append(f'grade REDACTED outside KDI-007 scope: {out7[:4]}')
+    # KDI-011 (not reported occupation): scope rows for the series and the group code in all three datasets; the figures
+    # the text gives = raw (separations share with a series not reported by effective fiscal year, and the action rows
+    # with a series but no published family)
+    k11 = [k for k in act if k['treatment'] == 'not_reported_occupation']
+    if k11:
+        want = {(ds, f) for ds in ('accessions', 'employment', 'separations') for f in ('occupational_series_code', 'occupational_group_code')}
+        got11 = {(k['dataset'], k['field']) for k in k11}
+        if got11 != want: bad.append(f'KDI-011 scope rows {sorted(got11)} != series and group code in the three datasets')
+        txt = k11[0]['issue']
+        sh = dict(rows(f"""SELECT {EFF_FY}, round(100.0 * avg(CAST({OCC_SERIES_NR.format(c='occupational_series_code')} AS INT)), 2)
+                         FROM {raw('separations')} GROUP BY 1"""))
+        for pct, fy in re.findall(r'([\d.]+)% in FY(\d{4})', txt):
+            if sh.get(int(fy)) != float(pct): bad.append(f'KDI-011 separations FY{fy}: raw {sh.get(int(fy))}%, text {pct}%')
+        nf = dict(rows(f"""SELECT ds, count(*) FROM (SELECT 'separations' AS ds, * FROM (SELECT occupational_series_code, occupational_group_code FROM {raw('separations')})
+                         UNION ALL SELECT 'accessions', * FROM (SELECT occupational_series_code, occupational_group_code FROM {raw('accessions')}))
+                         WHERE NOT {OCC_SERIES_NR.format(c='occupational_series_code')} AND (occupational_group_code IS NULL OR trim(occupational_group_code) = '')
+                         GROUP BY 1"""))
+        m11 = re.search(r'no published family \(([\d,]+) separations, ([\d,]+) accessions\)', txt)
+        if not m11 or (nf.get('separations', 0), nf.get('accessions', 0)) != (int(m11.group(1).replace(',', '')), int(m11.group(2).replace(',', ''))):
+            bad.append(f'KDI-011 rows with a series but no family: raw {nf}, text {m11.groups() if m11 else None}')
+        notes.append(f"KDI-011 separations not reported {', '.join(f'FY{fy} {sh.get(int(fy))}%' for _, fy in re.findall(r'([\d.]+)% in FY(\d{4})', txt))}; "
+                     f"no family {nf.get('separations', 0)} separations, {nf.get('accessions', 0)} accessions")
     return not bad, '; '.join(bad[:4]) or (f"{len(ks)} scope rows for KDI-001 to {max(spec)}, text = spec section 7; checked against raw: "
         + '; '.join(notes) + '; every re-assigned department in scope; grade REDACTED only in scope')
 
@@ -710,7 +740,8 @@ def _():
 CUBES = 'warehouse/cubes'
 BREAKDOWN_CUBES = ('leaving', 'joining', 'admin', 'appointments')   # Phase 2b (pipeline/build_breakdowns.py)
 MATRIX_CUBES = ('matrix',)   # docs/cube-plan.md amendment 1 (pipeline/build_matrix.py, copied from admin)
-ALL_CUBES = ('core', 'compare') + BREAKDOWN_CUBES + MATRIX_CUBES
+OCC_CUBES = ('occupations', 'occ_family_monthly', 'occ_series_monthly')   # cube plan amendment 2 (pipeline/build_occupations.py)
+ALL_CUBES = ('core', 'compare') + BREAKDOWN_CUBES + MATRIX_CUBES + OCC_CUBES
 CUBE_FILE_MAX = 3_000_000      # bytes per file (docs/cube-plan.md section 3)
 FIRST_LOAD_MAX = 3_000_000     # GOV core + GOV compare (docs/cube-plan.md section 3)
 SMALL_BASE = 30                # invariant 9
@@ -970,7 +1001,8 @@ def _():
             if hashlib.sha256(open(p, 'rb').read()).hexdigest() != fi['sha256']: bad.append(f'{name} {fi["path"]} sha256 differs from its meta')
             if os.path.getsize(p) != fi['bytes']: bad.append(f'{name} {fi["path"]} size differs from its meta')
             head = open(p, encoding='utf-8').read(300)   # the header only: the files are written {"cube", "entity"|"parent", ...}
-            hdr = {'cube': name} if name in MATRIX_CUBES else {'cube': name, 'parent' if name == 'compare' else 'entity': k}
+            hdr = ({'cube': name} if name in MATRIX_CUBES else {'cube': name, 'entity': 'GOV'} if name == 'occ_series_monthly'
+                   else {'cube': name, 'parent' if name == 'compare' else 'entity': k})
             if not head.startswith(json.dumps(hdr, separators=(',', ':'))[:-1] + ','):
                 bad.append(f'{name} {fi["path"]} header names another cube or key')
         digest = hashlib.sha256(''.join(f"{fi['path']} {fi['sha256']}\n" for fi in sorted(meta['files'].values(), key=lambda f: f['path'])).encode()).hexdigest()
@@ -1013,6 +1045,15 @@ def _():
             if [d['name'] for d in meta['columns']] != cols: bad.append(f'{name} {k}: meta column dictionary does not list the file columns in order'); break
         bad += [f'{name}.{c} kind {kinds[c]}' for c in kinds if kinds[c] not in KINDS]
         bad += [f'{name}.{d["name"]} has no description' for d in meta['columns'] if not d.get('description')]
+    # occupation cubes (cube plan amendment 2): every column and period column declares a kind and a description, stocks
+    # are headcount only (never summed across months); their rollups against core are occupations_partition and
+    # occ_monthly_matches_core, their figures against the raw recount occ_family_from_rows and occupations_partition
+    for name in OCC_CUBES:
+        meta = cube_meta(name)
+        for part in ('columns', 'period_columns'):
+            bad += [f'{name}.{d["name"]} kind {d.get("kind")}' for d in meta.get(part, []) if d.get('kind') not in KINDS]
+            bad += [f'{name}.{d["name"]} has no description' for d in meta.get(part, []) if not d.get('description')]
+        bad += [f'{name}.{d["name"]} is a stock other than headcount' for d in meta['columns'] if d.get('kind') == 'stock' and d['name'] != 'headcount']
     # core: every entity, grain and period against the independent recomputation
     core = cube_rows('core')
     got_keys = {(r['entity'], r['grain'], r['period']) for _, rs in core.values() for r in rs}
@@ -1843,6 +1884,205 @@ def _():
         f'code-to-group mapping; groups partition all, subgroups partition political, all = the entity hires and departures')
 
 
+# ---- Occupation cubes (cube plan amendment 2, D-040; warehouse/cubes/, staged by pipeline/build_occupations.py) ----
+# Recomputed without the cube code. Actions are counted from the raw Parquet files (department from the agency code
+# where missing, as raw_actions_org), employment headcount from emp_occ_month, which is itself checked here against the
+# raw employment files for OCC_SAMPLE months. The occupation is the published series and the published group code with
+# the gate's own Not reported rule (OCC_SERIES_NR), entity keys GATE_KEY, windows from the core meta spans and the signed
+# administrations, rate rules from metric spec section 3. Cube files are read straight into DuckDB (read_json), never
+# held in Python, and compared there.
+OCC_SAMPLE = sorted({'2011-10', '2018-03', '2024-10', '2025-09', '2026-06', LATEST} & set(EMP_FILES))   # 2018-03: series with no group code
+OCC_GRAINS = ('fy', 't12', 'admin', 'admin_n')
+
+
+def occ_series_sql(c='occupational_series_code'):
+    return f"CASE WHEN {OCC_SERIES_NR.format(c=c)} THEN '{OCC_NR}' ELSE {c} END"
+
+
+def occ_family_sql(c='occupational_series_code', g='occupational_group_code'):
+    return f"CASE WHEN {OCC_SERIES_NR.format(c=c)} OR {g} IS NULL OR trim({g}) = '' THEN '{OCC_NR}' ELSE {g} END"
+
+
+def occ_json(name, cols, extra='', where='true'):
+    """SQL over the files a cube meta lists: one row per cube row, columns cast by their position in the meta column
+    list (cols: {name: SQL type}); e = the file's entity, f = its published path."""
+    meta = cube_meta(name)
+    names = [d['name'] for d in meta['columns']]
+    paths = ', '.join(f"'{CUBES}/{fi['path']}'" for fi in meta['files'].values())
+    sel = ', '.join((f"r->>{names.index(c)} AS {c}" if t == 'VARCHAR' else
+                     f"CAST(r->>{names.index(c)} AS {t}) AS {c}") for c, t in cols.items())
+    return (f"SELECT e, f, {sel}{extra} FROM (SELECT entity AS e, filename AS f, unnest(rows) AS r FROM read_json([{paths}], "
+            f"columns={{'entity': 'VARCHAR', 'rows': 'JSON[]'}}, filename=true, maximum_object_size=4000000)) WHERE {where}")
+
+
+def occ_windows():
+    """[(e, grain, period, fiscal_year, first label, first published month, last published month, months_in_period,
+    months_published, partial)] for every core entity, from its core-meta span: every fiscal year, the latest 12 months
+    (over the entity's months in them), each administration and its first N months (N = the open one's months)."""
+    months = sorted(EMP_FILES)
+    n_now = len([m for m in months if m >= ADMIN_SIGNED[-1][1]])
+    out = []
+    for e, x in cube_meta('core')['entities'].items():
+        f, l = x['first_month'], x['last_month']
+        if f is None: continue
+        inspan = [m for m in months if f <= m <= l]
+        for fy in range(int(months[0][:4]) + (months[0][5:] >= '10'), int(months[-1][:4]) + (months[-1][5:] >= '10') + 1):
+            cal = [f'{fy - 1}-{x:02d}' for x in (10, 11, 12)] + [f'{fy}-{x:02d}' for x in range(1, 10)]
+            pub = [m for m in cal if m in inspan]
+            if pub: out.append((e, 'fy', f'FY{fy}', fy, cal[0], pub[0], pub[-1], 12, len(pub), len(pub) < 12))
+        win = months[-12:]
+        pub = [m for m in win if m in inspan]
+        if pub: out.append((e, 't12', months[-1], int(months[-1][:4]) + (months[-1][5:] >= '10'), win[0], pub[0], pub[-1], 12, len(pub), len(pub) < 12))
+        for g in ('admin', 'admin_n'):
+            for a, first, last in ADMIN_SIGNED:
+                exp = [m for m in months if m >= first and (last is None or m <= last)]
+                if g == 'admin_n': exp = exp[:n_now]
+                pub = [m for m in exp if m in inspan]
+                if exp and pub: out.append((e, g, a, None, exp[0], pub[0], pub[-1], len(exp), len(pub), last is None or len(pub) < len(exp)))
+    return out
+
+
+def occ_tables():
+    """Relations shared by the occupation checks (built once). Views over the cube files, re-read by each query so
+    nothing large is held: g_occ, g_per (occupations rows and period tables), g_fm, g_sm (monthly cubes), g_oc (recount
+    cells per month, organization, series and family: g_act plus emp_occ_month). Small temp tables: g_cm (core month
+    rows), g_win (expected windows); g_act (raw action cells, compact types). The cache and the connection are released
+    first (3 GB machine; every later check recomputes what it needs, as lookup_allowlist_and_size does)."""
+    if 'occ_tables' in _CACHE: return _CACHE['occ_tables']
+    global _DB
+    _CACHE.clear()
+    if _DB is not None: _DB.close(); _DB = None
+    import gc; gc.collect()
+    db().execute(f"SET memory_limit = '{os.environ.get('GATE_OCC_MEMORY', '1000MB')}'")   # this phase's own cap (3 GB machine)
+    t0 = time.time()
+    def x(sql):
+        db().execute(sql)
+        if os.environ.get('GATE_MEM'):
+            import resource
+            m = db().execute("SELECT sum(memory_usage_bytes) / 1e6, sum(temporary_storage_bytes) / 1e6 FROM duckdb_memory()").fetchone()
+            print(f'      {sql.split(" AS")[0].split()[-1][:20]}: {time.time() - t0:.1f}s, DuckDB {m[0]:.0f} MB, spilled {m[1]:.0f} MB, '
+                  f'peak RSS {resource.getrusage(resource.RUSAGE_SELF).ru_maxrss / 1e9:.2f} GB', flush=True)
+    x(f"""CREATE OR REPLACE TEMP VIEW g_occ AS {occ_json('occupations', {'grain': 'VARCHAR', 'period': 'VARCHAR', 'level': 'VARCHAR',
+         'occupation': 'VARCHAR', 'hires': 'BIGINT', 'departures': 'BIGINT', 'acc_transfer_in': 'BIGINT', 'sep_transfer_out': 'BIGINT',
+         'sep_drp': 'BIGINT', 'headcount': 'BIGINT', 'hire_num': 'DOUBLE', 'attrition_num': 'DOUBLE', 'rate_den': 'DOUBLE',
+         'rate_small_base': 'BOOLEAN'}, extra=', json_array_length(r) AS width')}""")
+    pc = [d['name'] for d in cube_meta('occupations')['period_columns']]
+    paths = ', '.join(f"'{CUBES}/{fi['path']}'" for fi in cube_meta('occupations')['files'].values())
+    P = lambda c: f"p->>{pc.index(c)}"
+    x(f"""CREATE OR REPLACE TEMP VIEW g_per AS SELECT e, {P('grain')} AS grain, {P('period')} AS period,
+            CAST({P('fiscal_year')} AS INT) AS fiscal_year, {P('period_first_month')} AS first_m, {P('period_last_month')} AS last_m,
+            CAST({P('months_in_period')} AS INT) AS n_in, CAST({P('months_published')} AS INT) AS n_pub, {P('time_basis')} AS time_basis,
+            CAST({P('provisional')} AS BOOLEAN) AS provisional, CAST({P('partial')} AS BOOLEAN) AS partial,
+            CAST({P('reissued')} AS BOOLEAN) AS reissued, CAST({P('opm_incomplete')} AS BOOLEAN) AS opm_incomplete,
+            CAST(p->{pc.index('kdi_ids')} AS VARCHAR[]) AS kdi_ids, json_array_length(p) AS width, cols, pcols
+          FROM (SELECT entity AS e, columns AS cols, period_columns AS pcols, unnest(periods) AS p FROM read_json([{paths}],
+                columns={{'entity': 'VARCHAR', 'columns': 'VARCHAR[]', 'period_columns': 'VARCHAR[]', 'periods': 'JSON[]'}},
+                maximum_object_size=4000000))""")
+    x(f"""CREATE OR REPLACE TEMP VIEW g_fm AS {occ_json('occ_family_monthly', {'month': 'VARCHAR', 'family': 'VARCHAR', 'headcount': 'BIGINT',
+         'hires': 'BIGINT', 'departures': 'BIGINT'}, extra=', json_array_length(r) AS width')}""")
+    x(f"""CREATE OR REPLACE TEMP VIEW g_sm AS {occ_json('occ_series_monthly', {'month': 'VARCHAR', 'series': 'VARCHAR', 'headcount': 'BIGINT',
+         'hires': 'BIGINT', 'departures': 'BIGINT'}, extra=', json_array_length(r) AS width')}""")
+    x(f"""CREATE OR REPLACE TEMP TABLE g_cm AS {occ_json('core', {'grain': 'VARCHAR', 'period': 'VARCHAR', 'headcount': 'BIGINT',
+         'hires': 'BIGINT', 'departures': 'BIGINT', 'acc_transfer_in': 'BIGINT', 'sep_transfer_out': 'BIGINT', 'sep_drp': 'BIGINT'},
+         where="r->>1 = 'month'")}""")
+    x("CREATE OR REPLACE TEMP TABLE g_win (e VARCHAR, grain VARCHAR, period VARCHAR, fiscal_year INT, first_m VARCHAR, pm0 VARCHAR, "
+      "pm1 VARCHAR, n_in INT, n_pub INT, partial BOOLEAN)")
+    wins = occ_windows()
+    for i in range(0, len(wins), 5000):
+        x('INSERT INTO g_win VALUES ' + ', '.join('(' + ', '.join('NULL' if v is None else (str(v).lower() if isinstance(v, bool) else
+                                                                    str(v) if isinstance(v, int) else f"'{v}'") for v in w) + ')'
+                                                  for w in wins[i:i + 5000]))
+    # raw actions per effective month, organization (department from the agency code where missing), series, family
+    parts = []
+    for ds in ('accessions', 'separations'):
+        code = 'accession_category_code' if ds == 'accessions' else 'separation_category_code'
+        tr = ACC_SIGNED['transfer_in'] if ds == 'accessions' else SEP_SIGNED['transfer_out']
+        parts.append(f"""(WITH r AS (SELECT personnel_action_effective_date_yyyymm AS eff, department_code AS d, agency_code AS a,
+                                agency_subelement_code AS s, {occ_series_sql()} AS sk, {occ_family_sql()} AS fk, {code} AS code,
+                                {'drp_indicator' if ds == 'separations' else 'NULL'} AS drp FROM {raw(ds)}),
+                         mp AS (SELECT a, min(d) AS dd FROM r WHERE NOT {BAD_DEPT.format(c='d')} GROUP BY a)
+                    SELECT substr(eff, 1, 4) || '-' || substr(eff, 5, 2) AS m, CASE WHEN {BAD_DEPT.format(c='d')} THEN mp.dd ELSE d END AS d,
+                           a, s, sk, fk, {'count(*)' if ds == 'accessions' else '0'} AS hires,
+                           {'count(*)' if ds == 'separations' else '0'} AS departures,
+                           {f'count(*) FILTER (WHERE code IN {IN(tr)})' if ds == 'accessions' else '0'} AS tin,
+                           {f'count(*) FILTER (WHERE code IN {IN(tr)})' if ds == 'separations' else '0'} AS tout,
+                           count(*) FILTER (WHERE drp = 'Y') AS drp
+                    FROM r LEFT JOIN mp USING (a) WHERE eff >= '201110' GROUP BY ALL)""")
+    ms = ', '.join(f"'{m}'" for m in sorted(EMP_FILES))
+    x(f"""CREATE OR REPLACE TEMP TABLE g_act AS
+          SELECT m, d, a, s, sk, fk, CAST(sum(hires) AS INTEGER) AS hires, CAST(sum(departures) AS INTEGER) AS departures,
+                 CAST(sum(tin) AS INTEGER) AS tin, CAST(sum(tout) AS INTEGER) AS tout, CAST(sum(drp) AS INTEGER) AS drp
+          FROM ({parts[0]} UNION ALL {parts[1]}) WHERE m IN ({ms}) GROUP BY ALL""")
+    x(f"""CREATE OR REPLACE TEMP VIEW g_oc AS
+          SELECT m, d, a, s, sk, fk, 0 AS h, hires, departures, tin, tout, drp FROM g_act
+          UNION ALL SELECT strftime(period, '%Y-%m'), department_code, agency_code, agency_subelement_code,
+                 {occ_series_sql()}, {occ_family_sql()}, headcount, 0, 0, 0, 0, 0 FROM emp_occ_month""")
+    # emp_occ_month against the raw employment files, sampled months (department from the agency code as raw_emp)
+    diffs = {}
+    for ym in OCC_SAMPLE:
+        rel = f"read_parquet('{EMP_FILES[ym]}')"
+        rawq = (f"WITH mp AS (SELECT agency_code, min(department_code) AS dd FROM {rel} WHERE NOT {BAD_DEPT.format(c='department_code')} GROUP BY 1) "
+                f"SELECT CASE WHEN {BAD_DEPT.format(c='r.department_code')} THEN mp.dd ELSE r.department_code END, r.agency_code, "
+                f"r.agency_subelement_code, r.occupational_series_code, r.occupational_group_code, count(*) "
+                f"FROM {rel} r LEFT JOIN mp USING (agency_code) GROUP BY ALL")
+        st = (f"SELECT department_code, agency_code, agency_subelement_code, occupational_series_code, occupational_group_code, headcount "
+              f"FROM emp_occ_month WHERE period = DATE '{ym}-01'")
+        diffs[ym] = rows(f"SELECT (SELECT count(*) FROM (SELECT * FROM ({rawq}) EXCEPT ALL {st})) + "
+                         f"(SELECT count(*) FROM ({st} EXCEPT ALL SELECT * FROM ({rawq})))")[0][0]
+    if os.environ.get('GATE_MEM'): print(f'      occupation tables built in {time.time() - t0:.1f}s', flush=True)
+    _CACHE['occ_tables'] = (len(wins), diffs)
+    return _CACHE['occ_tables']
+
+
+def occ_keyed(level):
+    """SQL: g_oc counted in the government, its department, its DOD agency and its subelement, at one level:
+    (e, m, occ, h, hires, departures, tin, tout, drp) summed."""
+    k = 'sk' if level == 'series' else 'fk'
+    c = f'm, {k} AS occ, h, hires, departures, tin, tout, drp'
+    return (f"SELECT e, m, occ, sum(h) AS h, sum(hires) AS hires, sum(departures) AS departures, sum(tin) AS tin, sum(tout) AS tout, "
+            f"sum(drp) AS drp FROM (SELECT 'GOV' AS e, {c} FROM g_oc UNION ALL SELECT d, {c} FROM g_oc UNION ALL "
+            f"SELECT 'DOD-' || a, {c} FROM g_oc WHERE d = 'DOD' UNION ALL SELECT {GATE_KEY}, {c} FROM g_oc) GROUP BY ALL")
+
+
+def occ_recount(level):
+    """SQL: every occupations row of one level recomputed from the raw recount over the expected windows, with the
+    row rule (a hire, a departure or headcount at period end) and the rate rules (fy method B, t12 method A, admin
+    grains annualized x 12 / months; mean month-end headcount over the published months; none for Not reported or a
+    zero mean; small base below 30)."""
+    ann = "CASE WHEN w.grain IN ('admin', 'admin_n') THEN 12.0 / w.n_pub ELSE 1 END"
+    return f"""SELECT e, grain, period, '{level}' AS level, occ, hires, departures, tin, tout, drp, h_end,
+                      CASE WHEN norate THEN NULL ELSE hires * fac END AS hire_num, CASE WHEN norate THEN NULL ELSE departures * fac END AS attrition_num,
+                      CASE WHEN norate THEN NULL ELSE den END AS den, CASE WHEN norate THEN NULL ELSE den < {SMALL_BASE} END AS sb
+               FROM (SELECT w.e, w.grain, w.period, c.occ, sum(c.hires) AS hires, sum(c.departures) AS departures, sum(c.tin) AS tin,
+                            sum(c.tout) AS tout, sum(c.drp) AS drp, coalesce(sum(c.h) FILTER (WHERE c.m = w.pm1), 0) AS h_end,
+                            sum(c.h) / any_value(w.n_pub) AS den, any_value({ann}) AS fac,
+                            c.occ = '{OCC_NR}' OR sum(c.h) = 0 AS norate
+                     FROM g_win w JOIN ({occ_keyed(level)}) c ON c.e = w.e AND c.m BETWEEN w.pm0 AND w.pm1
+                     GROUP BY w.e, w.grain, w.period, c.occ)
+               WHERE hires > 0 OR departures > 0 OR h_end > 0"""
+
+
+def occ_compare(level):
+    """(rows compared, mismatches, examples) between the occupations rows of one level and occ_recount(level)."""
+    q = f"""WITH want AS ({occ_recount(level)}),
+                 got AS (SELECT * FROM g_occ WHERE level = '{level}')
+            SELECT count(*) FILTER (WHERE w.e IS NOT NULL AND g.e IS NOT NULL),
+                   count(*) FILTER (WHERE w.e IS NULL OR g.e IS NULL OR g.hires <> w.hires OR g.departures <> w.departures
+                     OR g.acc_transfer_in <> w.tin OR g.sep_transfer_out <> w.tout OR g.sep_drp <> w.drp OR g.headcount <> w.h_end
+                     OR (g.rate_den IS NULL) <> (w.den IS NULL) OR abs(g.rate_den - w.den) > 1e-3
+                     OR (g.hire_num IS NULL) <> (w.hire_num IS NULL) OR abs(g.hire_num - w.hire_num) > 1e-3
+                     OR (g.attrition_num IS NULL) <> (w.attrition_num IS NULL) OR abs(g.attrition_num - w.attrition_num) > 1e-3
+                     OR g.rate_small_base IS DISTINCT FROM w.sb),
+                   list(coalesce(g.e, w.e) || ' ' || coalesce(g.grain, w.grain) || ' ' || coalesce(g.period, w.period) || ' '
+                        || coalesce(g.occupation, w.occ) || CASE WHEN g.e IS NULL THEN ' missing' WHEN w.e IS NULL THEN ' extra' ELSE '' END)
+                     FILTER (WHERE w.e IS NULL OR g.e IS NULL OR g.hires <> w.hires OR g.departures <> w.departures OR g.headcount <> w.h_end
+                     OR g.acc_transfer_in <> w.tin OR g.sep_transfer_out <> w.tout OR g.sep_drp <> w.drp
+                     OR (g.rate_den IS NULL) <> (w.den IS NULL) OR abs(g.rate_den - w.den) > 1e-3 OR abs(g.hire_num - w.hire_num) > 1e-3
+                     OR abs(g.attrition_num - w.attrition_num) > 1e-3 OR g.rate_small_base IS DISTINCT FROM w.sb)[1:3]
+            FROM got g FULL JOIN want w ON g.e = w.e AND g.grain = w.grain AND g.period = w.period AND g.occupation = w.occ"""
+    return rows(q)[0]
+
+
 def breakdown_rate_scan():
     """Rates in leaving, joining and admin (part of small_base_flags): a rate has a positive denominator and the
     small-base flag is exactly rate_den < 30; an empty rate carries no numerator and no flag; a structural zero is never
@@ -1888,7 +2128,18 @@ def _():
                     if len(bad) > 5: break
     b2, n2, f2, na = breakdown_rate_scan()
     bad += b2; n += n2; flagged.update(f2)
-    return not bad, '; '.join(bad[:5]) or (f'{n:,} rates scanned in core, compare, leaving, joining and admin, none on a zero denominator '
+    # occupations (cube plan amendment 2): a rate has a positive denominator and the flag is exactly rate_den < 30; an
+    # empty rate has no numerator and no flag; Not reported (KDI-011) never carries a rate
+    o = rows(f"""SELECT count(*) FILTER (WHERE rate_den IS NOT NULL),
+                   count(*) FILTER (WHERE rate_den IS NULL AND (hire_num IS NOT NULL OR attrition_num IS NOT NULL OR rate_small_base IS NOT NULL)),
+                   count(*) FILTER (WHERE rate_den <= 0), count(*) FILTER (WHERE rate_den IS NOT NULL AND rate_small_base IS DISTINCT FROM (rate_den < {SMALL_BASE})),
+                   count(*) FILTER (WHERE rate_den IS NOT NULL AND (hire_num IS NULL OR attrition_num IS NULL)),
+                   count(*) FILTER (WHERE occupation = '{OCC_NR}' AND rate_den IS NOT NULL), count(*) FILTER (WHERE rate_small_base)
+                 FROM ({occ_json('occupations', {'occupation': 'VARCHAR', 'hire_num': 'DOUBLE', 'attrition_num': 'DOUBLE', 'rate_den': 'DOUBLE', 'rate_small_base': 'BOOLEAN'})})""")[0]
+    if any(o[1:6]): bad.append(f'occupations: {o[1]} numerators or flags without a denominator, {o[2]} denominators <= 0, {o[3]} flags != rate_den < {SMALL_BASE}, '
+                               f'{o[4]} denominators without numerators, {o[5]} Not reported rows with a rate')
+    n += o[0]; flagged['occupations'] = o[6]
+    return not bad, '; '.join(bad[:5]) or (f'{n:,} rates scanned in core, compare, leaving, joining, admin and occupations, none on a zero denominator '
         f'({empty:,} empty core and compare rates where the mean headcount is 0; {na:,} leaving and joining structural zeros, not '
         f'applicable and unflagged); small base (< {SMALL_BASE}) flagged: ' + ', '.join(f'{k} {v:,}' for k, v in sorted(flagged.items())))
 
@@ -1905,6 +2156,156 @@ def _():
     if first > FIRST_LOAD_MAX: bad.append(f'GOV first load {first:,} B > {FIRST_LOAD_MAX:,}')
     return not bad, '; '.join(bad[:5]) or (f"every file under {CUBE_FILE_MAX:,} B (largest: " + ', '.join(f'{p} {b:,}' for p, b in big.values())
         + f"); GOV first load (core + compare + leaving) {first:,} B; all cube files {tot:,} B")
+
+
+@check('occupations_partition', 'inv 3, inv 5')
+def _():
+    """occupations: one file per core entity; columns and period columns = the meta; the period table = the expected
+    windows with their flags (KDI-011 where a Not reported row is in the window); series rows and family rows each sum
+    exactly to core's hires, departures, transfers in and out, DRP and period-end headcount for every entity and period
+    (core month rows summed over the window, headcount at its last month); every series row = the raw recount."""
+    bad = []
+    nwin, diffs = occ_tables()
+    meta, cm = cube_meta('occupations'), cube_meta('core')
+    if set(meta['files']) != set(cm['files']): bad.append(f"occupations files {len(meta['files'])} != core {len(cm['files'])}: {sorted(set(meta['files']) ^ set(cm['files']))[:4]}")
+    cols = [d['name'] for d in meta['columns']]; pcols = [d['name'] for d in meta['period_columns']]
+    wc = rows(f"SELECT count(*) FILTER (WHERE cols <> {cols}::VARCHAR[] OR pcols <> {pcols}::VARCHAR[] OR width <> {len(pcols)}) FROM g_per")[0][0]
+    wr = rows(f"SELECT count(*) FILTER (WHERE width <> {len(cols)}) FROM g_occ")[0][0]
+    if wc or wr: bad.append(f'{wc} period rows and {wr} rows whose file columns or width differ from the meta')
+    # row keys and codes
+    dup, lv, code, zero = rows(f"""SELECT (SELECT count(*) FROM (SELECT e, grain, period, level, occupation FROM g_occ GROUP BY ALL HAVING count(*) > 1)),
+        count(*) FILTER (WHERE level NOT IN ('series', 'family')),
+        count(*) FILTER (WHERE occupation <> '{OCC_NR}' AND NOT regexp_full_match(occupation, CASE level WHEN 'series' THEN '[0-9]{{4}}' ELSE '[0-9]{{2}}' END)),
+        count(*) FILTER (WHERE hires = 0 AND departures = 0 AND headcount = 0) FROM g_occ""")[0]
+    if dup or lv or code or zero: bad.append(f'{dup} duplicate keys, {lv} rows with another level, {code} occupation codes neither published nor NR, {zero} empty rows')
+    # period tables = expected windows and flags
+    months = sorted(EMP_FILES); prov = months[-3:]; vers = manifest_versions()
+    prior = json.load(open(f'{CUBES}/revision_baseline.json')).get('prior_versions')
+    reiss = sorted(m for m, v in vers.items() if prior and m in prior and prior[m] != v) or ['none']
+    pm = rows(f"""WITH x AS (SELECT strftime(month, '%Y-%m') AS m, department_code AS d, agency_code AS a, agency_subelement_code AS s,
+                                unnest(kdi_ids) AS id FROM monthly_org_kdi),
+               ids AS ({keyed_sql('x', ['m', 'id'])}),
+               nr AS (SELECT DISTINCT e, grain, period FROM g_occ WHERE occupation = '{OCC_NR}'),
+               want AS (SELECT w.*, list_sort(list_distinct(list(i.id) FILTER (WHERE i.id IS NOT NULL)
+                                 || CASE WHEN any_value(nr.e) IS NOT NULL THEN ['KDI-011'] ELSE [] END)) AS ids
+                        FROM g_win w LEFT JOIN ids i ON i.e = w.e AND i.m BETWEEN w.pm0 AND w.pm1
+                        LEFT JOIN nr ON nr.e = w.e AND nr.grain = w.grain AND nr.period = w.period GROUP BY ALL)
+          SELECT count(*) FILTER (WHERE g.e IS NULL), count(*) FILTER (WHERE w.e IS NULL),
+                 count(*) FILTER (WHERE g.e IS NOT NULL AND w.e IS NOT NULL AND (g.fiscal_year IS DISTINCT FROM w.fiscal_year OR g.first_m <> w.first_m
+                   OR g.last_m <> w.pm1 OR g.n_in <> w.n_in OR g.n_pub <> w.n_pub OR g.partial <> w.partial OR g.time_basis <> 'effective'
+                   OR g.provisional <> (w.pm1 >= '{prov[0]}') OR g.reissued <> EXISTS (SELECT 1 FROM (VALUES {', '.join(f"('{m}')" for m in reiss)}) v(m) WHERE v.m BETWEEN w.pm0 AND w.pm1)
+                   OR g.opm_incomplete <> list_contains(w.ids, 'KDI-006') OR g.kdi_ids <> w.ids)),
+                 list(coalesce(g.e, w.e) || ' ' || coalesce(g.grain, w.grain) || ' ' || coalesce(g.period, w.period)) FILTER (WHERE g.e IS NULL OR w.e IS NULL
+                   OR g.last_m <> w.pm1 OR g.n_pub <> w.n_pub OR g.partial <> w.partial OR g.kdi_ids <> w.ids OR g.provisional <> (w.pm1 >= '{prov[0]}'))[1:3],
+                 count(*) FILTER (WHERE list_contains(g.kdi_ids, 'KDI-011'))
+          FROM g_per g FULL JOIN want w ON g.e = w.e AND g.grain = w.grain AND g.period = w.period""")[0]
+    if pm[0] or pm[1] or pm[2]: bad.append(f'period tables: {pm[0]} expected windows missing, {pm[1]} extra, {pm[2]} with other months or flags, e.g. {pm[3]}')
+    orphan = rows("SELECT count(*) FROM g_occ o ANTI JOIN g_per p ON p.e = o.e AND p.grain = o.grain AND p.period = o.period")[0][0]
+    if orphan: bad.append(f'{orphan} rows whose window is not in the period table')
+    # partition: each level sums to core over the window
+    fl = ['hires', 'departures', 'acc_transfer_in', 'sep_transfer_out', 'sep_drp']
+    part = rows(f"""WITH core AS (SELECT w.e, w.grain, w.period, {', '.join(f'sum(c.{c}) AS {c}' for c in fl)},
+                                      sum(c.headcount) FILTER (WHERE c.period = w.pm1) AS headcount
+                               FROM g_win w JOIN g_cm c ON c.e = w.e AND c.period BETWEEN w.pm0 AND w.pm1 GROUP BY ALL),
+                         lv AS (SELECT * FROM core CROSS JOIN (VALUES ('series'), ('family')) v(level)),
+                         occ AS (SELECT e, grain, period, level, {', '.join(f'sum({c}) AS {c}' for c in fl + ['headcount'])} FROM g_occ GROUP BY ALL)
+                    SELECT count(*), count(*) FILTER (WHERE {' OR '.join(f'coalesce(o.{c}, 0) <> coalesce(l.{c}, 0)' for c in fl + ['headcount'])} OR l.e IS NULL),
+                           list(coalesce(l.e, o.e) || ' ' || coalesce(l.grain, o.grain) || ' ' || coalesce(l.period, o.period) || ' ' || coalesce(l.level, o.level))
+                             FILTER (WHERE {' OR '.join(f'coalesce(o.{c}, 0) <> coalesce(l.{c}, 0)' for c in fl + ['headcount'])} OR l.e IS NULL)[1:3]
+                    FROM lv l FULL JOIN occ o ON o.e = l.e AND o.grain = l.grain AND o.period = l.period AND o.level = l.level""")[0]
+    if part[1]: bad.append(f'{part[1]} entity-period-levels whose occupations do not sum to core, e.g. {part[2]}')
+    n_s, mis_s, ex_s = occ_compare('series')
+    if mis_s: bad.append(f'{mis_s} series rows differ from the raw recount, e.g. {ex_s}')
+    bad += [f'emp_occ_month {ym}: {n} cells differ from the raw file' for ym, n in diffs.items() if n]
+    g = rows("""SELECT sum(departures) FILTER (WHERE level = 'series' AND occupation = 'NR'), sum(departures) FILTER (WHERE level = 'family' AND occupation = 'NR'),
+                count(*) FILTER (WHERE level = 'series'), count(*) FILTER (WHERE level = 'family')
+                FROM g_occ WHERE e = 'GOV' AND grain = 'fy' AND period = 'FY2025'""")[0]
+    return not bad, '; '.join(bad[:6]) or (
+        f"{sum(fi['rows'] for fi in meta['files'].values()):,} rows in {len(meta['files'])} files (every core entity), {nwin:,} windows (fy, latest t12, admin, admin_n) "
+        f"with period tables and flags = expected ({pm[4]:,} carry KDI-011); series and family rows each sum to core's hires, departures, "
+        f"transfers in and out, DRP and period-end headcount in all {part[0]:,} entity-period-levels; {n_s:,} series rows = raw recount "
+        f"(counts, headcount, rate parts, small base; Not reported without a rate); emp_occ_month = raw in {len(diffs)} sampled months "
+        f"({' '.join(diffs)}); GOV FY2025 {g[2]} series and {g[3]} family rows, Not reported departures {g[0]:,} (series), {g[1]:,} (family)")
+
+
+@check('occ_monthly_matches_core', 'inv 3')
+def _():
+    """occ_family_monthly (every core entity) and occ_series_monthly (GOV, split at Oct 2020): columns = the meta; one
+    row per month and occupation; rows only inside the entity's months; per entity and month the families, and for GOV
+    the series, sum to core's monthly headcount, hires and departures; the GOV series rows = the raw recount."""
+    bad = []
+    occ_tables()
+    fmm, smm, cm = cube_meta('occ_family_monthly'), cube_meta('occ_series_monthly'), cube_meta('core')
+    if set(fmm['files']) != set(cm['files']): bad.append(f"occ_family_monthly files {len(fmm['files'])} != core {len(cm['files'])}")
+    if sorted(smm['files']) != ['GOV_from_2020-10', 'GOV_to_2020-09']: bad.append(f"occ_series_monthly files {sorted(smm['files'])}")
+    for name, t, lvl in (('occ_family_monthly', 'g_fm', 'family'), ('occ_series_monthly', 'g_sm', 'series')):
+        cols = [d['name'] for d in cube_meta(name)['columns']]
+        if cols != ['month', lvl, 'headcount', 'hires', 'departures']: bad.append(f'{name} columns {cols}')
+        w, dup, code, zero = rows(f"""SELECT count(*) FILTER (WHERE width <> 5),
+            (SELECT count(*) FROM (SELECT e, month, {lvl} FROM {t} GROUP BY ALL HAVING count(*) > 1)),
+            count(*) FILTER (WHERE {lvl} <> '{OCC_NR}' AND NOT regexp_full_match({lvl}, '{'[0-9]{2}' if lvl == 'family' else '[0-9]{4}'}')),
+            count(*) FILTER (WHERE headcount = 0 AND hires = 0 AND departures = 0) FROM {t}""")[0]
+        if w or dup or code or zero: bad.append(f'{name}: {w} rows of another width, {dup} duplicate keys, {code} bad codes, {zero} empty rows')
+        res = rows(f"""WITH s AS (SELECT e, month, sum(headcount) AS h, sum(hires) AS hi, sum(departures) AS de FROM {t} GROUP BY ALL),
+                            c AS (SELECT e, period AS month, headcount AS h, hires AS hi, departures AS de FROM g_cm {"WHERE e = 'GOV'" if t == 'g_sm' else ''})
+                       SELECT count(*), count(*) FILTER (WHERE c.e IS NULL OR coalesce(s.h, 0) <> c.h OR coalesce(s.hi, 0) <> c.hi OR coalesce(s.de, 0) <> c.de),
+                              list(coalesce(c.e, s.e) || ' ' || coalesce(c.month, s.month)) FILTER (WHERE c.e IS NULL OR coalesce(s.h, 0) <> c.h
+                                OR coalesce(s.hi, 0) <> c.hi OR coalesce(s.de, 0) <> c.de)[1:3]
+                       FROM c FULL JOIN s USING (e, month)""")[0]
+        if res[1]: bad.append(f'{name}: {res[1]} entity-months whose occupations do not sum to core (or outside its months), e.g. {res[2]}')
+        if t == 'g_fm': n_fm = res[0]
+        else: n_sm = res[0]
+    split = rows(f"""SELECT count(*) FILTER (WHERE (f LIKE '%GOV_to_2020-09.json') <> (month < '2020-10')) FROM g_sm""")[0][0]
+    if split: bad.append(f'occ_series_monthly: {split} rows in the wrong file for the Oct 2020 split')
+    for key, fi in smm['files'].items():
+        if fi['bytes'] > CUBE_FILE_MAX: bad.append(f'{key} over the cap')
+    # GOV series monthly rows = the raw recount
+    d = rows(f"""WITH want AS (SELECT m AS month, occ AS series, h AS headcount, hires, departures FROM ({occ_keyed('series')})
+                               WHERE e = 'GOV' AND (h > 0 OR hires > 0 OR departures > 0)),
+                      got AS (SELECT month, series, headcount, hires, departures FROM g_sm)
+                 SELECT (SELECT count(*) FROM (SELECT * FROM got EXCEPT ALL SELECT * FROM want)), (SELECT count(*) FROM (SELECT * FROM want EXCEPT ALL SELECT * FROM got))""")[0]
+    if d[0] or d[1]: bad.append(f'occ_series_monthly: {d[0]} rows not in the raw recount, {d[1]} recount rows missing')
+    it = rows(f"SELECT headcount FROM g_fm WHERE e = 'GOV' AND month = '{LATEST}' AND family = '22'")
+    return not bad, '; '.join(bad[:6]) or (
+        f"occ_family_monthly {sum(fi['rows'] for fi in fmm['files'].values()):,} rows ({len(fmm['files'])} entities) and occ_series_monthly "
+        f"{sum(fi['rows'] for fi in smm['files'].values()):,} GOV rows (split at 2020-10, "
+        f"{', '.join(f'{k} {fi["bytes"]:,} B' for k, fi in sorted(smm['files'].items()))}): families sum to core's headcount, hires and "
+        f"departures in all {n_fm:,} core entity-months, GOV series in all {n_sm} months; GOV series rows = raw recount; GOV family 22 "
+        f"headcount {LATEST} {it[0][0] if it else None:,}")
+
+
+@check('occ_family_from_rows', 'inv 2, inv 5')
+def _():
+    """Family rows equal a raw recount grouped by OPM's published occupational_group_code (D-039), independent of the
+    series rows: every occupations family row (counts, transfers, DRP, headcount, rate parts, small base) and every
+    occ_family_monthly row, for every entity; the published group is never derived from the series digits (the
+    recount reads the group code; a family row whose code is not a group code anywhere in the raw files fails)."""
+    bad = []
+    occ_tables()
+    n_f, mis_f, ex_f = occ_compare('family')
+    if mis_f: bad.append(f'{mis_f} occupations family rows differ from the raw recount by published group, e.g. {ex_f}')
+    d = rows(f"""WITH want AS (SELECT e, m AS month, occ AS family, h AS headcount, hires, departures FROM ({occ_keyed('family')})
+                               WHERE h > 0 OR hires > 0 OR departures > 0),
+                      got AS (SELECT e, month, family, headcount, hires, departures FROM g_fm)
+                 SELECT (SELECT count(*) FROM (SELECT * FROM got EXCEPT ALL SELECT * FROM want)),
+                        (SELECT count(*) FROM (SELECT * FROM want EXCEPT ALL SELECT * FROM got)), (SELECT count(*) FROM got)""")[0]
+    if d[0] or d[1]: bad.append(f'occ_family_monthly: {d[0]} rows not in the raw recount, {d[1]} recount rows missing')
+    pub = {r[0] for r in rows(f"SELECT DISTINCT fk FROM g_oc")}
+    used = {r[0] for r in rows("SELECT DISTINCT occupation FROM g_occ WHERE level = 'family' UNION SELECT DISTINCT family FROM g_fm")}
+    if used - pub: bad.append(f'family codes not published as a group code: {sorted(used - pub)[:5]}')
+    names = cube_meta('occupations')['occupations']
+    miss = sorted(c for c in used if c not in names['family'])
+    smiss = sorted(c for (c,) in rows("SELECT DISTINCT occupation FROM g_occ WHERE level = 'series' UNION SELECT DISTINCT series FROM g_sm") if c not in names['series'])
+    if miss or smiss: bad.append(f'meta occupations lacks names for families {miss[:4]}, series {smiss[:4]}')
+    for c in OCC_CUBES[1:]:
+        if cube_meta(c).get('occupations') != names: bad.append(f'{c} meta occupation names differ from the occupations meta')
+    for c in OCC_CUBES:
+        nr = cube_meta(c).get('not_reported', {})
+        if nr.get('code') != OCC_NR or nr.get('kdi') != 'KDI-011': bad.append(f'{c} meta not_reported {nr}')
+    dig = rows("SELECT count(*) FROM g_oc WHERE fk <> 'NR' AND fk <> substr(sk, 1, 2)")[0][0]
+    return not bad, '; '.join(bad[:6]) or (
+        f"{n_f:,} occupations family rows and {d[2]:,} occ_family_monthly rows (every entity) = raw recount by the published group code "
+        f"({len(pub)} codes incl. {OCC_NR}; raw cells where the group differs from the series' first two digits: {dig}); every code named in the metas")
 
 
 # ---- invariant 10: the Look-Up republishes OPM's release, never more ----

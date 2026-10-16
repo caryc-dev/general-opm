@@ -18,7 +18,7 @@ const { createServer } = require('../tools/dev-server.js');
 const COPY = JSON.parse(readFileSync(path.join(WEB, 'copy.json'), 'utf8')).strings;
 const NAV = COPY['shell.nav'].split(' · ');
 const FILES = ['index.html', 'workforce-size.html', 'hiring-and-departures.html', 'departments-compared.html', 'who-is-leaving.html',
-  'who-is-joining.html', 'appointments.html', 'look-up.html', 'reading-the-data.html'];
+  'who-is-joining.html', 'appointments.html', 'occupations.html', 'look-up.html', 'reading-the-data.html'];
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const results = [];
 function check(name, ok, detail = '') { results.push({ name, ok: !!ok, detail }); }
@@ -88,7 +88,7 @@ try {
     const ns = await evaluate(noScroll);
     check(`${width}: no sideways page scroll`, ns.sw <= ns.iw && ns.wide.length === 0, JSON.stringify(ns));
     check(`${width}: browser tab and header carry the site name`, (await evaluate('document.title')) === COPY['shell.site_name'] && (await text('.site-name')) === COPY['shell.site_name']);
-    check(`${width}: nine page tabs in order`, JSON.stringify(await evaluate(`[...document.querySelectorAll('.site-nav a')].map(a => a.textContent)`)) === JSON.stringify(NAV));
+    check(`${width}: ten page tabs in order`, JSON.stringify(await evaluate(`[...document.querySelectorAll('.site-nav a')].map(a => a.textContent)`)) === JSON.stringify(NAV));
     const t2 = await card('Trump II');
     check(`${width}: GOV Trump II card at N=20`, t2 && t2.big === '-12.4%' && t2.sub === '-287,469 employees' && t2.dd[1] === '505,259', JSON.stringify(t2));
     check(`${width}: GOV Trump II departure rate 14.2%, hire rate 6.8%`, (await rate('dep', 'Trump II')) === '14.2%' && (await rate('hire', 'Trump II')) === '6.8%');
@@ -167,17 +167,18 @@ try {
     }
     check(`${label}: ${fr.length} sections, each with table view and SVG download`, ok, detail.join(' '));
   }
-  const BUILT = [['workforce-size.html', 1], ['hiring-and-departures.html', 2], ['departments-compared.html', 3], ['who-is-leaving.html', 4], ['who-is-joining.html', 5],
-    ['appointments.html', 6], ['look-up.html', 7], ['reading-the-data.html', 8]];
+  // [file, nav position, title key]
+  const BUILT = [['workforce-size.html', 1, 'p2'], ['hiring-and-departures.html', 2, 'p3'], ['departments-compared.html', 3, 'p4'], ['who-is-leaving.html', 4, 'p5'], ['who-is-joining.html', 5, 'p6'],
+    ['appointments.html', 6, 'p7'], ['occupations.html', 7, 'p10'], ['look-up.html', 8, 'p8'], ['reading-the-data.html', 9, 'p9']];
   for (const width of [1280, 390]) {
     await viewport(width);
-    for (const [file, i] of BUILT) {
+    for (const [file, i, pk] of BUILT) {
       events.length = 0;
       check(`${width} ${file}: loads`, await go(BASE + file));
       await evaluate('document.fonts.ready.then(() => true)');
       const ns2 = await evaluate(noScroll);
       check(`${width} ${file}: no sideways page scroll`, ns2.sw <= ns2.iw && ns2.wide.length === 0, JSON.stringify(ns2));
-      check(`${width} ${file}: title and tab`, (await text('main h1')) === COPY['p' + (i + 1) + '.title'] && (await text('.site-nav a[aria-current="page"]')) === NAV[i]);
+      check(`${width} ${file}: title and tab`, (await text('main h1')) === COPY[pk + '.title'] && (await text('.site-nav a[aria-current="page"]')) === NAV[i]);
       if (file !== 'reading-the-data.html' && file !== 'look-up.html') await frameChecks(`${width} ${file}`);
       shots.push(await shot(path.join(SCREENS, file.replace('.html', '') + `-${width}.png`)));
       check(`${width} ${file}: no console errors`, events.length === 0, events.join(' | '));
@@ -215,8 +216,82 @@ try {
   await go(BASE + 'departments-compared.html?entity=AF02');
   check('page 4 falls back to the government for a subelement', (await evaluate(`document.querySelector('.field--entity select').value`)) === 'GOV' && !/entity=/.test(await evaluate('location.search')));
   await go(BASE + 'reading-the-data.html');
-  check('page 9: ten known data issues and 78 known breaks', (await evaluate(`document.querySelectorAll('.kdi-list li').length`)) === 10 && (await evaluate(`document.querySelectorAll('#known-breaks tbody tr').length`)) === 78);
+  check('page 9: eleven known data issues (KDI-011 last) and 78 known breaks', (await evaluate(`document.querySelectorAll('.kdi-list li').length`)) === 11 &&
+    (await text('#kdi-011')) === 'KDI-011 ' + COPY['p9.issues.kdi011'] && (await evaluate(`document.querySelectorAll('#known-breaks tbody tr').length`)) === 78);
   check('page 9: every section has its anchor', await evaluate(`['data-origin','counting','rates','known-data-issues','known-breaks','withheld-values','revised-files'].every(id => !!document.getElementById(id))`));
+
+  // page 10, Occupations (figures: the occupations cube, GOV, 12 months to Aug 2026; see web/tests/occ.test.js)
+  events.length = 0;
+  await go(BASE + 'occupations.html');
+  check('page 10 GOV: tiles hires 160,466, departures 329,623, 551 series with hires, 636 with departures', (await tile(COPY['p10.tile.hires'])) === '160,466' &&
+    (await tile(COPY['p10.tile.departures'])) === '329,623' && (await tile(COPY['p10.tile.withHires'])) === '551' && (await tile(COPY['p10.tile.withDepartures'])) === '636');
+  const codes = sel => evaluate(`[...document.querySelectorAll('${sel} .occ-row')].map(r => r.dataset.code)`);
+  check('page 10 GOV: most hired 1801, 0610, 0303, 0456, 0301; 25 rows', JSON.stringify((await codes('#occ-hires')).slice(0, 5)) === '["1801","0610","0303","0456","0301"]' && (await codes('#occ-hires')).length === 25);
+  check('page 10 GOV: most departed 0301, 0343, 2210, 0303, then Not reported (8,847)', JSON.stringify((await codes('#occ-departures')).slice(0, 5)) === '["0301","0343","2210","0303","NR"]' &&
+    (await evaluate(`document.querySelector('#occ-departures .occ-row[data-code="NR"] .occ-row__val').textContent`)) === '8,847 left · 2.7% of departures' &&
+    (await evaluate(`document.querySelector('#occ-departures .occ-row[data-code="NR"] .occ-row__name').textContent`)) === COPY['p10.notReported']);
+  check('page 10 GOV: the hired bar text', (await evaluate(`document.querySelector('#occ-hires .occ-row .occ-row__val').textContent`)) === '8,524 hired · 5.3% of hires');
+  check('page 10 GOV: the table lists every series with activity or employees (668), Not reported included, and its notes', (await evaluate(`document.querySelectorAll('#occ-table tbody tr').length`)) === 668 &&
+    await evaluate(`!!document.querySelector('#occ-table tr[data-code="NR"]')`) && /Not reported/.test(await text('#occ-all .frame__notes')) && (await text('#occ-all .frame__notes')).includes(COPY['p10.note.moves']));
+  await evaluate(`document.querySelector('#occ-table button[data-sort="departures"]').click()`);
+  check('page 10: a table heading sorts', (await evaluate(`document.querySelector('#occ-table tbody tr').dataset.code`)) === '0301' && await evaluate(`document.querySelector('#occ-table th[aria-sort="descending"] button').dataset.sort === 'departures'`));
+  check('page 10: CSV has the column headings and one line per occupation', await evaluate(`(() => { const c = OPM.page.csv().split(String.fromCharCode(13, 10)); return c[0].startsWith(${JSON.stringify(COPY['p10.col.occupation'] + ',' + COPY['p10.col.employees'])}) && c.length === 670; })()`));
+  check('page 10: Download CSV raises no error', await evaluate(`(() => { document.getElementById('occ-download').click(); return true; })()`));
+  await evaluate(`document.querySelector('#occ-departures .seg button[data-value="rate"]').click()`);
+  check('page 10: sort by rate puts the highest departure rate first', await evaluate(`(() => { const r = OPM.page.state(); return r.departuresBy === 'rate'; })()`) &&
+    (await codes('#occ-departures')).length === 25);
+  await evaluate(`document.querySelector('#occ-hires .frame__head .btn').click()`);
+  check('page 10: show all lists every series with a hire (552 incl. Not reported)', (await codes('#occ-hires')).length === 552);
+  check('page 10 GOV: a series links to page 3 filtered to it', (await evaluate(`document.querySelector('#occ-hires .occ-row[data-code="0610"] a').getAttribute('href')`)) === 'hiring-and-departures.html?series=0610');
+  await frameChecks('page 10 GOV');
+  await evaluate(`document.querySelector('.seg button[data-value="family"]').click()`);
+  check('page 10 GOV, family level: 60 rows incl. Not reported; links to page 3 by family; level in the URL', (await evaluate(`document.querySelectorAll('#occ-table tbody tr').length`)) === 60 &&
+    (await evaluate(`document.querySelector('#occ-table tr[data-code="22"] a').getAttribute('href')`)) === 'hiring-and-departures.html?family=22' && /level=family/.test(await evaluate('location.search')));
+  await go(BASE + 'occupations.html?entity=DJ&level=series');
+  check('page 10 DJ, job series: a series links to the Look-Up with the series and department; the note on series below government', (await evaluate(`document.querySelector('#occ-departures .occ-row[data-code="0905"] a').getAttribute('href')`)) ===
+    'look-up.html?entity=DJ&records=separations&file=separations_FY2026&occ=0905' && (await text('#occ-all .frame__notes')).includes(COPY['p10.note.seriesBelowGov']));
+  await go(BASE + 'occupations.html?entity=DJ');
+  check('page 10 DJ: family level by default, 47 families, hires 8,630', (await evaluate(`OPM.page.state().level`)) === 'family' && (await evaluate(`document.querySelectorAll('#occ-table tbody tr').length`)) === 47 && (await tile(COPY['p10.tile.hires'])) === '8,630');
+  check('page 10 DJ: a family links to page 3 filtered to it for Justice', /^hiring-and-departures\.html\?entity=DJ&family=\d\d$/.test(await evaluate(`document.querySelector('#occ-table tbody tr a').getAttribute('href')`)));
+  await evaluate(`document.querySelector('.seg button[data-value="fy"]').click()`);
+  check('page 10 DJ: Yearly view, latest fiscal year (partial) chosen', /FY2026/.test(await evaluate(`document.querySelectorAll('.field select')[1].selectedOptions[0].textContent`)));
+  await evaluate(`document.querySelector('.seg button[data-value="admin"]').click()`);
+  check('page 10 DJ: by administration, Trump II', (await evaluate(`document.querySelectorAll('.field select')[1].value`)) === 'trump2' && /view=admin/.test(await evaluate('location.search')));
+  check('page 10: no console errors', events.length === 0, events.join(' | '));
+  // the Look-Up takes the series and department from page 10
+  await go(BASE + 'look-up.html?entity=DJ&records=separations&file=separations_FY2026&occ=0905');
+  await waitFor(`!!document.querySelector('.lookup-count')`, 30000);
+  check('Look-Up from page 10: DJ, series 0905, FY2026 departures: 1,500 records (DuckDB on the Look-Up file)', (await text('.lookup-count')) === '1,500 matching records' &&
+    (await evaluate(`document.querySelector('[data-filter="occupation"] select').value`)) === '0905' && (await evaluate(`document.querySelector('[data-filter="department"] select').value`)) === 'DJ');
+
+  // the occupation filter on pages 2 and 3 (occupation-spec 5.2)
+  events.length = 0;
+  await go(BASE + 'workforce-size.html?family=22');
+  check('page 2, family 22: employees 84,894 and change over 12 months -12,688 (occ_family_monthly)', (await tile(COPY['p2.tile.headcount'])) === '84,894' && (await tile(COPY['p2.tile.change12'])) === '-12,688');
+  check('page 2 filtered: banner names the family; by department not available; series-change note', (await text('.occ-banner')).startsWith('Showing 22 ') && (await text('#children .frame__body')) === COPY['filter.occ.unavailable'] &&
+    (await text('#flow .frame__notes')).includes(COPY['p10.note.moves']));
+  await frameChecks('page 2 filtered');
+  shots.push(await shot(path.join(SCREENS, 'workforce-size-occupation-1280.png')));
+  await evaluate(`document.getElementById('occ-clear').click()`);
+  await waitFor('document.body.dataset.ready === "true"');
+  check('page 2: Clear removes the filter', (await tile(COPY['p2.tile.headcount'])) === '2,024,832' && !/family=/.test(await evaluate('location.search')) && await evaluate(`document.querySelector('.occ-banner').hidden`));
+  await go(BASE + 'hiring-and-departures.html?series=0610');
+  check('page 3, series 0610: hires 8,369 (year before 5,568), departures 8,440 (9,312), departure rate 7.9% (8.5%)', (await tile(COPY['p3.tile.hires'])) === '8,369' && (await tile(COPY['p3.tile.departures'])) === '8,440' &&
+    (await tile(COPY['p3.tile.rate'])) === '7.9%' && await evaluate(`[...document.querySelectorAll('.tile .tile__sub')].map(x => x.textContent).join('|')`) === 'Year before: 5,568|Year before: 9,312|Year before: 8.5%');
+  check('page 3 filtered: reasons, hires by type and transfers not available', await evaluate(`['reasons', 'types', 'transfers'].every(id => document.querySelector('#' + id + ' .frame__body').textContent === ${JSON.stringify(COPY['filter.occ.unavailable'])})`));
+  await frameChecks('page 3 filtered');
+  await evaluate(`document.querySelector('.field select:not(#ctl-occ)') && (() => { const s = document.querySelectorAll('.controls select')[2]; s.value = 'obama2'; s.dispatchEvent(new Event('change')); })()`);
+  await waitFor('document.body.dataset.ready === "true"');
+  check('page 3 filtered, Obama II range: loads the earlier series file, rates filled', /range=obama2/.test(await evaluate('location.search')) && /series=0610/.test(await evaluate('location.search')) &&
+    await evaluate(`OPM.page.frames.rates.chart.data.datasets[0].data.every(v => typeof v === 'number' && v > 0)`));
+  shots.push(await shot(path.join(SCREENS, 'hiring-and-departures-occupation-1280.png')));
+  await go(BASE + 'hiring-and-departures.html?entity=DJ&series=0610');
+  check('page 3: a job series filter is government only (dropped for Justice)', !/series=/.test(await evaluate('location.search')) && await evaluate(`document.querySelector('.occ-banner').hidden`) &&
+    !(await evaluate(`[...document.querySelectorAll('#ctl-occ option')].some(o => o.value.startsWith('series:'))`)));
+  await go(BASE + 'hiring-and-departures.html?entity=DJ&family=NR');
+  check('page 3, Justice, Not reported: counts, no rates, KDI-011 note', /^[\d,]+$/.test(await tile(COPY['p3.tile.departures'])) && (await tile(COPY['p3.tile.rate'])) === COPY['shared.mark.empty'] &&
+    (await text('#rates .frame__notes')).includes('KDI-011'));
+  check('pages 2 and 3 filtered: no console errors', events.length === 0, events.join(' | '));
 
   // pages 5 to 8
   await go(BASE + 'who-is-leaving.html');

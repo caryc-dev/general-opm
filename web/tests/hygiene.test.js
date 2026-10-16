@@ -43,6 +43,15 @@ test('served files do not mention the publisher, tools or the former look', () =
   }
 });
 
-test('nothing under web/data/ (cubes are not promoted)', () => {
-  assert.ok(!fs.existsSync(path.join(WEB, 'data')), 'web/data exists');
+test('web/data/ holds only promoted cubes: every file there is listed by a meta there (pipeline/promote.py writes it)', () => {
+  const dir = path.join(WEB, 'data');
+  if (!fs.existsSync(dir)) return; // not promoted yet
+  const listed = new Set();
+  for (const m of fs.readdirSync(dir).filter(f => f.endsWith('.meta.json'))) {
+    listed.add(m);
+    const meta = JSON.parse(fs.readFileSync(path.join(dir, m), 'utf8'));
+    for (const k of Object.keys(meta.files || {})) listed.add(meta.files[k].path);
+  }
+  const extra = allFiles(dir).filter(f => !listed.has(f));
+  assert.deepEqual(extra.slice(0, 5), [], extra.length + ' files under web/data are not listed by a meta there');
 });

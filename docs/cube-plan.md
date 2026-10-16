@@ -45,3 +45,8 @@ Cubes are staged under `warehouse/cubes/`; promotion into `web/data/` waits for 
 Every value is copied from the admin cube of the same entity, administration and month, so the gate can check the
 two match exactly. Entities without a comparison for an administration (D-020) have no rows for it. The home page
 loads it with GOV admin (40 KB), inside the 3 MB first-load budget.
+
+## Amendment 2 (signed 2026-10-16, D-040): occupation cubes
+As written in `docs/occupation-spec.md` section 8 (occupations, occ_family_monthly, occ_series_monthly; about 99 MB;
+gate checks occupations_partition, occ_monthly_matches_core, occ_family_from_rows). Subelements get the occupation
+cubes (D-037), an exception to section 2's "core and compare only", signed with metric spec amendment M-1 (section 9).

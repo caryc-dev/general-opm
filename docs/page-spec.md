@@ -19,12 +19,13 @@ each signed before anything is built. Look: design option B, "Briefing" (D-023).
 | # | Page | Purpose | Cubes read | Sections, in order |
 |---|---|---|---|---|
 | 1 | Administrations (home) | Compare the first N months of each administration | admin, matrix (section 4) | scoreboard (one card per administration); departments-by-administrations heat map (change, departure rate, hire rate, deferred resignation share; sortable); departure and hire rate bars; why people left |
-| 2 | Workforce size | Headcount over time | core | headcount line by month, quarter or fiscal year with administration bands; change table |
-| 3 | Hiring and departures | Flows over time | core | hires and departures with categories, DRP and transfers as their own series; rates with the three methods |
+| 2 | Workforce size | Headcount over time | core; occ_family_monthly, occ_series_monthly under an occupation filter (D-040) | headcount line by month, quarter or fiscal year with administration bands; change table |
+| 3 | Hiring and departures | Flows over time | core; occ_family_monthly, occ_series_monthly under an occupation filter (D-040) | hires and departures with categories, DRP and transfers as their own series; rates with the three methods |
 | 4 | Departments compared | Children of the selected entity side by side | compare | heat map and table of each child, fiscal year or trailing 12 months |
 | 5 | Who is leaving | Departures by group | leaving | breakdowns of metric-spec section 9, fiscal year, trailing 12 months or administration |
 | 6 | Who is joining | Hires by group | joining | as page 5, for hires |
 | 7 | Appointments | Hires and departures by appointment group | appointments | groups and political subgroups by period |
+| 10 | Occupations | Most hired and most departed occupations (D-040) | occupations | tiles, most hired, most departed, table; series or family (docs/occupation-spec.md section 5.1); shown in the menu between Appointments and Look-Up |
 | 8 | Look-Up | Row-level records | Look-Up | filters, table, CSV download |
 | 9 | Reading the data | Method, known data issues, known breaks | metadata | definitions, KDI list, break list, sources |
 
@@ -100,7 +101,7 @@ title case ("Department of Housing and Urban Development"); where two names matc
 | Key | Text |
 |---|---|
 | shell.site_name | Reworked OPM Data Dashboard |
-| shell.nav | Administrations · Workforce size · Hiring and departures · Departments compared · Who is leaving · Who is joining · Appointments · Look-Up · Reading the data |
+| shell.nav | Administrations · Workforce size · Hiring and departures · Departments compared · Who is leaving · Who is joining · Appointments · Occupations · Look-Up · Reading the data |
 | shell.footer.source | Source: OPM Federal Workforce Data |
 | shell.footer.updated | Last updated {date}. Data through {month}. |
 | shell.chart.table | Show table |
@@ -235,6 +236,13 @@ years, transfers between agencies); rates and categories (the three methods, sma
 deferred resignations); known data issues (KDI-001 to KDI-010, from pipeline/known_data_issues.csv); known breaks
 (the signed list, as a table by entity and fiscal year); redaction and coverage; revised files. No charts or
 controls. No AI use section (D-025).
+
+### 7.10 Page 10, Occupations, and the occupation filter on pages 2 and 3 (signed 2026-10-16, D-040)
+Contents as `docs/occupation-spec.md` sections 5.1 and 5.2. Cube details (cube plan Amendment 2): "Not reported" is
+code `NR` at both levels, with no rate; names come from the meta; one rate method per grain (fiscal year B, past 12
+months A, administration annualized), as pages 5 and 6; flags from each file's period table; on pages 2 and 3 the
+monthly cubes support all three methods, and series history at government level is split into `GOV_to_2020-09` and
+`GOV_from_2020-10`.
 
 ### 7.9 Left out of version 1 (each needs a cube change, signed separately)
 Quit and retirement rates (core holds departure and hire rate numerators only); departures and hires by occupation
@@ -554,6 +562,7 @@ fixed text measured on the Aug 2026 data (warehouse/profile/REPORT.md, opm-conte
 | p9.issues.kdi008 | One hire in the August 2016 file has no department code; it is placed by its agency code and flagged. |
 | p9.issues.kdi009 | A few records show more than 100 years of service outside the 1900 problem; they are treated as unknown. |
 | p9.issues.kdi010 | Seven hires in 2026 files show a negative length of service; they are treated as unknown. |
+| p9.issues.kdi011 | Job series missing: some records have a blank or invalid job series (most years under 0.15%; among departures, 1.7% in fiscal 2016, 0.6% in 2024, 2.8% in 2025 and 1.9% in 2026). They are shown as "Not reported" in every occupation list, never dropped. |
 | p9.breaks.title | Known breaks |
 | p9.breaks.p1 | For each department and fiscal year, the dashboard compares the change in employees with hires minus departures. Where they differ by more than 5% of the average number of employees and more than 20 people, the year is listed below. Most come from September departures that leave the employee count in October: in September 2025, 132,949 departures took effect, 106,883 of them deferred resignations, while the employee count fell 28,342 in September and 92,685 in October. |
 | p9.breaks.col.entity | Department |
@@ -563,3 +572,42 @@ fixed text measured on the Aug 2026 data (warehouse/profile/REPORT.md, opm-conte
 | p9.redact.p1 | OPM withholds pay, duty location and some other fields for many employees: about 47% of employee records in August 2026, including every Defense record. The dashboard therefore shows no pay or location breakdowns; the Look-Up shows REDACTED where a value was withheld. |
 | p9.revisions.title | Revised files |
 | p9.revisions.p1 | OPM sometimes reissues a month's files; in October 2026 it reissued every file. When that happens the dashboard reloads them, and figures can change. |
+
+### 8.10 Page 10, Occupations, and the occupation filter (approved under D-029, signed D-040)
+| Key | Text |
+|---|---|
+| p10.title | Occupations |
+| p10.intro | Which jobs agencies are hiring for and losing, by job series or occupational family, as OPM classifies them. |
+| p10.level.label | Group by |
+| p10.level.series | Job series |
+| p10.level.family | Occupational family |
+| p10.tile.hires | Hires |
+| p10.tile.departures | Departures |
+| p10.tile.withHires | Occupations with hires |
+| p10.tile.withDepartures | Occupations with departures |
+| p10.hired.title | Most hired |
+| p10.departed.title | Most departed |
+| p10.sort.label | Sort by |
+| p10.sort.count | Number |
+| p10.sort.rate | Rate |
+| p10.bar.hired | {count} hired · {share} of hires |
+| p10.bar.departed | {count} left · {share} of departures |
+| p10.col.occupation | Occupation |
+| p10.col.employees | Employees at end of period |
+| p10.col.hires | Hires |
+| p10.col.departures | Departures |
+| p10.col.net | Hires minus departures |
+| p10.col.transferIn | Transfers in |
+| p10.col.transferOut | Transfers out |
+| p10.col.drp | Deferred resignations |
+| p10.col.hireRate | Hire rate |
+| p10.col.departureRate | Departure rate |
+| p10.notReported | Not reported |
+| p10.note.notReported | "Not reported" counts records where OPM left the job series or family blank or invalid. See Reading the data. |
+| p10.note.moves | Employees also move between job series without being hired or leaving, so the change in employees in an occupation can differ from its hires minus departures. |
+| p10.note.seriesBelowGov | Single job series over time is shown government-wide only. Below that level, open the Look-Up for the records. |
+| filter.occ.label | Occupation |
+| filter.occ.all | All occupations |
+| filter.occ.banner | Showing {occupation} only. |
+| filter.occ.clear | Clear |
+| filter.occ.unavailable | Not available for a single occupation. |

@@ -283,6 +283,78 @@
    "min": null,
    "max": -0.1,
    "treatment": "unknown"
+  },
+  {
+   "id": "KDI-011",
+   "dataset": "accessions",
+   "field": "occupational_series_code",
+   "first": "201110",
+   "last": "999912",
+   "level": "all",
+   "entities": [],
+   "min": null,
+   "max": null,
+   "treatment": "not_reported_occupation"
+  },
+  {
+   "id": "KDI-011",
+   "dataset": "employment",
+   "field": "occupational_series_code",
+   "first": "201110",
+   "last": "999912",
+   "level": "all",
+   "entities": [],
+   "min": null,
+   "max": null,
+   "treatment": "not_reported_occupation"
+  },
+  {
+   "id": "KDI-011",
+   "dataset": "separations",
+   "field": "occupational_series_code",
+   "first": "201110",
+   "last": "999912",
+   "level": "all",
+   "entities": [],
+   "min": null,
+   "max": null,
+   "treatment": "not_reported_occupation"
+  },
+  {
+   "id": "KDI-011",
+   "dataset": "accessions",
+   "field": "occupational_group_code",
+   "first": "201110",
+   "last": "999912",
+   "level": "all",
+   "entities": [],
+   "min": null,
+   "max": null,
+   "treatment": "not_reported_occupation"
+  },
+  {
+   "id": "KDI-011",
+   "dataset": "employment",
+   "field": "occupational_group_code",
+   "first": "201110",
+   "last": "999912",
+   "level": "all",
+   "entities": [],
+   "min": null,
+   "max": null,
+   "treatment": "not_reported_occupation"
+  },
+  {
+   "id": "KDI-011",
+   "dataset": "separations",
+   "field": "occupational_group_code",
+   "first": "201110",
+   "last": "999912",
+   "level": "all",
+   "entities": [],
+   "min": null,
+   "max": null,
+   "treatment": "not_reported_occupation"
   }
  ]
 }
