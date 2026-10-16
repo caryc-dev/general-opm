@@ -155,7 +155,7 @@ Shared rules as page-spec section 7 (provisional, partial, small-base flags, tab
 - **Metric spec KDI-011** (known data issues table and `pipeline/known_data_issues.csv`): "Occupational series blank
   (' ', "NO DATA REPORTED") or `*` INVALID: under 0.15% of records in most years; separations 1.72% in FY2016, 0.63% in
   FY2024, 2.77% in FY2025, 1.94% in FY2026 (from the Jun 2024 file, alongside KDI-002); and rows with a series but no published family
-  (21 separations, 17 accessions)." Treatment: "Counted as their own 'Not reported' occupation in every occupation
+  (21 separations, 17 accessions, and 1,058 employee records in the March 2018 file)." Treatment: "Counted as their own 'Not reported' occupation in every occupation
   cube and list; never dropped or shared out; kept as published in the Look-Up."
 - **Cube plan Amendment 2:** section 8 below, also appended to `docs/cube-plan.md` as a draft.
 - **Page spec:** page 10 added to the shell's page list (section 2) and navigation; page 2 and 3 contents gain section

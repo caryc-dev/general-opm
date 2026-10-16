@@ -499,7 +499,7 @@
  },
  "known_data_issues": {
   "file": "pipeline/known_data_issues.csv",
-  "sha256": "aa0056a088bd7a6914969b3e9bd3be8af77ee9cb3ee87efb043c11de15d157e0",
+  "sha256": "6d63674826313e4b6a59f7ea1f5ed1f6ed4a65e25b040eb1eb6fd93a15f18906",
   "applied": [
    {
     "id": "KDI-001",
@@ -550,6 +550,11 @@
     "id": "KDI-010",
     "treatment": "unknown",
     "decision": "D-021"
+   },
+   {
+    "id": "KDI-011",
+    "treatment": "not_reported_occupation",
+    "decision": "D-040"
    }
   ]
  },
@@ -1313,7 +1318,7 @@
    ]
   },
   "KDI-006": {
-   "rows": 356,
+   "rows": 358,
    "entities": [
     "AF02",
     "AF03",
@@ -1448,6 +1453,7 @@
     "DD15",
     "DD16",
     "DD21",
+    "DD23",
     "DD25",
     "DD26",
     "DD27",
@@ -1976,8 +1982,8 @@
   },
   "DOD": {
    "path": "compare/DOD.json",
-   "sha256": "d56a6507f4fa0084e8efb9078e81fa41e67f6ae0ccc598c7791f8f9752defdd2",
-   "bytes": 639207,
+   "sha256": "3e4438213757472b2e96d5bcf0a044e22392be5e8c7f2b2a51e8cf3de03977f6",
+   "bytes": 639223,
    "rows": 2768,
    "children": 223
   },
@@ -2731,15 +2737,15 @@
    "children": 1
   }
  },
- "files_sha256": "617d551900522d280c7db5bcd8f85bb6f2269baaf3979ad6826bb05972a02900",
+ "files_sha256": "16bd7d562875297217af35d767ec473a3a0c353436bc0e149690a95c10ede4b8",
  "files_digest_method": "sha256 of the lines '<path> <sha256>\\n' for every file, sorted by path",
  "size": {
   "files": 142,
-  "total_bytes": 2511291,
+  "total_bytes": 2511307,
   "mean_bytes": 17685,
   "largest": {
    "key": "DOD",
-   "bytes": 639207
+   "bytes": 639223
   },
   "gov_first_load_bytes": 535164
  }

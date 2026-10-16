@@ -23,7 +23,7 @@
  "small_base_threshold": 30,
  "known_data_issues": {
   "file": "pipeline/known_data_issues.csv",
-  "sha256": "aa0056a088bd7a6914969b3e9bd3be8af77ee9cb3ee87efb043c11de15d157e0",
+  "sha256": "6d63674826313e4b6a59f7ea1f5ed1f6ed4a65e25b040eb1eb6fd93a15f18906",
   "applied": [
    {
     "id": "KDI-001",
@@ -74,6 +74,11 @@
     "id": "KDI-010",
     "treatment": "unknown",
     "decision": "D-021"
+   },
+   {
+    "id": "KDI-011",
+    "treatment": "not_reported_occupation",
+    "decision": "D-040"
    }
   ]
  },

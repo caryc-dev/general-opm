@@ -152,7 +152,7 @@ def entities_and_core(con, months):
     base = bc.load_base(con)
     ent_all = bc.entity_table()
     midx = {m: i for i, m in enumerate(months)}
-    vec, kdi, flags = bc.entity_months(base, ent_all, len(months), midx)
+    vec, kdi, flags = bc.entity_months(base, ent_all, len(months), midx, bc.incomplete_scope(con))
     keep = [k for k, e in ent_all.items() if e['level'] in LEVELS]
     starts = {k: bc.first_index(vec[k]) for k in keep}
     ends = {k: bc.last_index(vec[k]) for k in keep}
@@ -397,7 +397,8 @@ def breakdown_dictionary(kind):
     return out
 
 
-def period_dictionary():
+def period_dictionary(kdi_ids=None):
+    """Period-table column dictionary; kdi_ids replaces the kdi_ids description for a cube that carries other ids."""
     d = {
         'grain': ('dimension', 'as in the rows'), 'period': ('dimension', 'as in the rows'),
         'fiscal_year': ('dimension', 'fiscal year of the period (of its last month at t12 grain); null at admin grains'),
@@ -415,6 +416,8 @@ def period_dictionary():
         'kdi_ids': ('flag', 'known data issue ids touching a month of the window: entity-month flags, plus the ids of '
                             'length-of-service values treated as unknown on the cube\'s action rows (KDI-001, KDI-009, KDI-010)'),
     }
+    if kdi_ids:
+        d['kdi_ids'] = ('flag', kdi_ids)
     return [{'name': c, 'kind': d[c][0], 'description': d[c][1]} for c in PERIOD_COLUMNS]
 
 

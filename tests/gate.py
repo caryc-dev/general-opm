@@ -589,11 +589,19 @@ def _():
                          UNION ALL SELECT 'accessions', * FROM (SELECT occupational_series_code, occupational_group_code FROM {raw('accessions')}))
                          WHERE NOT {OCC_SERIES_NR.format(c='occupational_series_code')} AND (occupational_group_code IS NULL OR trim(occupational_group_code) = '')
                          GROUP BY 1"""))
-        m11 = re.search(r'no published family \(([\d,]+) separations, ([\d,]+) accessions\)', txt)
+        m11 = re.search(r'no published family \(([\d,]+) separations, ([\d,]+) accessions, and ([\d,]+) employee records in the (\w+) (\d{4}) file\)', txt)
         if not m11 or (nf.get('separations', 0), nf.get('accessions', 0)) != (int(m11.group(1).replace(',', '')), int(m11.group(2).replace(',', ''))):
             bad.append(f'KDI-011 rows with a series but no family: raw {nf}, text {m11.groups() if m11 else None}')
+        # employment: the named file's raw count = the text, and no other month holds such rows (emp_occ_month, which
+        # occupations_partition checks against raw in sampled months)
+        nf_where = f"NOT {OCC_SERIES_NR.format(c='occupational_series_code')} AND (occupational_group_code IS NULL OR trim(occupational_group_code) = '')"
+        e_ym = f"{m11.group(5)}-{time.strptime(m11.group(4), '%B').tm_mon:02d}" if m11 else None
+        e_raw = rows(f"SELECT count(*) FROM read_parquet('{EMP_FILES[e_ym]}') WHERE {nf_where}")[0][0] if e_ym in EMP_FILES else None
+        e_months = rows(f"SELECT strftime(period, '%Y-%m'), sum(headcount) FROM emp_occ_month WHERE {nf_where} GROUP BY 1 ORDER BY 1")
+        if not m11 or e_raw != int(m11.group(3).replace(',', '')) or [m for m, _ in e_months] != [e_ym]:
+            bad.append(f'KDI-011 employee records with a series but no family: raw {e_ym} {e_raw}, stored by month {e_months[:4]}, text {m11.groups() if m11 else None}')
         notes.append(f"KDI-011 separations not reported {', '.join(f'FY{fy} {sh.get(int(fy))}%' for _, fy in re.findall(r'([\d.]+)% in FY(\d{4})', txt))}; "
-                     f"no family {nf.get('separations', 0)} separations, {nf.get('accessions', 0)} accessions")
+                     f"no family {nf.get('separations', 0)} separations, {nf.get('accessions', 0)} accessions, {e_raw:,} employee records ({e_ym} raw; no other month stored)")
     return not bad, '; '.join(bad[:4]) or (f"{len(ks)} scope rows for KDI-001 to {max(spec)}, text = spec section 7; checked against raw: "
         + '; '.join(notes) + '; every re-assigned department in scope; grade REDACTED only in scope')
 
@@ -889,11 +897,28 @@ def independent_cubes():
     lastm = {e: fmt_ym(m) for e, f, m in span}
     firstm = {e: fmt_ym(f) for e, f, m in span}
     # parents: departments under GOV; subelements under their department; DOD agencies under DOD
-    orgs = rows(f"WITH {cte} SELECT DISTINCT d, a, {GATE_KEY} FROM cell")
-    children = {'GOV': {('department', d) for d, a, s in orgs}}
-    for d, a, s in orgs:
-        children.setdefault(d, set()).add(('subelement', s))
+    orgs = rows(f"WITH {cte} SELECT DISTINCT d, a, s, {GATE_KEY} FROM cell")
+    children = {'GOV': {('department', d) for d, a, s, sk in orgs}}
+    for d, a, s, sk in orgs:
+        children.setdefault(d, set()).add(('subelement', sk))
         if d == 'DOD': children[d].add(('agency', f'DOD-{a}'))
+    # flagged_incomplete issues (KDI-006, spec section 7: every entity-month in scope, and the government total) flag
+    # entity-months, not rows: every entity holding an organization in the issue's scope (its subelement, DOD agency,
+    # department and the government) in every scoped month of the entity's span (first to last month with headcount
+    # or a flow), whether or not the entity has rows that month
+    inc = {}
+    for k in [k for k in kdi_rows() if k['status'] == 'active' and k['treatment'] == 'flagged_incomplete']:
+        ents = {x for x in k['entities'].split(';') if x}
+        li = {'department': 0, 'agency': 1, 'subelement': 2}[k['entity_level']] if ents else None
+        hit = set()
+        for o in orgs:
+            if not ents or o[li] in ents:
+                hit |= {'GOV', o[0], o[3]} | ({f'DOD-{o[1]}'} if o[0] == 'DOD' else set())
+        for e in hit:
+            for m in EMP_FILES:
+                if e in firstm and k['first_file_month'] <= m <= (k['last_file_month'] or '9999') and firstm[e] <= m <= lastm[e]:
+                    inc.setdefault((e, m), set()).add(k['id'])
+    _CACHE['inc'] = inc
     # entity-month known data issue ids: monthly_org_kdi keyed, plus the issue id (KDI-001, KDI-009) of every departure
     # whose length of service is unknown
     kd = {}
@@ -908,6 +933,8 @@ def independent_cubes():
                   SELECT DISTINCT e, m, id FROM k WHERE id IS NOT NULL""")
     for e, m, i in li:
         kd.setdefault((e, fmt_ym(m)), set()).add(i)
+    for em, ids in inc.items():
+        kd.setdefault(em, set()).update(ids)
     present = {(e, fmt_ym(m)) for e, m in rows(f"WITH {cte}, k AS ({keyed_sql('cell', ['m'])}) SELECT DISTINCT e, m FROM k")}
     _CACHE['indep'] = (out, lastm, children, kd, present, flows, firstm)
     return _CACHE['indep']
@@ -1306,9 +1333,10 @@ def _():
     prior = bl.get('prior_versions')
     reissued = {m for m, v in vers.items() if prior and m in prior and prior[m] != v}
     k6 = [k for k in kdi_rows() if k['status'] == 'active' and k['treatment'] == 'flagged_incomplete']
-    def incomplete(e, m):
+    def incomplete(e, m):   # every DOD entity-month of the entity's span, with or without rows that month (KDI-006)
         dod = e in ('GOV', 'DOD') or e.startswith('DOD-') or cube_meta('core')['entities'].get(e, {}).get('parent', '').startswith('DOD-')
-        return dod and (e, m) in present and any(k['first_file_month'] <= m <= (k['last_file_month'] or '9999') for k in k6)
+        return dod and e in firstm and firstm[e] <= m <= lastm[e] and any(k['first_file_month'] <= m <= (k['last_file_month'] or '9999') for k in k6)
+    no_rows = sorted(f'{e} {m}' for (e, m), ids in _CACHE['inc'].items() if (e, m) not in present)
     n, flagged_prov, flagged_inc = 0, set(), 0
     for name in ('core', 'compare'):
         for key, (cols, rs) in cube_rows(name).items():
@@ -1337,7 +1365,8 @@ def _():
             bad.append(f'{name} meta provisional or reissued months differ')
     return not bad, '; '.join(bad[:5]) or (f"{n:,} rows: provisional = newest 3 months {sorted(prov)} (GOV core periods {sorted(flagged_prov)}); "
         f"baseline {'prior ' + str(bl.get('prior_manifest_sha256'))[:12] if prior else 'is this first build, no prior'}, {len(reissued)} reissued; "
-        f"opm_incomplete (KDI-006) on {flagged_inc:,} rows; known data issue ids and file versions = recomputation on every row")
+        f"opm_incomplete (KDI-006) on {flagged_inc:,} rows, incl. {len(no_rows)} entity-month(s) in scope with no rows ({', '.join(no_rows[:4])}); "
+        f"known data issue ids and file versions = recomputation on every row")
 
 
 # ---- Phase 2b cubes: leaving, joining, admin, appointments (warehouse/cubes/, staged by pipeline/build_breakdowns.py) ----
@@ -1412,6 +1441,9 @@ def b_org_ids():
     for e, m, ids in rows(f"""WITH x AS (SELECT month AS m, department_code AS d, agency_code AS a, unnest(kdi_ids) AS id FROM monthly_org_kdi)
                               SELECT e, m, list(DISTINCT id) FROM ({lv('x', 'm, id')}) GROUP BY ALL"""):
         org[(e, fmt_ym(m))] = set(ids)
+    independent_cubes()
+    for em, ids in _CACHE['inc'].items():
+        org.setdefault(em, set()).update(ids)
     los = {}
     for ds, t in (('separations', 'separation_rows'), ('accessions', 'accession_rows')):
         los[ds] = {}
@@ -2182,9 +2214,11 @@ def _():
     months = sorted(EMP_FILES); prov = months[-3:]; vers = manifest_versions()
     prior = json.load(open(f'{CUBES}/revision_baseline.json')).get('prior_versions')
     reiss = sorted(m for m, v in vers.items() if prior and m in prior and prior[m] != v) or ['none']
+    independent_cubes(); inc6 = _CACHE['inc']   # KDI-006 entity-months, with or without rows
     pm = rows(f"""WITH x AS (SELECT strftime(month, '%Y-%m') AS m, department_code AS d, agency_code AS a, agency_subelement_code AS s,
                                 unnest(kdi_ids) AS id FROM monthly_org_kdi),
-               ids AS ({keyed_sql('x', ['m', 'id'])}),
+               inc(e, m, id) AS (VALUES {', '.join(f"('{e}', '{m}', '{i}')" for (e, m), ids in sorted(inc6.items()) for i in sorted(ids)) or "(NULL, NULL, NULL)"}),
+               ids AS ({keyed_sql('x', ['m', 'id'])} UNION SELECT * FROM inc WHERE e IS NOT NULL),
                nr AS (SELECT DISTINCT e, grain, period FROM g_occ WHERE occupation = '{OCC_NR}'),
                want AS (SELECT w.*, list_sort(list_distinct(list(i.id) FILTER (WHERE i.id IS NOT NULL)
                                  || CASE WHEN any_value(nr.e) IS NOT NULL THEN ['KDI-011'] ELSE [] END)) AS ids

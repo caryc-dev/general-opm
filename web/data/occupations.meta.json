@@ -23,7 +23,7 @@
  "small_base_threshold": 30,
  "known_data_issues": {
   "file": "pipeline/known_data_issues.csv",
-  "sha256": "86f91c311ee98c753f702b24c76c37beb161168fd4ff2dde04ee010a007a5679",
+  "sha256": "6d63674826313e4b6a59f7ea1f5ed1f6ed4a65e25b040eb1eb6fd93a15f18906",
   "applied": [
    {
     "id": "KDI-001",
@@ -7356,7 +7356,7 @@
    ]
   },
   "KDI-006": {
-   "rows": 716,
+   "rows": 720,
    "entities": [
     "AF02",
     "AF03",
@@ -7491,6 +7491,7 @@
     "DD15",
     "DD16",
     "DD21",
+    "DD23",
     "DD25",
     "DD26",
     "DD27",
@@ -8133,7 +8134,7 @@
   {
    "name": "kdi_ids",
    "kind": "flag",
-   "description": "known data issue ids touching a month of the window: entity-month flags, plus the ids of length-of-service values treated as unknown on the cube's action rows (KDI-001, KDI-009, KDI-010)"
+   "description": "known data issue ids touching a month of the window: entity-month flags of the entity and the entities inside it, and KDI-011 when the window has a 'NR' (Not reported) row"
   }
  ],
  "files": {
@@ -10521,8 +10522,8 @@
   },
   "DD23": {
    "path": "occupations/DD23.json",
-   "sha256": "37667359e52f0a3960b4ec2cabc132cd1f219caa092f5dec82139880c8a3b25f",
-   "bytes": 18760,
+   "sha256": "78543095138905ebdb655c76cf1f443d3faa5259f5deb5724ce83d5dc08e6218",
+   "bytes": 18792,
    "rows": 266
   },
   "DD25": {
@@ -12932,11 +12933,11 @@
    "rows": 55
   }
  },
- "files_sha256": "7fadaa06cee6be3a8bafa1c9c10c107200a20cf195ed36fa81407ebbf6904f50",
+ "files_sha256": "b758fa268242b87bde06e5eb503a3d5ccb4844d4ec199f8e53b0960f847b0926",
  "size": {
   "files": 799,
-  "total_bytes": 72858002,
-  "mean_bytes": 91186,
+  "total_bytes": 72858034,
+  "mean_bytes": 91187,
   "largest": {
    "key": "GOV",
    "bytes": 1298963

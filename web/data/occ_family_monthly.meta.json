@@ -23,7 +23,7 @@
  "small_base_threshold": 30,
  "known_data_issues": {
   "file": "pipeline/known_data_issues.csv",
-  "sha256": "86f91c311ee98c753f702b24c76c37beb161168fd4ff2dde04ee010a007a5679",
+  "sha256": "6d63674826313e4b6a59f7ea1f5ed1f6ed4a65e25b040eb1eb6fd93a15f18906",
   "applied": [
    {
     "id": "KDI-001",
@@ -7310,7 +7310,7 @@
    ]
   },
   "KDI-006": {
-   "rows": 355,
+   "rows": 358,
    "entities": [
     "AF02",
     "AF03",
@@ -7445,6 +7445,7 @@
     "DD15",
     "DD16",
     "DD21",
+    "DD23",
     "DD25",
     "DD26",
     "DD27",

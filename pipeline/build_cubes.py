@@ -226,10 +226,18 @@ def revision_baseline(mhash, vers):
 
 
 # ---------------------------------------------------------------- aggregation
-def entity_months(base, ent, n_months, midx):
-    """{key: [vector per month index]}, {key: [set of entity-month KDI ids per month index]} (monthly_org_kdi) and
-    {key: [the same plus the ids of departures' unknown length of service]}: every base row added to its
-    government, department, DOD agency and subelement."""
+def incomplete_scope(con):
+    """[(issue id, entity level, entity code, month)] of the active known data issues treated flagged_incomplete
+    (KDI-006), from kdi_scope. Such an issue flags entity-months, not rows (spec section 7), so entity_months applies it
+    to every month of an entity's span whether or not the entity has rows that month."""
+    return con.execute("""SELECT DISTINCT id, entity_level, entity_code, file_month FROM kdi_scope
+                          WHERE treatment = 'flagged_incomplete' ORDER BY ALL""").fetchall()
+
+
+def entity_months(base, ent, n_months, midx, incomplete):
+    """{key: [vector per month index]}, {key: [set of entity-month KDI ids per month index]} (monthly_org_kdi, plus the
+    flagged_incomplete issues of incomplete_scope) and {key: [the same plus the ids of departures' unknown length of
+    service]}: every base row added to its government, department, DOD agency and subelement."""
     vec = {k: [[0] * len(F) for _ in range(n_months)] for k in ent}
     kdi = {k: [set() for _ in range(n_months)] for k in ent}
     flags = {k: [set() for _ in range(n_months)] for k in ent}
@@ -245,6 +253,26 @@ def entity_months(base, ent, n_months, midx):
             kdi[k][i].update(ids)
             flags[k][i].update(ids)
             flags[k][i].update(los_ids)
+    # flagged_incomplete issues (KDI-006): every entity that holds an organization in the issue's scope (that
+    # organization's subelement, DOD agency and department, and the government) is flagged in every scoped month of its
+    # span (first to last month with headcount or a flow), whether or not it has rows that month
+    orgs = {(d, a, s) for _, d, a, s, *_ in base}
+    span = {}
+    for iid, lvl, code, m in incomplete:
+        if m not in midx:
+            continue
+        i = midx[m]
+        hit = set()
+        for d, a, s in orgs:
+            if code == '*' or {'department': d, 'agency': a, 'subelement': s}.get(lvl) == code:
+                hit.update(['GOV', d] + ([f'DOD-{a}'] if d == 'DOD' else []) + [sub_key(s, a)])
+        for k in hit:
+            if k not in span:
+                span[k] = (first_index(vec[k]), last_index(vec[k]))
+            f, l = span[k]
+            if f is not None and f <= i <= l:
+                kdi[k][i].add(iid)
+                flags[k][i].add(iid)
     return vec, kdi, flags
 
 
@@ -570,13 +598,14 @@ def main():
     if any((b.year * 12 + b.month) - (a.year * 12 + a.month) != 1 for a, b in zip(months, months[1:])):
         sys.exit('cubes NOT built: months are not contiguous')
     base = load_base(con)
+    incomplete = incomplete_scope(con)
     ab_sb = mass_transfers(con)
     con.close()
     print(f'read {len(base):,} organization-months in {time.time() - T0:.1f}s', flush=True)
 
     ent = entity_table()
     midx = {m: i for i, m in enumerate(months)}
-    vec, kdi, flags = entity_months(base, ent, len(months), midx)
+    vec, kdi, flags = entity_months(base, ent, len(months), midx, incomplete)
     starts = {k: first_index(vec[k]) for k in ent}
     ends = {k: last_index(vec[k]) for k in ent}
     mhash, vers = manifest_hash(), versions_by_month()

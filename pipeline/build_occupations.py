@@ -279,7 +279,7 @@ def main():
     base = bc.load_base(con)
     ent = bc.entity_table()
     midx = {m: i for i, m in enumerate(months)}
-    vec, kdi, _ = bc.entity_months(base, ent, len(months), midx)
+    vec, kdi, _ = bc.entity_months(base, ent, len(months), midx, bc.incomplete_scope(con))
     del base
     starts = {k: bc.first_index(vec[k]) for k in ent}
     ends = {k: bc.last_index(vec[k]) for k in ent}
@@ -420,7 +420,9 @@ def main():
                                             'list': [{'id': a, 'name': nm, 'month_0': bc.ym(months[ix[0] - 1]), 'first_month': bc.ym(months[ix[0]]),
                                                       'last_month': bc.ym(months[ix[-1]]), 'open': o} for a, nm, ix, o in admins]},
                         'kdi_in_scope': kscope('occupations'),
-                        'columns': occ_dictionary(), 'period_columns': bb.period_dictionary(),
+                        'columns': occ_dictionary(), 'period_columns': bb.period_dictionary(
+                            'known data issue ids touching a month of the window: entity-month flags of the entity and the '
+                            f"entities inside it, and KDI-011 when the window has a '{NR}' (Not reported) row"),
                         'files': files['occupations'], 'files_sha256': bb.digest(files['occupations']),
                         'size': size(files['occupations'])},
         'occ_family_monthly': {'cube': 'occ_family_monthly',

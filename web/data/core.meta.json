@@ -499,7 +499,7 @@
  },
  "known_data_issues": {
   "file": "pipeline/known_data_issues.csv",
-  "sha256": "aa0056a088bd7a6914969b3e9bd3be8af77ee9cb3ee87efb043c11de15d157e0",
+  "sha256": "6d63674826313e4b6a59f7ea1f5ed1f6ed4a65e25b040eb1eb6fd93a15f18906",
   "applied": [
    {
     "id": "KDI-001",
@@ -550,6 +550,11 @@
     "id": "KDI-010",
     "treatment": "unknown",
     "decision": "D-021"
+   },
+   {
+    "id": "KDI-011",
+    "treatment": "not_reported_occupation",
+    "decision": "D-040"
    }
   ]
  },
@@ -7280,7 +7285,7 @@
    ]
   },
   "KDI-006": {
-   "rows": 889,
+   "rows": 896,
    "entities": [
     "AF02",
     "AF03",
@@ -7415,6 +7420,7 @@
     "DD15",
     "DD16",
     "DD21",
+    "DD23",
     "DD25",
     "DD26",
     "DD27",
@@ -8877,8 +8883,8 @@
   },
   "AF1S": {
    "path": "core/AF1S.json",
-   "sha256": "357250efb027ce954d8315ad061750290f4c2f6ed52ccedf90dc75a9e3f92207",
-   "bytes": 72386,
+   "sha256": "7f84b53b283b5afa741941284e14e896d0ded5c50817714a3a172850438a6a11",
+   "bytes": 72402,
    "rows": 254
   },
   "AF1W": {
@@ -10167,8 +10173,8 @@
   },
   "DD23": {
    "path": "core/DD23.json",
-   "sha256": "7fa385758cebc1b7b70ecad14402b1be2e2821ae28e8a02a25776c20878c06c8",
-   "bytes": 67885,
+   "sha256": "e0275173a827b9a4c1b346f79bcb737c2e7f6ef6c2e3e3ee870f8dd0332f34be",
+   "bytes": 67925,
    "rows": 254
   },
   "DD25": {
@@ -12578,11 +12584,11 @@
    "rows": 174
   }
  },
- "files_sha256": "8f789a302dbc66798b1cc9f38049cf135c237944204907b29d94cc5fba8d1c50",
+ "files_sha256": "728555a05ed7823257d9e2d096b6e4e6d43831db8e30f8b4565593dc7d55a218",
  "files_digest_method": "sha256 of the lines '<path> <sha256>\\n' for every file, sorted by path",
  "size": {
   "files": 799,
-  "total_bytes": 48149176,
+  "total_bytes": 48149232,
   "mean_bytes": 60262,
   "largest": {
    "key": "GOV",
