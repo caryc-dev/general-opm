@@ -1,0 +1,61 @@
+# Deploys web/ to GitHub Pages: https://caryc-dev.github.io/general-opm/
+# Enable once in Settings > Pages > Source: GitHub Actions. Each push to main (or a manual run) tests and deploys.
+name: Deploy the dashboard to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# one deployment at a time; a newer push waits rather than cancelling one in progress
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      # The web unit tests. warehouse/, data/ and the database are not in git: tests that need them skip.
+      # Smoke tests need a browser and run locally.
+      - name: Run the web unit tests
+        run: node --test 'web/tests/*.test.js'
+
+      # Only the site: web/ without screenshots, tests, dev tools and the developer README
+      - name: Collect the site
+        run: |
+          mkdir _site
+          rsync -a --exclude '_screens/' --exclude 'tests/' --exclude 'tools/' --exclude 'README.md' web/ _site/
+          test -f _site/index.html
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload the site
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
